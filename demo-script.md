@@ -1,99 +1,99 @@
-# Demo Script — Water Rights Trading for Health Resilience
+# 演示脚本 — 水权交易促进健康韧性
 
-**Duration:** 5 minutes (within 20-min Part 2)  
-**URL (EN):** https://roeslerroy010-sudo.github.io/water-rights-health-resilience/  
-**URL (ZH):** https://roeslerroy010-sudo.github.io/water-rights-health-resilience/zh/
-
----
-
-## Pre-flight (before presentation starts)
-
-- [ ] Open browser, load the tool
-- [ ] Confirm map renders, dashboard shows numbers
-- [ ] Pre-set sliders to defaults: τ=15%, Health Floor=25%, SSP2-4.5, Medium cost
-- [ ] Have a second tab ready with just the tool (no browser chrome if possible, F11 fullscreen)
+**时长：** 5 分钟（在 20 分钟的第二部分内）  
+**URL（英文版）：** https://roeslerroy010-sudo.github.io/water-rights-health-resilience/  
+**URL（中文版）：** https://roeslerroy010-sudo.github.io/water-rights-health-resilience/zh/
 
 ---
 
-## The Walkthrough
+## 演示前准备
 
-### Step 0 — Setup (15s)
-
-> "This is our interactive decision-support tool. It simulates a water rights market in a watershed — in this case, the Middle Yangtze Basin. You see six water users on the map: municipal drinking water in green, agriculture in orange, industry in red, and hydropower in purple. The size of each node reflects how much water they receive."
-
-**Action:** Point cursor at the map, hover over the green municipal water node to show the popup.
-
----
-
-### Step 1 — The Baseline (45s)
-
-> "Right now, we're looking at a moderate climate scenario — SSP2-4.5. The market price is ¥0.53 per cubic meter. The dashboard on the right shows we're avoiding about 110,000 DALYs and reducing water-borne disease by 22%, with an economic benefit of over 200 billion RMB. The incentive status is green — all users are following the rules."
-
-**Action:** Point to each dashboard card as you mention them. Highlight the green "激励相容" badge.
+- [ ] 打开浏览器，加载工具（中文版 URL）
+- [ ] 确认地图能正常渲染，仪表盘有数据显示
+- [ ] 预设滑块默认值：τ=15%、健康底线=25%、SSP2-4.5、中等成本
+- [ ] 另开一个标签页只放工具（尽量隐藏浏览器工具栏，按 F11 全屏）
 
 ---
 
-### Step 2 — Introduce the Health Tax (1 min)
+## 演示流程
 
-> "Now let me show you what happens when we introduce a health tax — our core mechanism. This slider controls τ, the Pigouvian tax rate on health-damaging water use. Watch what happens as I increase it."
+### 第 0 步 — 开场（15 秒）
 
-**Action:** Slowly drag τ from 15% → 35%.
+> "这是我们开发的交互式决策支持工具，模拟的是一个流域内的水权市场——今天展示的是长江中游地区。地图上一共有六类用水户：绿色是市政饮用水，橙色是农业，红色是工业，紫色是水力发电。节点的大小代表他们的取水量。"
 
-> "Look at the map. The industrial nodes — the red ones — are shrinking. That's because the health tax makes polluting water more expensive, so they use less. Meanwhile, the green municipal water node stays the same size — it's protected by the health floor. The red rings around the industrial nodes mean they're being taxed for their negative health impact."
-
-> "On the dashboard: DALY avoided goes up, disease reduction increases. The market is redirecting water toward healthier outcomes — automatically, through the price mechanism."
-
-**Action:** Point to the changing numbers on the dashboard.
+**操作：** 把鼠标移到地图上，悬停在绿色市政用水节点上，弹出信息窗口。
 
 ---
 
-### Step 3 — Climate Shock (1 min)
+### 第 1 步 — 基准情景（45 秒）
 
-> "Now let's see what happens under a worse climate scenario. I'm switching from SSP2-4.5 to SSP5-8.5 — the high-emission pathway."
+> "现在看到的是一个中等气候情景——SSP2-4.5。当前市场水价是每立方米 0.53 元。右边仪表盘显示，我们减少了大约 11 万伤残调整寿命年，水传疾病发病率降低了 22%，经济效益超过 2000 亿元。激励状态是绿色——所有用水户都在规则框架内行事。"
 
-**Action:** Switch climate dropdown to SSP5-8.5.
-
-> "Immediately, total water availability drops 28%. The tradable water shrinks, the market price jumps. But look — the health-priority quota still protects the municipal water supply. The system adapts automatically."
-
-> "Without this market mechanism, in a drought, water would go to the highest bidder — probably industry. Our design ensures health comes first."
+**操作：** 逐个指向仪表盘卡片进行说明。高亮绿色的"激励相容"徽章。
 
 ---
 
-### Step 4 — Break the System (1 min)
+### 第 2 步 — 引入健康税率（1 分钟）
 
-> "Let me show you what happens when the mechanism is poorly designed. I'll lower the health priority quota to 10% and raise the health tax to 40%."
+> "接下来我给大家演示引入健康税率之后会发生什么——这是我们的核心机制。这个滑块控制 τ，也就是对有害健康用水行为征收的庇古税率。注意看当我调高它时发生的变化。"
 
-**Action:** Drag health floor to 10%, τ to 40%.
+**操作：** 将 τ 从 15% 缓慢拖至 35%。
 
-> "The incentive status turns red. It now says '激励不相容' — incentive incompatible. The tool tells us exactly which users might deviate: the chemical industry. The tolerance is too tight, they can't afford to comply."
+> "看地图。工业节点——红色的那些——在缩小。这是因为健康税率让污染用水的成本变高了，所以它们的用水量减少了。而绿色的市政用水节点大小不变——有健康底线在保护它。工业节点周围的红色光圈，表示它们正在因负面健康影响而被征税。"
 
-> "This is the power of the tool — it doesn't just show happy paths. It helps policymakers avoid bad designs by flagging when the incentives don't work."
+> "再看仪表盘：伤残调整寿命年的避免量在上升，疾病减少率也在提高。市场正在自动地把水资源导向更健康的用途——完全通过价格机制实现。"
 
----
-
-### Step 5 — The Comparison (45s)
-
-> "Finally, look at the bar chart at the bottom right. Green bars are with our market design. Gray bars are without any market. The difference is stark — especially in DALY avoided and economic value."
-
-**Action:** Point to the chart.
-
-> "This is the core message of our project: well-designed water markets don't just allocate water efficiently — they save lives and generate enormous economic value. The key is getting the incentives right."
+**操作：** 指向仪表盘上变化的数字。
 
 ---
 
-### Step 6 — Closing (15s)
+### 第 3 步 — 气候冲击（1 分钟）
 
-> "The tool is live at this URL, and you can try it yourself after the presentation. Thank you."
+> "现在我们来看更恶劣气候条件下的情况。我把情景从 SSP2-4.5 切换到 SSP5-8.5——高排放路径。"
 
-**Action:** Point to the footer URL or have a QR code slide ready.
+**操作：** 将气候下拉菜单切换至 SSP5-8.5。
+
+> "可以看到，总可用水量立刻下降了 28%。可交易水量缩水，市场价格飙升。但注意——健康优先配额依然在保护市政供水。系统是自动适应的。"
+
+> "如果没有这个市场机制，遇到干旱时，水会流向出价最高的人——大概率是工业。我们的设计确保了健康优先。"
 
 ---
 
-## Key Talking Points (if asked)
+### 第 4 步 — 打破系统（1 分钟）
 
-| Question | Answer |
-|----------|--------|
-| Is this based on real data? | Parameters are calibrated from China Water Resources Bulletin, CMIP6, and WHO DALY guidelines. The watershed is a stylized Middle Yangtze for demonstration. |
-| Can this scale to real basins? | Yes — the model accepts any set of water users, allocations, and health coefficients. Replace the JSON config with real basin data. |
-| What makes this different from existing water markets? | Existing markets optimize for economic efficiency. We embed health externalities into the price — water transactions carry a health tax calibrated to their pollution profile. |
-| How did you build this? | Pure static frontend — HTML/CSS/JS with Leaflet and Chart.js. No backend, no database. Deployed on GitHub Pages. |
+> "下面我给大家展示一下，如果机制设计得不好会怎样。我把健康优先配额降到 10%，再把健康税率升到 40%。"
+
+**操作：** 将健康底线拖至 10%，τ 拖至 40%。
+
+> "激励状态变成红色了，显示'激励不相容'。工具明确告诉我们是哪类用水户可能违规——化学工业。容差太紧，他们根本负担不起合规的成本。"
+
+> "这正是这个工具的价值所在——它不仅展示理想情况，还能帮助政策制定者提前发现设计缺陷，避免制定出激励失效的政策。"
+
+---
+
+### 第 5 步 — 对比分析（45 秒）
+
+> "最后来看右下角的柱状图。绿色柱子代表我们的市场设计，灰色柱子代表没有市场的情况。差距非常明显——尤其是在伤残调整寿命年避免量和经济价值方面。"
+
+**操作：** 指向图表。
+
+> "这是我们项目的核心信息：设计良好的水市场不仅能有效配置水资源——它还能挽救生命，创造巨大的经济价值。关键在于把激励机制做对。"
+
+---
+
+### 第 6 步 — 收尾（15 秒）
+
+> "这个工具现在就在这个网址上，演示结束后大家可以亲自上手试试。谢谢大家。"
+
+**操作：** 指向页面底部的 URL，或准备好二维码幻灯片。
+
+---
+
+## 备用问答要点
+
+| 问题 | 回答 |
+|------|------|
+| 数据是真实的吗？ | 参数来自《中国水资源公报》、CMIP6 和 WHO 伤残调整寿命年指南。流域以长江中游为原型做了适当简化。 |
+| 能推广到真实流域吗？ | 可以。模型接受任意用水户集合、分配方案和健康系数。把 JSON 配置文件换成真实流域数据即可。 |
+| 和现有水市场比有什么不同？ | 现有水市场追求经济效益最大化。我们把健康外部性嵌入到价格中——每笔水权交易都附带按其污染水平校准的健康税率。 |
+| 技术上是如何实现的？ | 纯静态前端——HTML/CSS/JS，使用 Leaflet 和 Chart.js。无后端、无数据库，部署在 GitHub Pages 上。 |
