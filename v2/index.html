@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Water Rights Trading for Health Resilience — An interactive decision-support tool for health-prioritized water markets under climate uncertainty">
+  <meta name="theme-color" content="#0c4a6e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💧</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Rights Trading for Health Resilience | ACTION Hackathon</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <h1>Water Rights Trading for Health Resilience</h1>
+      <p class="subtitle">An interactive decision-support tool for health-prioritized water markets under climate uncertainty</p>
+    </header>
+    <main id="main">
+      <aside id="panel-left">
+        <h2>Parameters</h2>
+        <div id="controls"></div>
+      </aside>
+      <section id="panel-center">
+        <div id="map"></div>
+        <div id="map-stats"></div>
+      </section>
+      <aside id="panel-right">
+        <h2>Health Dashboard</h2>
+        <div id="dashboard"></div>
+      </aside>
+    </main>
+    <footer id="footer">
+      <span>ACTION Hackathon — Theme 4: Water, Climate &amp; Health Adaptation</span>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

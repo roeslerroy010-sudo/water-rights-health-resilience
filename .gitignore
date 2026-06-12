@@ -1,0 +1,9 @@
+.superpowers/
+.DS_Store
+create_pptx.js
+node_modules/
+package.json
+package-lock.json
+ACTION*.png
+ppt/*.png
+*.docx

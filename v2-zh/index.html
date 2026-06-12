@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="水权交易与健康韧性——面向气候不确定性的健康优先水权市场交互式决策工具">
+  <meta name="theme-color" content="#0c4a6e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💧</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水权交易与健康韧性 | ACTION 黑客马拉松</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <h1>水权交易与健康韧性</h1>
+      <p class="subtitle">面向气候不确定性的健康优先水权市场——交互式决策支持工具</p>
+    </header>
+    <main id="main">
+      <aside id="panel-left">
+        <h2>参数设置</h2>
+        <div id="controls"></div>
+      </aside>
+      <section id="panel-center">
+        <div id="map"></div>
+        <div id="map-stats"></div>
+      </section>
+      <aside id="panel-right">
+        <h2>健康收益仪表盘</h2>
+        <div id="dashboard"></div>
+      </aside>
+    </main>
+    <footer id="footer">
+      <span>ACTION 黑客马拉松 — 主题四：水、气候与健康适应</span>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
