@@ -1,0 +1,294 @@
+{
+  "kind": "research-network-phase2a-spike-benchmark",
+  "generatedAt": "2026-06-16T02:36:59.035Z",
+  "fixtureDir": "fixtures",
+  "runsPerCase": 5,
+  "solverStatus": "glpk-js-wired",
+  "solverDetail": "glpk.js is installed, loaded through glpk.js/node, and wired to the Phase 2a LP benchmark.",
+  "lpSolveStatus": "all-cases-solved",
+  "decisionEligible": true,
+  "decision": "PATH A: browser real-time LP solve is acceptable for the 30-80 node target.",
+  "nextStep": "Keep the real-time LP path and add browser bundle-size/worker loading checks before frontend release.",
+  "maxLpSolveMs": 7.127,
+  "thresholdMs": 300,
+  "targetLpSolveMs": 300,
+  "licenseNote": "glpk.js is GPL-3.0; any browser/distribution release must confirm license compatibility or replace the solver before shipping.",
+  "params": {
+    "tau": 0.35,
+    "climate": "dry",
+    "healthFloor": 0.25,
+    "tradingCost": "medium"
+  },
+  "cases": [
+    {
+      "fixture": "fixtures/synthetic-30.json",
+      "synthetic": true,
+      "nodeCount": 30,
+      "edgeCount": 29,
+      "sectorCount": 3,
+      "transitInjection": {
+        "nodeCount": 3,
+        "total": 186.145
+      },
+      "lpSolveMs": 1.874,
+      "lpSolveRunsMs": [
+        5.916,
+        1.806,
+        1.87,
+        1.874,
+        2.421
+      ],
+      "lpSolveStatus": "optimal",
+      "lpGlpkStatus": 5,
+      "lpObjectiveValue": 3244.136668,
+      "interfaceGenerationMs": 0.262,
+      "interfaceGenerationRunsMs": [
+        0.988,
+        0.262,
+        1.45,
+        0.26,
+        0.242
+      ],
+      "heuristicSolveMs": 1.043,
+      "heuristicSolveRunsMs": [
+        2.91,
+        1.425,
+        1.043,
+        0.966,
+        0.998
+      ],
+      "variableCounts": {
+        "allocation": 90,
+        "outflow": 30,
+        "trade": 203,
+        "total": 323
+      },
+      "glpkProblem": {
+        "variables": 150,
+        "constraints": 90,
+        "objectiveDirection": "max"
+      },
+      "estimate": {
+        "reachableOdPairCount": 203,
+        "constraintCounts": {
+          "demandCaps": 90,
+          "routingBalance": 30,
+          "healthFloor": 30,
+          "tradeDirection": 203,
+          "nonNegativity": 323
+        },
+        "totalConstraints": 676
+      },
+      "constraints": {
+        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
+        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
+        "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
+      },
+      "heuristicSummary": {
+        "tradeFlowCount": 18,
+        "totalWithdrawn": 1706.824599,
+        "outletOutflowApprox": 118.467063,
+        "marketPrice": 0.421339
+      },
+      "lpSummary": {
+        "tradeFlowCount": 29,
+        "totalWithdrawn": 1706.8246,
+        "outletOutflowApprox": 118.467063,
+        "marketPrice": 0.421339
+      },
+      "checks": {
+        "syntheticFixture": true,
+        "normalizedTopologyAcyclic": true,
+        "variableCountsMatchEstimate": true,
+        "heuristicSolverType": "heuristic-routing-market",
+        "lpReady": true,
+        "lpStatus": "optimal",
+        "lpSolverType": "glpk.js",
+        "lpNoNaN": true,
+        "lpNonNegative": true
+      }
+    },
+    {
+      "fixture": "fixtures/synthetic-50.json",
+      "synthetic": true,
+      "nodeCount": 50,
+      "edgeCount": 49,
+      "sectorCount": 3,
+      "transitInjection": {
+        "nodeCount": 3,
+        "total": 203.182
+      },
+      "lpSolveMs": 3.191,
+      "lpSolveRunsMs": [
+        4.102,
+        3.191,
+        3.068,
+        3.937,
+        2.943
+      ],
+      "lpSolveStatus": "optimal",
+      "lpGlpkStatus": 5,
+      "lpObjectiveValue": 5319.577319,
+      "interfaceGenerationMs": 0.216,
+      "interfaceGenerationRunsMs": [
+        0.367,
+        0.216,
+        0.212,
+        0.211,
+        0.314
+      ],
+      "heuristicSolveMs": 2.07,
+      "heuristicSolveRunsMs": [
+        2.61,
+        2.308,
+        2.07,
+        1.937,
+        1.721
+      ],
+      "variableCounts": {
+        "allocation": 150,
+        "outflow": 50,
+        "trade": 528,
+        "total": 728
+      },
+      "glpkProblem": {
+        "variables": 250,
+        "constraints": 150,
+        "objectiveDirection": "max"
+      },
+      "estimate": {
+        "reachableOdPairCount": 528,
+        "constraintCounts": {
+          "demandCaps": 150,
+          "routingBalance": 50,
+          "healthFloor": 50,
+          "tradeDirection": 528,
+          "nonNegativity": 728
+        },
+        "totalConstraints": 1506
+      },
+      "constraints": {
+        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
+        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
+        "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
+      },
+      "heuristicSummary": {
+        "tradeFlowCount": 31,
+        "totalWithdrawn": 2763.566586,
+        "outletOutflowApprox": 148.097918,
+        "marketPrice": 0.463245
+      },
+      "lpSummary": {
+        "tradeFlowCount": 49,
+        "totalWithdrawn": 2763.566587,
+        "outletOutflowApprox": 148.097918,
+        "marketPrice": 0.463245
+      },
+      "checks": {
+        "syntheticFixture": true,
+        "normalizedTopologyAcyclic": true,
+        "variableCountsMatchEstimate": true,
+        "heuristicSolverType": "heuristic-routing-market",
+        "lpReady": true,
+        "lpStatus": "optimal",
+        "lpSolverType": "glpk.js",
+        "lpNoNaN": true,
+        "lpNonNegative": true
+      }
+    },
+    {
+      "fixture": "fixtures/synthetic-80.json",
+      "synthetic": true,
+      "nodeCount": 80,
+      "edgeCount": 79,
+      "sectorCount": 3,
+      "transitInjection": {
+        "nodeCount": 3,
+        "total": 284.021
+      },
+      "lpSolveMs": 7.127,
+      "lpSolveRunsMs": [
+        7.127,
+        7.438,
+        8.419,
+        6.48,
+        6.695
+      ],
+      "lpSolveStatus": "optimal",
+      "lpGlpkStatus": 5,
+      "lpObjectiveValue": 8440.487964,
+      "interfaceGenerationMs": 0.342,
+      "interfaceGenerationRunsMs": [
+        0.385,
+        0.556,
+        0.342,
+        0.342,
+        0.32
+      ],
+      "heuristicSolveMs": 4.879,
+      "heuristicSolveRunsMs": [
+        4.879,
+        4.864,
+        5.047,
+        4.764,
+        5.134
+      ],
+      "variableCounts": {
+        "allocation": 240,
+        "outflow": 80,
+        "trade": 1435,
+        "total": 1755
+      },
+      "glpkProblem": {
+        "variables": 400,
+        "constraints": 240,
+        "objectiveDirection": "max"
+      },
+      "estimate": {
+        "reachableOdPairCount": 1435,
+        "constraintCounts": {
+          "demandCaps": 240,
+          "routingBalance": 80,
+          "healthFloor": 80,
+          "tradeDirection": 1435,
+          "nonNegativity": 1755
+        },
+        "totalConstraints": 3590
+      },
+      "constraints": {
+        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
+        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
+        "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
+      },
+      "heuristicSummary": {
+        "tradeFlowCount": 55,
+        "totalWithdrawn": 4391.743521,
+        "outletOutflowApprox": 232.401653,
+        "marketPrice": 0.452798
+      },
+      "lpSummary": {
+        "tradeFlowCount": 79,
+        "totalWithdrawn": 4391.743522,
+        "outletOutflowApprox": 232.401653,
+        "marketPrice": 0.452798
+      },
+      "checks": {
+        "syntheticFixture": true,
+        "normalizedTopologyAcyclic": true,
+        "variableCountsMatchEstimate": true,
+        "heuristicSolverType": "heuristic-routing-market",
+        "lpReady": true,
+        "lpStatus": "optimal",
+        "lpSolverType": "glpk.js",
+        "lpNoNaN": true,
+        "lpNonNegative": true
+      }
+    }
+  ]
+}

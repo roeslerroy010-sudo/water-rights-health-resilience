@@ -1,0 +1,2987 @@
+{
+  "meta": {
+    "region": "synthetic-phase2a-spike",
+    "fixture": "phase2a-synthetic-80",
+    "generatedBy": "research/tools/spike/generate-fixtures.js",
+    "generatedAt": "deterministic",
+    "seed": 20260281,
+    "synthetic": true,
+    "nodeCount": 80,
+    "topology": "branching-hydrologic-dag",
+    "sectors": [
+      "urban",
+      "eco",
+      "agri",
+      "industry"
+    ],
+    "units": {
+      "demand": "million m3/year",
+      "supply": "million m3/year",
+      "transitInjection": "million m3/year"
+    }
+  },
+  "topology": {
+    "SB001": "SB002",
+    "SB002": "SB005",
+    "SB003": "SB004",
+    "SB004": "SB006",
+    "SB005": "SB007",
+    "SB006": "SB009",
+    "SB007": "SB009",
+    "SB008": "SB009",
+    "SB009": "SB010",
+    "SB010": "SB014",
+    "SB011": "SB015",
+    "SB012": "SB015",
+    "SB013": "SB015",
+    "SB014": "SB015",
+    "SB015": "SB017",
+    "SB016": "SB019",
+    "SB017": "SB019",
+    "SB018": "SB021",
+    "SB019": "SB024",
+    "SB020": "SB022",
+    "SB021": "SB024",
+    "SB022": "SB024",
+    "SB023": "SB025",
+    "SB024": "SB027",
+    "SB025": "SB026",
+    "SB026": "SB027",
+    "SB027": "SB030",
+    "SB028": "SB033",
+    "SB029": "SB032",
+    "SB030": "SB033",
+    "SB031": "SB033",
+    "SB032": "SB035",
+    "SB033": "SB036",
+    "SB034": "SB037",
+    "SB035": "SB036",
+    "SB036": "SB038",
+    "SB037": "SB040",
+    "SB038": "SB041",
+    "SB039": "SB040",
+    "SB040": "SB042",
+    "SB041": "SB042",
+    "SB042": "SB043",
+    "SB043": "SB045",
+    "SB044": "SB045",
+    "SB045": "SB048",
+    "SB046": "SB050",
+    "SB047": "SB048",
+    "SB048": "SB051",
+    "SB049": "SB052",
+    "SB050": "SB051",
+    "SB051": "SB053",
+    "SB052": "SB054",
+    "SB053": "SB055",
+    "SB054": "SB057",
+    "SB055": "SB057",
+    "SB056": "SB059",
+    "SB057": "SB058",
+    "SB058": "SB060",
+    "SB059": "SB060",
+    "SB060": "SB062",
+    "SB061": "SB065",
+    "SB062": "SB065",
+    "SB063": "SB064",
+    "SB064": "SB067",
+    "SB065": "SB067",
+    "SB066": "SB068",
+    "SB067": "SB069",
+    "SB068": "SB071",
+    "SB069": "SB072",
+    "SB070": "SB073",
+    "SB071": "SB073",
+    "SB072": "SB075",
+    "SB073": "SB075",
+    "SB074": "SB075",
+    "SB075": "SB078",
+    "SB076": "SB077",
+    "SB077": "SB080",
+    "SB078": "SB079",
+    "SB079": "SB080",
+    "SB080": "OUTLET"
+  },
+  "subbasins": [
+    {
+      "id": "SB001",
+      "name": "Synthetic phase2a subbasin 1",
+      "areaKm2": 84.62,
+      "population": 52447,
+      "demand": {
+        "urban": 10.96,
+        "eco": 10.891,
+        "agri": 40.847,
+        "industry": 8.621
+      },
+      "supply": {
+        "qLocal": 65.38,
+        "externalInflow": 89.275,
+        "transitInjection": 89.275
+      },
+      "transitInjection": 89.275,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.05,
+        "eco": 2.411,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.276,
+        "eco": 0.086,
+        "agri": 0.193,
+        "industry": 0.527
+      }
+    },
+    {
+      "id": "SB002",
+      "name": "Synthetic phase2a subbasin 2",
+      "areaKm2": 122.2,
+      "population": 23946,
+      "demand": {
+        "urban": 10.519,
+        "eco": 9.805,
+        "agri": 43.713,
+        "industry": 4.847
+      },
+      "supply": {
+        "qLocal": 88.098,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.054,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.231,
+        "eco": 0.092,
+        "agri": 0.133,
+        "industry": 0.521
+      }
+    },
+    {
+      "id": "SB003",
+      "name": "Synthetic phase2a subbasin 3",
+      "areaKm2": 107.26,
+      "population": 54039,
+      "demand": {
+        "urban": 11.354,
+        "eco": 9.629,
+        "agri": 43.723,
+        "industry": 9.222
+      },
+      "supply": {
+        "qLocal": 83.668,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.059,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.242,
+        "eco": 0.087,
+        "agri": 0.166,
+        "industry": 0.543
+      }
+    },
+    {
+      "id": "SB004",
+      "name": "Synthetic phase2a subbasin 4",
+      "areaKm2": 116.26,
+      "population": 60324,
+      "demand": {
+        "urban": 9.311,
+        "eco": 8.978,
+        "agri": 31.144,
+        "industry": 7.325
+      },
+      "supply": {
+        "qLocal": 91.915,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.063,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.224,
+        "eco": 0.07,
+        "agri": 0.186,
+        "industry": 0.487
+      }
+    },
+    {
+      "id": "SB005",
+      "name": "Synthetic phase2a subbasin 5",
+      "areaKm2": 96.5,
+      "population": 69450,
+      "demand": {
+        "urban": 12.572,
+        "eco": 9.076,
+        "agri": 23.239,
+        "industry": 6.174
+      },
+      "supply": {
+        "qLocal": 90.465,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.068,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.267,
+        "eco": 0.099,
+        "agri": 0.167,
+        "industry": 0.54
+      }
+    },
+    {
+      "id": "SB006",
+      "name": "Synthetic phase2a subbasin 6",
+      "areaKm2": 90.42,
+      "population": 70924,
+      "demand": {
+        "urban": 12.09,
+        "eco": 8.092,
+        "agri": 18.013,
+        "industry": 18.745
+      },
+      "supply": {
+        "qLocal": 76.284,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.072,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.232,
+        "eco": 0.063,
+        "agri": 0.168,
+        "industry": 0.566
+      }
+    },
+    {
+      "id": "SB007",
+      "name": "Synthetic phase2a subbasin 7",
+      "areaKm2": 91.25,
+      "population": 100362,
+      "demand": {
+        "urban": 10.839,
+        "eco": 9.444,
+        "agri": 20.784,
+        "industry": 14.588
+      },
+      "supply": {
+        "qLocal": 56.285,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.077,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.24,
+        "eco": 0.082,
+        "agri": 0.203,
+        "industry": 0.627
+      }
+    },
+    {
+      "id": "SB008",
+      "name": "Synthetic phase2a subbasin 8",
+      "areaKm2": 133.04,
+      "population": 54621,
+      "demand": {
+        "urban": 9.211,
+        "eco": 10.324,
+        "agri": 27.804,
+        "industry": 12.571
+      },
+      "supply": {
+        "qLocal": 61.664,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.081,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.223,
+        "eco": 0.088,
+        "agri": 0.201,
+        "industry": 0.559
+      }
+    },
+    {
+      "id": "SB009",
+      "name": "Synthetic phase2a subbasin 9",
+      "areaKm2": 93.68,
+      "population": 55640,
+      "demand": {
+        "urban": 8.911,
+        "eco": 9.499,
+        "agri": 39.613,
+        "industry": 6.433
+      },
+      "supply": {
+        "qLocal": 54.178,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.085,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.244,
+        "eco": 0.1,
+        "agri": 0.165,
+        "industry": 0.532
+      }
+    },
+    {
+      "id": "SB010",
+      "name": "Synthetic phase2a subbasin 10",
+      "areaKm2": 113.87,
+      "population": 75707,
+      "demand": {
+        "urban": 13.208,
+        "eco": 9.959,
+        "agri": 40.257,
+        "industry": 9.032
+      },
+      "supply": {
+        "qLocal": 64.518,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.09,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.222,
+        "eco": 0.099,
+        "agri": 0.192,
+        "industry": 0.592
+      }
+    },
+    {
+      "id": "SB011",
+      "name": "Synthetic phase2a subbasin 11",
+      "areaKm2": 135.16,
+      "population": 55655,
+      "demand": {
+        "urban": 9.656,
+        "eco": 9.445,
+        "agri": 51.753,
+        "industry": 8.93
+      },
+      "supply": {
+        "qLocal": 68.484,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.094,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.252,
+        "eco": 0.09,
+        "agri": 0.178,
+        "industry": 0.59
+      }
+    },
+    {
+      "id": "SB012",
+      "name": "Synthetic phase2a subbasin 12",
+      "areaKm2": 115.34,
+      "population": 71800,
+      "demand": {
+        "urban": 9.618,
+        "eco": 12.698,
+        "agri": 33.533,
+        "industry": 8.86
+      },
+      "supply": {
+        "qLocal": 66.078,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.099,
+        "eco": 2.411,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.225,
+        "eco": 0.091,
+        "agri": 0.153,
+        "industry": 0.549
+      }
+    },
+    {
+      "id": "SB013",
+      "name": "Synthetic phase2a subbasin 13",
+      "areaKm2": 91.04,
+      "population": 51110,
+      "demand": {
+        "urban": 11.736,
+        "eco": 9.139,
+        "agri": 21.789,
+        "industry": 5.481
+      },
+      "supply": {
+        "qLocal": 50.364,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.103,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.239,
+        "eco": 0.088,
+        "agri": 0.14,
+        "industry": 0.496
+      }
+    },
+    {
+      "id": "SB014",
+      "name": "Synthetic phase2a subbasin 14",
+      "areaKm2": 140.58,
+      "population": 53097,
+      "demand": {
+        "urban": 11.65,
+        "eco": 11.03,
+        "agri": 26.344,
+        "industry": 14.94
+      },
+      "supply": {
+        "qLocal": 59.628,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.108,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.275,
+        "eco": 0.054,
+        "agri": 0.194,
+        "industry": 0.614
+      }
+    },
+    {
+      "id": "SB015",
+      "name": "Synthetic phase2a subbasin 15",
+      "areaKm2": 97.7,
+      "population": 135384,
+      "demand": {
+        "urban": 12.994,
+        "eco": 8.336,
+        "agri": 18.726,
+        "industry": 14.63
+      },
+      "supply": {
+        "qLocal": 55.098,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.112,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.259,
+        "eco": 0.053,
+        "agri": 0.185,
+        "industry": 0.562
+      }
+    },
+    {
+      "id": "SB016",
+      "name": "Synthetic phase2a subbasin 16",
+      "areaKm2": 122.49,
+      "population": 74425,
+      "demand": {
+        "urban": 11.369,
+        "eco": 9.641,
+        "agri": 23.812,
+        "industry": 14.539
+      },
+      "supply": {
+        "qLocal": 63.37,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.116,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.262,
+        "eco": 0.082,
+        "agri": 0.191,
+        "industry": 0.519
+      }
+    },
+    {
+      "id": "SB017",
+      "name": "Synthetic phase2a subbasin 17",
+      "areaKm2": 116.99,
+      "population": 77343,
+      "demand": {
+        "urban": 11.52,
+        "eco": 10.809,
+        "agri": 43.058,
+        "industry": 8.076
+      },
+      "supply": {
+        "qLocal": 56.319,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.121,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.256,
+        "eco": 0.066,
+        "agri": 0.15,
+        "industry": 0.552
+      }
+    },
+    {
+      "id": "SB018",
+      "name": "Synthetic phase2a subbasin 18",
+      "areaKm2": 144.72,
+      "population": 75357,
+      "demand": {
+        "urban": 11.243,
+        "eco": 11.3,
+        "agri": 45.107,
+        "industry": 8.437
+      },
+      "supply": {
+        "qLocal": 71.181,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.125,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.273,
+        "eco": 0.074,
+        "agri": 0.137,
+        "industry": 0.486
+      }
+    },
+    {
+      "id": "SB019",
+      "name": "Synthetic phase2a subbasin 19",
+      "areaKm2": 138.73,
+      "population": 85769,
+      "demand": {
+        "urban": 14.042,
+        "eco": 11.057,
+        "agri": 46.347,
+        "industry": 6.082
+      },
+      "supply": {
+        "qLocal": 67.543,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.13,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.254,
+        "eco": 0.056,
+        "agri": 0.134,
+        "industry": 0.577
+      }
+    },
+    {
+      "id": "SB020",
+      "name": "Synthetic phase2a subbasin 20",
+      "areaKm2": 112.45,
+      "population": 79965,
+      "demand": {
+        "urban": 12.925,
+        "eco": 10.273,
+        "agri": 31.11,
+        "industry": 8.996
+      },
+      "supply": {
+        "qLocal": 58.893,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.134,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.278,
+        "eco": 0.077,
+        "agri": 0.134,
+        "industry": 0.536
+      }
+    },
+    {
+      "id": "SB021",
+      "name": "Synthetic phase2a subbasin 21",
+      "areaKm2": 102.87,
+      "population": 87423,
+      "demand": {
+        "urban": 13.612,
+        "eco": 10.09,
+        "agri": 22.108,
+        "industry": 8.6
+      },
+      "supply": {
+        "qLocal": 58.49,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.139,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.24,
+        "eco": 0.085,
+        "agri": 0.206,
+        "industry": 0.528
+      }
+    },
+    {
+      "id": "SB022",
+      "name": "Synthetic phase2a subbasin 22",
+      "areaKm2": 115.17,
+      "population": 84181,
+      "demand": {
+        "urban": 11.904,
+        "eco": 10.54,
+        "agri": 25.228,
+        "industry": 14.243
+      },
+      "supply": {
+        "qLocal": 61.124,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.143,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.248,
+        "eco": 0.069,
+        "agri": 0.197,
+        "industry": 0.601
+      }
+    },
+    {
+      "id": "SB023",
+      "name": "Synthetic phase2a subbasin 23",
+      "areaKm2": 135.71,
+      "population": 152728,
+      "demand": {
+        "urban": 16.394,
+        "eco": 14.923,
+        "agri": 24.565,
+        "industry": 18.129
+      },
+      "supply": {
+        "qLocal": 65.149,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.147,
+        "eco": 2.411,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.235,
+        "eco": 0.055,
+        "agri": 0.18,
+        "industry": 0.597
+      }
+    },
+    {
+      "id": "SB024",
+      "name": "Synthetic phase2a subbasin 24",
+      "areaKm2": 131.19,
+      "population": 92805,
+      "demand": {
+        "urban": 13.952,
+        "eco": 9.867,
+        "agri": 23.094,
+        "industry": 14.768
+      },
+      "supply": {
+        "qLocal": 62.088,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.152,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.269,
+        "eco": 0.081,
+        "agri": 0.177,
+        "industry": 0.561
+      }
+    },
+    {
+      "id": "SB025",
+      "name": "Synthetic phase2a subbasin 25",
+      "areaKm2": 127.91,
+      "population": 81073,
+      "demand": {
+        "urban": 12.942,
+        "eco": 9.609,
+        "agri": 42.382,
+        "industry": 10.247
+      },
+      "supply": {
+        "qLocal": 61.837,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.156,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.251,
+        "eco": 0.068,
+        "agri": 0.131,
+        "industry": 0.564
+      }
+    },
+    {
+      "id": "SB026",
+      "name": "Synthetic phase2a subbasin 26",
+      "areaKm2": 154.14,
+      "population": 96115,
+      "demand": {
+        "urban": 11.896,
+        "eco": 11.056,
+        "agri": 50.277,
+        "industry": 8.85
+      },
+      "supply": {
+        "qLocal": 61.654,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.161,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.245,
+        "eco": 0.061,
+        "agri": 0.134,
+        "industry": 0.562
+      }
+    },
+    {
+      "id": "SB027",
+      "name": "Synthetic phase2a subbasin 27",
+      "areaKm2": 112.35,
+      "population": 91751,
+      "demand": {
+        "urban": 13.176,
+        "eco": 8.666,
+        "agri": 40.726,
+        "industry": 9.118
+      },
+      "supply": {
+        "qLocal": 54.295,
+        "externalInflow": 93.468,
+        "transitInjection": 93.468
+      },
+      "transitInjection": 93.468,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.165,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.247,
+        "eco": 0.079,
+        "agri": 0.148,
+        "industry": 0.582
+      }
+    },
+    {
+      "id": "SB028",
+      "name": "Synthetic phase2a subbasin 28",
+      "areaKm2": 140.23,
+      "population": 101922,
+      "demand": {
+        "urban": 13.899,
+        "eco": 10.529,
+        "agri": 36.185,
+        "industry": 6.519
+      },
+      "supply": {
+        "qLocal": 67.963,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.17,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.259,
+        "eco": 0.087,
+        "agri": 0.189,
+        "industry": 0.588
+      }
+    },
+    {
+      "id": "SB029",
+      "name": "Synthetic phase2a subbasin 29",
+      "areaKm2": 138.41,
+      "population": 101101,
+      "demand": {
+        "urban": 11.634,
+        "eco": 11.467,
+        "agri": 24.957,
+        "industry": 9.662
+      },
+      "supply": {
+        "qLocal": 68.551,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.174,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.223,
+        "eco": 0.052,
+        "agri": 0.14,
+        "industry": 0.529
+      }
+    },
+    {
+      "id": "SB030",
+      "name": "Synthetic phase2a subbasin 30",
+      "areaKm2": 153.98,
+      "population": 106117,
+      "demand": {
+        "urban": 13.521,
+        "eco": 11.517,
+        "agri": 27.196,
+        "industry": 16.064
+      },
+      "supply": {
+        "qLocal": 66.098,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.178,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.26,
+        "eco": 0.086,
+        "agri": 0.175,
+        "industry": 0.612
+      }
+    },
+    {
+      "id": "SB031",
+      "name": "Synthetic phase2a subbasin 31",
+      "areaKm2": 128.95,
+      "population": 174186,
+      "demand": {
+        "urban": 15.414,
+        "eco": 10.6,
+        "agri": 25.138,
+        "industry": 16.95
+      },
+      "supply": {
+        "qLocal": 60.177,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.183,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.28,
+        "eco": 0.077,
+        "agri": 0.144,
+        "industry": 0.59
+      }
+    },
+    {
+      "id": "SB032",
+      "name": "Synthetic phase2a subbasin 32",
+      "areaKm2": 112.46,
+      "population": 121205,
+      "demand": {
+        "urban": 14.706,
+        "eco": 10.41,
+        "agri": 20.471,
+        "industry": 15.206
+      },
+      "supply": {
+        "qLocal": 58.867,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.187,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.228,
+        "eco": 0.096,
+        "agri": 0.131,
+        "industry": 0.597
+      }
+    },
+    {
+      "id": "SB033",
+      "name": "Synthetic phase2a subbasin 33",
+      "areaKm2": 152.07,
+      "population": 124495,
+      "demand": {
+        "urban": 15.919,
+        "eco": 11.222,
+        "agri": 50.765,
+        "industry": 9.383
+      },
+      "supply": {
+        "qLocal": 61.275,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.192,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.268,
+        "eco": 0.082,
+        "agri": 0.202,
+        "industry": 0.522
+      }
+    },
+    {
+      "id": "SB034",
+      "name": "Synthetic phase2a subbasin 34",
+      "areaKm2": 127.42,
+      "population": 134696,
+      "demand": {
+        "urban": 12.625,
+        "eco": 13.176,
+        "agri": 45.669,
+        "industry": 10.051
+      },
+      "supply": {
+        "qLocal": 63.849,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.196,
+        "eco": 2.411,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.25,
+        "eco": 0.052,
+        "agri": 0.14,
+        "industry": 0.584
+      }
+    },
+    {
+      "id": "SB035",
+      "name": "Synthetic phase2a subbasin 35",
+      "areaKm2": 122.59,
+      "population": 103393,
+      "demand": {
+        "urban": 13.139,
+        "eco": 9.427,
+        "agri": 44.812,
+        "industry": 9.14
+      },
+      "supply": {
+        "qLocal": 56.54,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.201,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.264,
+        "eco": 0.084,
+        "agri": 0.2,
+        "industry": 0.577
+      }
+    },
+    {
+      "id": "SB036",
+      "name": "Synthetic phase2a subbasin 36",
+      "areaKm2": 111.3,
+      "population": 117568,
+      "demand": {
+        "urban": 12.5,
+        "eco": 8.775,
+        "agri": 33.104,
+        "industry": 8.754
+      },
+      "supply": {
+        "qLocal": 60.851,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.205,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.228,
+        "eco": 0.095,
+        "agri": 0.208,
+        "industry": 0.54
+      }
+    },
+    {
+      "id": "SB037",
+      "name": "Synthetic phase2a subbasin 37",
+      "areaKm2": 118.53,
+      "population": 144483,
+      "demand": {
+        "urban": 14.49,
+        "eco": 9.739,
+        "agri": 22.823,
+        "industry": 9.67
+      },
+      "supply": {
+        "qLocal": 56.123,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.209,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.272,
+        "eco": 0.084,
+        "agri": 0.166,
+        "industry": 0.56
+      }
+    },
+    {
+      "id": "SB038",
+      "name": "Synthetic phase2a subbasin 38",
+      "areaKm2": 145.38,
+      "population": 135080,
+      "demand": {
+        "urban": 15.706,
+        "eco": 10.697,
+        "agri": 24.517,
+        "industry": 17.64
+      },
+      "supply": {
+        "qLocal": 67.008,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.214,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.253,
+        "eco": 0.079,
+        "agri": 0.188,
+        "industry": 0.623
+      }
+    },
+    {
+      "id": "SB039",
+      "name": "Synthetic phase2a subbasin 39",
+      "areaKm2": 130.01,
+      "population": 198487,
+      "demand": {
+        "urban": 16.004,
+        "eco": 9.171,
+        "agri": 22.647,
+        "industry": 18.116
+      },
+      "supply": {
+        "qLocal": 56.729,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.218,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.272,
+        "eco": 0.1,
+        "agri": 0.187,
+        "industry": 0.591
+      }
+    },
+    {
+      "id": "SB040",
+      "name": "Synthetic phase2a subbasin 40",
+      "areaKm2": 122.37,
+      "population": 134733,
+      "demand": {
+        "urban": 14.347,
+        "eco": 10.733,
+        "agri": 22.241,
+        "industry": 13.785
+      },
+      "supply": {
+        "qLocal": 61.846,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.223,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.237,
+        "eco": 0.093,
+        "agri": 0.209,
+        "industry": 0.585
+      }
+    },
+    {
+      "id": "SB041",
+      "name": "Synthetic phase2a subbasin 41",
+      "areaKm2": 162.51,
+      "population": 115262,
+      "demand": {
+        "urban": 14.592,
+        "eco": 11.935,
+        "agri": 55.771,
+        "industry": 8.047
+      },
+      "supply": {
+        "qLocal": 70.862,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.227,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.257,
+        "eco": 0.067,
+        "agri": 0.193,
+        "industry": 0.517
+      }
+    },
+    {
+      "id": "SB042",
+      "name": "Synthetic phase2a subbasin 42",
+      "areaKm2": 121.34,
+      "population": 125336,
+      "demand": {
+        "urban": 15.077,
+        "eco": 10.503,
+        "agri": 46.419,
+        "industry": 8.253
+      },
+      "supply": {
+        "qLocal": 65.294,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.232,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.262,
+        "eco": 0.073,
+        "agri": 0.176,
+        "industry": 0.511
+      }
+    },
+    {
+      "id": "SB043",
+      "name": "Synthetic phase2a subbasin 43",
+      "areaKm2": 154.47,
+      "population": 132931,
+      "demand": {
+        "urban": 13.674,
+        "eco": 10.294,
+        "agri": 53.788,
+        "industry": 10.441
+      },
+      "supply": {
+        "qLocal": 69.605,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.236,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.262,
+        "eco": 0.075,
+        "agri": 0.164,
+        "industry": 0.489
+      }
+    },
+    {
+      "id": "SB044",
+      "name": "Synthetic phase2a subbasin 44",
+      "areaKm2": 165.06,
+      "population": 159207,
+      "demand": {
+        "urban": 15.021,
+        "eco": 11.168,
+        "agri": 39.581,
+        "industry": 11.035
+      },
+      "supply": {
+        "qLocal": 73.173,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.241,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.257,
+        "eco": 0.083,
+        "agri": 0.166,
+        "industry": 0.559
+      }
+    },
+    {
+      "id": "SB045",
+      "name": "Synthetic phase2a subbasin 45",
+      "areaKm2": 141.32,
+      "population": 164152,
+      "demand": {
+        "urban": 16.147,
+        "eco": 17.04,
+        "agri": 27.494,
+        "industry": 11.959
+      },
+      "supply": {
+        "qLocal": 64.032,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.245,
+        "eco": 2.411,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.254,
+        "eco": 0.073,
+        "agri": 0.206,
+        "industry": 0.585
+      }
+    },
+    {
+      "id": "SB046",
+      "name": "Synthetic phase2a subbasin 46",
+      "areaKm2": 115.65,
+      "population": 159500,
+      "demand": {
+        "urban": 16.008,
+        "eco": 9.869,
+        "agri": 23.47,
+        "industry": 17.268
+      },
+      "supply": {
+        "qLocal": 58.773,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.249,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.263,
+        "eco": 0.079,
+        "agri": 0.14,
+        "industry": 0.597
+      }
+    },
+    {
+      "id": "SB047",
+      "name": "Synthetic phase2a subbasin 47",
+      "areaKm2": 125.86,
+      "population": 219500,
+      "demand": {
+        "urban": 18.673,
+        "eco": 10.686,
+        "agri": 23.498,
+        "industry": 17.6
+      },
+      "supply": {
+        "qLocal": 66.642,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.254,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.257,
+        "eco": 0.066,
+        "agri": 0.168,
+        "industry": 0.62
+      }
+    },
+    {
+      "id": "SB048",
+      "name": "Synthetic phase2a subbasin 48",
+      "areaKm2": 140.69,
+      "population": 138652,
+      "demand": {
+        "urban": 13.456,
+        "eco": 10.837,
+        "agri": 24.71,
+        "industry": 14.526
+      },
+      "supply": {
+        "qLocal": 70.63,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.258,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.26,
+        "eco": 0.05,
+        "agri": 0.149,
+        "industry": 0.612
+      }
+    },
+    {
+      "id": "SB049",
+      "name": "Synthetic phase2a subbasin 49",
+      "areaKm2": 140.99,
+      "population": 147979,
+      "demand": {
+        "urban": 16.49,
+        "eco": 10.868,
+        "agri": 50.256,
+        "industry": 9.534
+      },
+      "supply": {
+        "qLocal": 64.151,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.263,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.229,
+        "eco": 0.079,
+        "agri": 0.166,
+        "industry": 0.573
+      }
+    },
+    {
+      "id": "SB050",
+      "name": "Synthetic phase2a subbasin 50",
+      "areaKm2": 129.64,
+      "population": 135956,
+      "demand": {
+        "urban": 12.726,
+        "eco": 9.401,
+        "agri": 46.237,
+        "industry": 8.427
+      },
+      "supply": {
+        "qLocal": 66.678,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.267,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.237,
+        "eco": 0.087,
+        "agri": 0.173,
+        "industry": 0.499
+      }
+    },
+    {
+      "id": "SB051",
+      "name": "Synthetic phase2a subbasin 51",
+      "areaKm2": 126.85,
+      "population": 178661,
+      "demand": {
+        "urban": 17.045,
+        "eco": 9.723,
+        "agri": 41.619,
+        "industry": 10.749
+      },
+      "supply": {
+        "qLocal": 59.833,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.272,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.278,
+        "eco": 0.051,
+        "agri": 0.171,
+        "industry": 0.526
+      }
+    },
+    {
+      "id": "SB052",
+      "name": "Synthetic phase2a subbasin 52",
+      "areaKm2": 166.66,
+      "population": 168264,
+      "demand": {
+        "urban": 17.044,
+        "eco": 11.326,
+        "agri": 47.577,
+        "industry": 10.218
+      },
+      "supply": {
+        "qLocal": 66.921,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.276,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.236,
+        "eco": 0.081,
+        "agri": 0.141,
+        "industry": 0.592
+      }
+    },
+    {
+      "id": "SB053",
+      "name": "Synthetic phase2a subbasin 53",
+      "areaKm2": 162.35,
+      "population": 175444,
+      "demand": {
+        "urban": 15.558,
+        "eco": 11.039,
+        "agri": 28.933,
+        "industry": 8.813
+      },
+      "supply": {
+        "qLocal": 67.008,
+        "externalInflow": 101.278,
+        "transitInjection": 101.278
+      },
+      "transitInjection": 101.278,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.28,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.234,
+        "eco": 0.084,
+        "agri": 0.171,
+        "industry": 0.488
+      }
+    },
+    {
+      "id": "SB054",
+      "name": "Synthetic phase2a subbasin 54",
+      "areaKm2": 130.79,
+      "population": 150755,
+      "demand": {
+        "urban": 14.59,
+        "eco": 10.549,
+        "agri": 25.716,
+        "industry": 17.74
+      },
+      "supply": {
+        "qLocal": 68.675,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.285,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.274,
+        "eco": 0.055,
+        "agri": 0.14,
+        "industry": 0.645
+      }
+    },
+    {
+      "id": "SB055",
+      "name": "Synthetic phase2a subbasin 55",
+      "areaKm2": 156.92,
+      "population": 238326,
+      "demand": {
+        "urban": 22.239,
+        "eco": 10.361,
+        "agri": 25.521,
+        "industry": 19.461
+      },
+      "supply": {
+        "qLocal": 62.139,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.289,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.258,
+        "eco": 0.091,
+        "agri": 0.177,
+        "industry": 0.613
+      }
+    },
+    {
+      "id": "SB056",
+      "name": "Synthetic phase2a subbasin 56",
+      "areaKm2": 153.58,
+      "population": 154827,
+      "demand": {
+        "urban": 17.491,
+        "eco": 16.225,
+        "agri": 28.418,
+        "industry": 13.234
+      },
+      "supply": {
+        "qLocal": 68.22,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.294,
+        "eco": 2.411,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.247,
+        "eco": 0.066,
+        "agri": 0.194,
+        "industry": 0.569
+      }
+    },
+    {
+      "id": "SB057",
+      "name": "Synthetic phase2a subbasin 57",
+      "areaKm2": 138.84,
+      "population": 174393,
+      "demand": {
+        "urban": 16.12,
+        "eco": 9.534,
+        "agri": 45.863,
+        "industry": 8.571
+      },
+      "supply": {
+        "qLocal": 58.957,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.298,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.224,
+        "eco": 0.07,
+        "agri": 0.17,
+        "industry": 0.506
+      }
+    },
+    {
+      "id": "SB058",
+      "name": "Synthetic phase2a subbasin 58",
+      "areaKm2": 164.49,
+      "population": 175908,
+      "demand": {
+        "urban": 16.646,
+        "eco": 12.418,
+        "agri": 49.147,
+        "industry": 10.836
+      },
+      "supply": {
+        "qLocal": 73.989,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.303,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.238,
+        "eco": 0.085,
+        "agri": 0.161,
+        "industry": 0.546
+      }
+    },
+    {
+      "id": "SB059",
+      "name": "Synthetic phase2a subbasin 59",
+      "areaKm2": 126.24,
+      "population": 166564,
+      "demand": {
+        "urban": 18.409,
+        "eco": 11.038,
+        "agri": 41.339,
+        "industry": 9.434
+      },
+      "supply": {
+        "qLocal": 68.184,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.307,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.278,
+        "eco": 0.086,
+        "agri": 0.142,
+        "industry": 0.487
+      }
+    },
+    {
+      "id": "SB060",
+      "name": "Synthetic phase2a subbasin 60",
+      "areaKm2": 151.41,
+      "population": 184474,
+      "demand": {
+        "urban": 15.405,
+        "eco": 10.807,
+        "agri": 43.73,
+        "industry": 7.945
+      },
+      "supply": {
+        "qLocal": 71.671,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.311,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.273,
+        "eco": 0.086,
+        "agri": 0.133,
+        "industry": 0.541
+      }
+    },
+    {
+      "id": "SB061",
+      "name": "Synthetic phase2a subbasin 61",
+      "areaKm2": 165.83,
+      "population": 179030,
+      "demand": {
+        "urban": 16.252,
+        "eco": 12.532,
+        "agri": 30.403,
+        "industry": 8.814
+      },
+      "supply": {
+        "qLocal": 74.654,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.316,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.226,
+        "eco": 0.057,
+        "agri": 0.198,
+        "industry": 0.571
+      }
+    },
+    {
+      "id": "SB062",
+      "name": "Synthetic phase2a subbasin 62",
+      "areaKm2": 171.53,
+      "population": 168251,
+      "demand": {
+        "urban": 16.694,
+        "eco": 10.723,
+        "agri": 31.533,
+        "industry": 14.331
+      },
+      "supply": {
+        "qLocal": 77.291,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.32,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.264,
+        "eco": 0.061,
+        "agri": 0.171,
+        "industry": 0.577
+      }
+    },
+    {
+      "id": "SB063",
+      "name": "Synthetic phase2a subbasin 63",
+      "areaKm2": 133.97,
+      "population": 230824,
+      "demand": {
+        "urban": 18.919,
+        "eco": 10.73,
+        "agri": 27.293,
+        "industry": 17.744
+      },
+      "supply": {
+        "qLocal": 65.968,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.325,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.266,
+        "eco": 0.052,
+        "agri": 0.197,
+        "industry": 0.58
+      }
+    },
+    {
+      "id": "SB064",
+      "name": "Synthetic phase2a subbasin 64",
+      "areaKm2": 173.29,
+      "population": 179057,
+      "demand": {
+        "urban": 14.972,
+        "eco": 12.011,
+        "agri": 30.075,
+        "industry": 15.071
+      },
+      "supply": {
+        "qLocal": 73.696,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.329,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.271,
+        "eco": 0.076,
+        "agri": 0.2,
+        "industry": 0.608
+      }
+    },
+    {
+      "id": "SB065",
+      "name": "Synthetic phase2a subbasin 65",
+      "areaKm2": 147.5,
+      "population": 211473,
+      "demand": {
+        "urban": 17.249,
+        "eco": 11.526,
+        "agri": 52.818,
+        "industry": 10.166
+      },
+      "supply": {
+        "qLocal": 63.399,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.334,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.269,
+        "eco": 0.082,
+        "agri": 0.204,
+        "industry": 0.512
+      }
+    },
+    {
+      "id": "SB066",
+      "name": "Synthetic phase2a subbasin 66",
+      "areaKm2": 159.01,
+      "population": 214259,
+      "demand": {
+        "urban": 20.696,
+        "eco": 11.848,
+        "agri": 54.531,
+        "industry": 8.898
+      },
+      "supply": {
+        "qLocal": 74.339,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.338,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.256,
+        "eco": 0.098,
+        "agri": 0.166,
+        "industry": 0.514
+      }
+    },
+    {
+      "id": "SB067",
+      "name": "Synthetic phase2a subbasin 67",
+      "areaKm2": 181.36,
+      "population": 193277,
+      "demand": {
+        "urban": 18.846,
+        "eco": 16.268,
+        "agri": 57.592,
+        "industry": 10.581
+      },
+      "supply": {
+        "qLocal": 77.652,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.342,
+        "eco": 2.411,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.272,
+        "eco": 0.078,
+        "agri": 0.136,
+        "industry": 0.513
+      }
+    },
+    {
+      "id": "SB068",
+      "name": "Synthetic phase2a subbasin 68",
+      "areaKm2": 148.61,
+      "population": 184874,
+      "demand": {
+        "urban": 17.161,
+        "eco": 11.29,
+        "agri": 36.524,
+        "industry": 11.863
+      },
+      "supply": {
+        "qLocal": 68.827,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.347,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.226,
+        "eco": 0.079,
+        "agri": 0.184,
+        "industry": 0.591
+      }
+    },
+    {
+      "id": "SB069",
+      "name": "Synthetic phase2a subbasin 69",
+      "areaKm2": 135.22,
+      "population": 202205,
+      "demand": {
+        "urban": 16.196,
+        "eco": 11.427,
+        "agri": 23.613,
+        "industry": 8.784
+      },
+      "supply": {
+        "qLocal": 69.5,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.351,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.246,
+        "eco": 0.065,
+        "agri": 0.14,
+        "industry": 0.533
+      }
+    },
+    {
+      "id": "SB070",
+      "name": "Synthetic phase2a subbasin 70",
+      "areaKm2": 160.01,
+      "population": 222274,
+      "demand": {
+        "urban": 18.368,
+        "eco": 10.482,
+        "agri": 28.48,
+        "industry": 19.937
+      },
+      "supply": {
+        "qLocal": 73.204,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.356,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.236,
+        "eco": 0.06,
+        "agri": 0.143,
+        "industry": 0.6
+      }
+    },
+    {
+      "id": "SB071",
+      "name": "Synthetic phase2a subbasin 71",
+      "areaKm2": 186.83,
+      "population": 275431,
+      "demand": {
+        "urban": 23.68,
+        "eco": 13.14,
+        "agri": 30.017,
+        "industry": 19.529
+      },
+      "supply": {
+        "qLocal": 79.456,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.36,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.243,
+        "eco": 0.07,
+        "agri": 0.178,
+        "industry": 0.576
+      }
+    },
+    {
+      "id": "SB072",
+      "name": "Synthetic phase2a subbasin 72",
+      "areaKm2": 152.57,
+      "population": 189531,
+      "demand": {
+        "urban": 17.051,
+        "eco": 10.3,
+        "agri": 28.845,
+        "industry": 17.988
+      },
+      "supply": {
+        "qLocal": 66.771,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.365,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.241,
+        "eco": 0.092,
+        "agri": 0.186,
+        "industry": 0.552
+      }
+    },
+    {
+      "id": "SB073",
+      "name": "Synthetic phase2a subbasin 73",
+      "areaKm2": 136.35,
+      "population": 203479,
+      "demand": {
+        "urban": 17.397,
+        "eco": 11.073,
+        "agri": 48.163,
+        "industry": 8.457
+      },
+      "supply": {
+        "qLocal": 59.296,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.369,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.224,
+        "eco": 0.08,
+        "agri": 0.17,
+        "industry": 0.546
+      }
+    },
+    {
+      "id": "SB074",
+      "name": "Synthetic phase2a subbasin 74",
+      "areaKm2": 149.25,
+      "population": 203381,
+      "demand": {
+        "urban": 18.701,
+        "eco": 11.028,
+        "agri": 51.008,
+        "industry": 12.381
+      },
+      "supply": {
+        "qLocal": 64.43,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.373,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.226,
+        "eco": 0.071,
+        "agri": 0.161,
+        "industry": 0.5
+      }
+    },
+    {
+      "id": "SB075",
+      "name": "Synthetic phase2a subbasin 75",
+      "areaKm2": 171.54,
+      "population": 231008,
+      "demand": {
+        "urban": 21.266,
+        "eco": 12.438,
+        "agri": 52.284,
+        "industry": 10.388
+      },
+      "supply": {
+        "qLocal": 75.107,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.378,
+        "eco": 2.33,
+        "agri": 1.182,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.277,
+        "eco": 0.076,
+        "agri": 0.147,
+        "industry": 0.575
+      }
+    },
+    {
+      "id": "SB076",
+      "name": "Synthetic phase2a subbasin 76",
+      "areaKm2": 159.8,
+      "population": 234813,
+      "demand": {
+        "urban": 17.91,
+        "eco": 11.308,
+        "agri": 38.56,
+        "industry": 11.422
+      },
+      "supply": {
+        "qLocal": 70.782,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.382,
+        "eco": 2.33,
+        "agri": 1.15,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.247,
+        "eco": 0.09,
+        "agri": 0.193,
+        "industry": 0.522
+      }
+    },
+    {
+      "id": "SB077",
+      "name": "Synthetic phase2a subbasin 77",
+      "areaKm2": 137.8,
+      "population": 208204,
+      "demand": {
+        "urban": 18.377,
+        "eco": 11.144,
+        "agri": 24.52,
+        "industry": 11.152
+      },
+      "supply": {
+        "qLocal": 67.819,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.387,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.471
+      },
+      "complianceCost": {
+        "urban": 0.274,
+        "eco": 0.077,
+        "agri": 0.168,
+        "industry": 0.493
+      }
+    },
+    {
+      "id": "SB078",
+      "name": "Synthetic phase2a subbasin 78",
+      "areaKm2": 174.68,
+      "population": 216286,
+      "demand": {
+        "urban": 17.397,
+        "eco": 15.969,
+        "agri": 28.116,
+        "industry": 21.44
+      },
+      "supply": {
+        "qLocal": 71.228,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.391,
+        "eco": 2.411,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.264,
+        "eco": 0.099,
+        "agri": 0.148,
+        "industry": 0.552
+      }
+    },
+    {
+      "id": "SB079",
+      "name": "Synthetic phase2a subbasin 79",
+      "areaKm2": 175.1,
+      "population": 288817,
+      "demand": {
+        "urban": 22.77,
+        "eco": 12.979,
+        "agri": 30.046,
+        "industry": 21.527
+      },
+      "supply": {
+        "qLocal": 66.01,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.396,
+        "eco": 2.33,
+        "agri": 1.106,
+        "industry": 1.588
+      },
+      "complianceCost": {
+        "urban": 0.272,
+        "eco": 0.055,
+        "agri": 0.162,
+        "industry": 0.646
+      }
+    },
+    {
+      "id": "SB080",
+      "name": "Synthetic phase2a subbasin 80",
+      "areaKm2": 160.68,
+      "population": 233995,
+      "demand": {
+        "urban": 20.772,
+        "eco": 17.601,
+        "agri": 27.488,
+        "industry": 14.166
+      },
+      "supply": {
+        "qLocal": 75.449,
+        "externalInflow": 0,
+        "transitInjection": 0
+      },
+      "transitInjection": 0,
+      "healthWeight": {
+        "urban": 1,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "sectorValue": {
+        "urban": 3.4,
+        "eco": 2.411,
+        "agri": 1.106,
+        "industry": 1.532
+      },
+      "complianceCost": {
+        "urban": 0.268,
+        "eco": 0.08,
+        "agri": 0.205,
+        "industry": 0.52
+      }
+    }
+  ]
+}

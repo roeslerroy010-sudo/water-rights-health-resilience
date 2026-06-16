@@ -1,0 +1,3531 @@
+{
+  "meta": {
+    "region": "Wuhan Metropolitan Area (1+8)",
+    "regionZh": "武汉都市圈（武汉城市圈 1+8）",
+    "calibrationYear": 2022,
+    "datasetType": "offline-bake-real-data-estimated",
+    "demoSample": false,
+    "estimated": true,
+    "synthetic": false,
+    "realDataReady": true,
+    "source": "Real-data offline bake from GADM AOI, project-provided Pfafstetter level_6 Basin_Asia.gdb vector, CLCD/WorldCover/WorldPop/NASA POWER/WB-LEN rasters, Hubei Water Resources Bulletin, and HydroRIVERS routing draft.",
+    "note": "Industrial downscaling uses World Bank Light Every Night with adjacent-month interpolation for 202206 and 202208; EOG Annual VNL was not used. PRE-1 injects Hubei Bulletin 2022 table 5 provincial-boundary transit proxies into externalInflow/mainstemInflow: 355275000000 m3/yr at PF_465500 for the Yangtze mainstem and 17553000000 m3/yr at PF_465610 for the Han mainstem. Province-total and Han-system aggregate inflows are excluded to avoid double counting; injection node assignment remains low-confidence because HydroRIVERS route matching lacks independent river-name confirmation.",
+    "bbox": [
+      112.5,
+      29.0,
+      116.0,
+      31.5
+    ],
+    "sectors": [
+      "agri",
+      "industry",
+      "urban",
+      "eco"
+    ],
+    "citySet": [
+      "Wuhan",
+      "Huangshi",
+      "Ezhou",
+      "Xiaogan",
+      "Huanggang",
+      "Xianning",
+      "Xiantao",
+      "Tianmen",
+      "Qianjiang"
+    ]
+  },
+  "topology": {
+    "PF_462742": "OUTLET",
+    "PF_462748": "OUTLET",
+    "PF_462749": "OUTLET",
+    "PF_462784": "OUTLET",
+    "PF_462788": "OUTLET",
+    "PF_462789": "OUTLET",
+    "PF_462790": "OUTLET",
+    "PF_462902": "OUTLET",
+    "PF_462906": "OUTLET",
+    "PF_462908": "OUTLET",
+    "PF_463087": "OUTLET",
+    "PF_463088": "PF_463087",
+    "PF_463089": "PF_463087",
+    "PF_463096": "OUTLET",
+    "PF_463099": "OUTLET",
+    "PF_464205": "OUTLET",
+    "PF_464207": "PF_464205",
+    "PF_464208": "PF_464207",
+    "PF_465100": "PF_463099",
+    "PF_465200": "PF_465100",
+    "PF_465301": "PF_465100",
+    "PF_465302": "PF_465301",
+    "PF_465303": "PF_465301",
+    "PF_465304": "PF_465303",
+    "PF_465305": "PF_465303",
+    "PF_465306": "PF_465305",
+    "PF_465307": "PF_465305",
+    "PF_465308": "PF_465307",
+    "PF_465309": "PF_465307",
+    "PF_465401": "PF_465309",
+    "PF_465402": "PF_465401",
+    "PF_465403": "PF_465401",
+    "PF_465404": "PF_465403",
+    "PF_465405": "PF_465403",
+    "PF_465500": "PF_465309",
+    "PF_465610": "PF_465500",
+    "PF_465621": "PF_465610",
+    "PF_465622": "PF_465621",
+    "PF_465623": "PF_465621",
+    "PF_465624": "PF_465623",
+    "PF_465625": "PF_465623",
+    "PF_465626": "PF_465625",
+    "PF_465627": "PF_465625",
+    "PF_465628": "PF_465627",
+    "PF_465629": "PF_465627",
+    "PF_465631": "PF_465610",
+    "PF_465632": "PF_465631",
+    "PF_465633": "PF_465631",
+    "PF_465634": "PF_465633",
+    "PF_465635": "PF_465633",
+    "PF_465701": "PF_465500",
+    "PF_465702": "PF_465701",
+    "PF_465703": "PF_465701",
+    "PF_465704": "PF_465703",
+    "PF_465705": "PF_465703",
+    "PF_465706": "PF_465705",
+    "PF_465707": "PF_465705",
+    "PF_465708": "PF_465707",
+    "PF_465709": "PF_465707",
+    "PF_465802": "OUTLET",
+    "PF_465804": "OUTLET",
+    "PF_465807": "OUTLET",
+    "PF_465808": "PF_465807",
+    "PF_465809": "PF_465807",
+    "PF_466106": "OUTLET",
+    "PF_466212": "OUTLET"
+  },
+  "sectorTotals": {
+    "agri": 9038000002,
+    "industry": 5312000001,
+    "urban": 4841000003,
+    "eco": 1615000003
+  },
+  "citySectorDemand": {
+    "Wuhan": {
+      "agri": 994999999,
+      "industry": 1568999999,
+      "urban": 1965000003,
+      "eco": 445999999
+    },
+    "Huangshi": {
+      "agri": 454000000,
+      "industry": 1074000001,
+      "urban": 230000000,
+      "eco": 13000000
+    },
+    "Ezhou": {
+      "agri": 404000000,
+      "industry": 993999999,
+      "urban": 95999999,
+      "eco": 6000000
+    },
+    "Xiaogan": {
+      "agri": 1803000000,
+      "industry": 877000000,
+      "urban": 686999999,
+      "eco": 337000001
+    },
+    "Huanggang": {
+      "agri": 2351999999,
+      "industry": 272000000,
+      "urban": 548000000,
+      "eco": 31000001
+    },
+    "Xianning": {
+      "agri": 876000001,
+      "industry": 256000001,
+      "urban": 252000001,
+      "eco": 11000000
+    },
+    "Xiantao": {
+      "agri": 739000000,
+      "industry": 85000000,
+      "urban": 306000000,
+      "eco": 190000001
+    },
+    "Tianmen": {
+      "agri": 763000002,
+      "industry": 85000001,
+      "urban": 385000000,
+      "eco": 282000001
+    },
+    "Qianjiang": {
+      "agri": 652000001,
+      "industry": 100000000,
+      "urban": 372000001,
+      "eco": 299000000
+    }
+  },
+  "subbasins": [
+    {
+      "id": "PF_462742",
+      "name": "黄冈·农业丘陵2",
+      "pfafId": 462742,
+      "code": "PF_462742",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 2.233987,
+      "population": 0.0,
+      "centroid": [
+        115.77083,
+        31.1125
+      ],
+      "zonalProxy": {
+        "croplandHa": 0.63,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.013657807,
+        "precipMm": 1239.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 1624,
+        "industry": 23,
+        "urban": 0,
+        "eco": 8981
+      },
+      "supply": {
+        "qLocal": 1107977,
+        "qAvail": 1107977,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462748",
+      "name": "黄冈·丘陵2",
+      "pfafId": 462748,
+      "code": "PF_462748",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 0.35019,
+      "population": 0.0,
+      "centroid": [
+        115.9999,
+        30.96888
+      ],
+      "zonalProxy": {
+        "croplandHa": 0.0,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1239.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 0,
+        "industry": 0,
+        "urban": 0,
+        "eco": 1441
+      },
+      "supply": {
+        "qLocal": 173682,
+        "qAvail": 173682,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462749",
+      "name": "黄冈·农业区5",
+      "pfafId": 462749,
+      "code": "PF_462749",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 5.180719,
+      "population": 438.533,
+      "centroid": [
+        115.9639,
+        31.04417
+      ],
+      "zonalProxy": {
+        "croplandHa": 76.14,
+        "builtupHa": 1.26,
+        "industrialWeight": 0.49770031,
+        "precipMm": 1239.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 192626,
+        "industry": 809,
+        "urban": 31247,
+        "eco": 17432
+      },
+      "supply": {
+        "qLocal": 2569450,
+        "qAvail": 2569450,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462784",
+      "name": "黄冈·农业区1",
+      "pfafId": 462784,
+      "code": "PF_462784",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 3.193173,
+      "population": 70.342,
+      "centroid": [
+        115.25583,
+        31.39316
+      ],
+      "zonalProxy": {
+        "croplandHa": 30.96,
+        "builtupHa": 0.09,
+        "industrialWeight": 0.230928215,
+        "precipMm": 1116.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 79795,
+        "industry": 382,
+        "urban": 5106,
+        "eco": 11617
+      },
+      "supply": {
+        "qLocal": 1426595,
+        "qAvail": 1426595,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462788",
+      "name": "黄冈·农业区3",
+      "pfafId": 462788,
+      "code": "PF_462788",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 4.876844,
+      "population": 75.192,
+      "centroid": [
+        115.49708,
+        31.2675
+      ],
+      "zonalProxy": {
+        "croplandHa": 33.84,
+        "builtupHa": 0.09,
+        "industrialWeight": 0.50108412,
+        "precipMm": 1239.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 85479,
+        "industry": 813,
+        "urban": 5349,
+        "eco": 17922
+      },
+      "supply": {
+        "qLocal": 2418739,
+        "qAvail": 2418739,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462789",
+      "name": "黄冈·农业区2",
+      "pfafId": 462789,
+      "code": "PF_462789",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 2.249895,
+      "population": 56.148,
+      "centroid": [
+        115.37349,
+        31.35
+      ],
+      "zonalProxy": {
+        "croplandHa": 11.52,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.148412681,
+        "precipMm": 1118.75,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 30063,
+        "industry": 249,
+        "urban": 4127,
+        "eco": 8710
+      },
+      "supply": {
+        "qLocal": 1006828,
+        "qAvail": 1006828,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462790",
+      "name": "黄冈·丘陵1",
+      "pfafId": 462790,
+      "code": "PF_462790",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 0.252525,
+      "population": 0.307,
+      "centroid": [
+        115.12473,
+        31.4999
+      ],
+      "zonalProxy": {
+        "croplandHa": 0.0,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1116.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 0,
+        "industry": 0,
+        "urban": 22,
+        "eco": 1013
+      },
+      "supply": {
+        "qLocal": 112819,
+        "qAvail": 112819,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462902",
+      "name": "黄冈·农业丘陵1",
+      "pfafId": 462902,
+      "code": "PF_462902",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 0.82237,
+      "population": 0.27,
+      "centroid": [
+        115.01276,
+        31.4999
+      ],
+      "zonalProxy": {
+        "croplandHa": 1.62,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1116.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 4215,
+        "industry": 0,
+        "urban": 20,
+        "eco": 3280
+      },
+      "supply": {
+        "qLocal": 367405,
+        "qAvail": 367405,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462906",
+      "name": "孝感·农业区1",
+      "pfafId": 462906,
+      "code": "PF_462906",
+      "adminCities": [
+        "Huanggang",
+        "Xiaogan"
+      ],
+      "areaKm2": 453.662437,
+      "population": 64649.301,
+      "centroid": [
+        114.42514,
+        31.4999
+      ],
+      "zonalProxy": {
+        "croplandHa": 17603.28,
+        "builtupHa": 673.74,
+        "industrialWeight": 0.0,
+        "precipMm": 1119.73,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 47995750,
+        "industry": 0,
+        "urban": 8000986,
+        "eco": 53418960
+      },
+      "supply": {
+        "qLocal": 203191776,
+        "qAvail": 203191776,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_462908",
+      "name": "孝感·农业丘陵",
+      "pfafId": 462908,
+      "code": "PF_462908",
+      "adminCities": [
+        "Xiaogan"
+      ],
+      "areaKm2": 0.539029,
+      "population": 6.888,
+      "centroid": [
+        114.11984,
+        31.4999
+      ],
+      "zonalProxy": {
+        "croplandHa": 1.71,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1119.73,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 4635,
+        "industry": 0,
+        "urban": 849,
+        "eco": 102799
+      },
+      "supply": {
+        "qLocal": 241427,
+        "qAvail": 241427,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_463088",
+      "name": "黄冈·农业区8",
+      "pfafId": 463088,
+      "code": "PF_463088",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 16.325751,
+      "population": 1209.682,
+      "centroid": [
+        115.89023,
+        30.52483
+      ],
+      "zonalProxy": {
+        "croplandHa": 473.04,
+        "builtupHa": 6.21,
+        "industrialWeight": 4.084706187,
+        "precipMm": 1310.31,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 1262941,
+        "industry": 7006,
+        "urban": 90962,
+        "eco": 48146
+      },
+      "supply": {
+        "qLocal": 8556718,
+        "qAvail": 8556718,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_463087",
+      "downstreamReach": [
+        "PF_463087",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_463089",
+      "name": "黄冈·农业区6",
+      "pfafId": 463089,
+      "code": "PF_463089",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 1.596474,
+      "population": 75.07,
+      "centroid": [
+        115.90917,
+        30.88835
+      ],
+      "zonalProxy": {
+        "croplandHa": 21.15,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.019979107,
+        "precipMm": 1239.91,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 49621,
+        "industry": 30,
+        "urban": 4960,
+        "eco": 5081
+      },
+      "supply": {
+        "qLocal": 791794,
+        "qAvail": 791794,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_463087",
+      "downstreamReach": [
+        "PF_463087",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_463087",
+      "name": "黄冈·丘陵3",
+      "pfafId": 463087,
+      "code": "PF_463087",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 0.548127,
+      "population": 0.0,
+      "centroid": [
+        115.92563,
+        30.43174
+      ],
+      "zonalProxy": {
+        "croplandHa": 0.0,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1310.31,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 0,
+        "industry": 0,
+        "urban": 0,
+        "eco": 2302
+      },
+      "supply": {
+        "qLocal": 287287,
+        "qAvail": 9635799,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_463096",
+      "name": "黄冈·城区4",
+      "pfafId": 463096,
+      "code": "PF_463096",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 2531.388114,
+      "population": 1350702.375,
+      "centroid": [
+        115.74396,
+        30.02083
+      ],
+      "zonalProxy": {
+        "croplandHa": 172901.52,
+        "builtupHa": 18743.22,
+        "industrialWeight": 18056.896521406,
+        "precipMm": 1384.72,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 464206739,
+        "industry": 31144599,
+        "urban": 102135091,
+        "eco": 2581485
+      },
+      "supply": {
+        "qLocal": 1402105500,
+        "qAvail": 1402105500,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_464208",
+      "name": "咸宁·农业丘陵3",
+      "pfafId": 464208,
+      "code": "PF_464208",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 1.409162,
+      "population": 0.527,
+      "centroid": [
+        114.05453,
+        29.1975
+      ],
+      "zonalProxy": {
+        "croplandHa": 1.62,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.059905826,
+        "precipMm": 1463.08,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 3357,
+        "industry": 293,
+        "urban": 42,
+        "eco": 2523
+      },
+      "supply": {
+        "qLocal": 824687,
+        "qAvail": 824687,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_464207",
+      "downstreamReach": [
+        "PF_464207",
+        "PF_464205",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_464207",
+      "name": "咸宁·农业丘陵2",
+      "pfafId": 464207,
+      "code": "PF_464207",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 2.912285,
+      "population": 52.59,
+      "centroid": [
+        114.44074,
+        29.33833
+      ],
+      "zonalProxy": {
+        "croplandHa": 14.13,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.308109024,
+        "precipMm": 1350.44,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 30094,
+        "industry": 1548,
+        "urban": 4311,
+        "eco": 5159
+      },
+      "supply": {
+        "qLocal": 1573146,
+        "qAvail": 2397833,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_464205",
+      "downstreamReach": [
+        "PF_464205",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_464205",
+      "name": "黄石·农业区2",
+      "pfafId": 464205,
+      "code": "PF_464205",
+      "adminCities": [
+        "Huangshi",
+        "Xianning"
+      ],
+      "areaKm2": 2.708915,
+      "population": 0.0,
+      "centroid": [
+        115.0875,
+        29.53083
+      ],
+      "zonalProxy": {
+        "croplandHa": 39.96,
+        "builtupHa": 0.18,
+        "industrialWeight": 0.031505581,
+        "precipMm": 1441.88,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 91110,
+        "industry": 705,
+        "urban": 0,
+        "eco": 8642
+      },
+      "supply": {
+        "qLocal": 1562372,
+        "qAvail": 3960205,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465200",
+      "name": "黄石·农业区1",
+      "pfafId": 465200,
+      "code": "PF_465200",
+      "adminCities": [
+        "Huanggang",
+        "Huangshi",
+        "Xianning"
+      ],
+      "areaKm2": 4739.882619,
+      "population": 1096038.75,
+      "centroid": [
+        114.75559,
+        29.66333
+      ],
+      "zonalProxy": {
+        "croplandHa": 135928.8,
+        "builtupHa": 11161.53,
+        "industrialWeight": 10493.718073618,
+        "precipMm": 1364.692,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 326068014,
+        "industry": 201675156,
+        "urban": 131143748,
+        "eco": 11426075
+      },
+      "supply": {
+        "qLocal": 2587391956,
+        "qAvail": 2587391956,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465100",
+      "downstreamReach": [
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465302",
+      "name": "黄冈·农业区7",
+      "pfafId": 465302,
+      "code": "PF_465302",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang"
+      ],
+      "areaKm2": 3544.871633,
+      "population": 1102272.375,
+      "centroid": [
+        115.35458,
+        30.87917
+      ],
+      "zonalProxy": {
+        "croplandHa": 148087.8,
+        "builtupHa": 13744.62,
+        "industrialWeight": 17713.739379529,
+        "precipMm": 1258.327,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 406529843,
+        "industry": 44711209,
+        "urban": 84581153,
+        "eco": 8658944
+      },
+      "supply": {
+        "qLocal": 1784243075,
+        "qAvail": 1784243075,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465301",
+      "downstreamReach": [
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465304",
+      "name": "鄂州·农业区",
+      "pfafId": 465304,
+      "code": "PF_465304",
+      "adminCities": [
+        "Ezhou",
+        "Huangshi",
+        "Wuhan",
+        "Xianning"
+      ],
+      "areaKm2": 3275.758777,
+      "population": 1085174.125,
+      "centroid": [
+        114.545,
+        30.15625
+      ],
+      "zonalProxy": {
+        "croplandHa": 206248.59,
+        "builtupHa": 17892.72,
+        "industrialWeight": 56491.6006708,
+        "precipMm": 1267.88,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 548994345,
+        "industry": 672154191,
+        "urban": 140051852,
+        "eco": 67144978
+      },
+      "supply": {
+        "qLocal": 1661307615,
+        "qAvail": 1661307615,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465303",
+      "downstreamReach": [
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465306",
+      "name": "黄冈·农业区4",
+      "pfafId": 465306,
+      "code": "PF_465306",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang",
+        "Wuhan"
+      ],
+      "areaKm2": 4042.201429,
+      "population": 1279299.125,
+      "centroid": [
+        114.97625,
+        31.055
+      ],
+      "zonalProxy": {
+        "croplandHa": 203245.02,
+        "builtupHa": 16152.3,
+        "industrialWeight": 20292.938214594,
+        "precipMm": 1157.21,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 523745759,
+        "industry": 33523378,
+        "urban": 116506307,
+        "eco": 60845441
+      },
+      "supply": {
+        "qLocal": 1871070366,
+        "qAvail": 1871070366,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465305",
+      "downstreamReach": [
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465308",
+      "name": "武汉·农业区",
+      "pfafId": 465308,
+      "code": "PF_465308",
+      "adminCities": [
+        "Huanggang",
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 2803.115443,
+      "population": 970808.875,
+      "centroid": [
+        114.3725,
+        31.08167
+      ],
+      "zonalProxy": {
+        "croplandHa": 178917.12,
+        "builtupHa": 12626.01,
+        "industrialWeight": 24217.669077505,
+        "precipMm": 1145.315,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 394657010,
+        "industry": 45774445,
+        "urban": 151858155,
+        "eco": 157947790
+      },
+      "supply": {
+        "qLocal": 1284180065,
+        "qAvail": 1284180065,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465307",
+      "downstreamReach": [
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465402",
+      "name": "孝感·城区2",
+      "pfafId": 465402,
+      "code": "PF_465402",
+      "adminCities": [
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 2237.810368,
+      "population": 1023389.812,
+      "centroid": [
+        114.03125,
+        31.17917
+      ],
+      "zonalProxy": {
+        "croplandHa": 143558.37,
+        "builtupHa": 11180.43,
+        "industrialWeight": 9459.380349887,
+        "precipMm": 1106.08,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 391352304,
+        "industry": 37073686,
+        "urban": 127189687,
+        "eco": 136898424
+      },
+      "supply": {
+        "qLocal": 990078917,
+        "qAvail": 990078917,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465401",
+      "downstreamReach": [
+        "PF_465401",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465404",
+      "name": "孝感·农业区2",
+      "pfafId": 465404,
+      "code": "PF_465404",
+      "adminCities": [
+        "Xiaogan"
+      ],
+      "areaKm2": 567.484618,
+      "population": 102754.516,
+      "centroid": [
+        113.55089,
+        31.20083
+      ],
+      "zonalProxy": {
+        "croplandHa": 45733.41,
+        "builtupHa": 1045.98,
+        "industrialWeight": 606.472338098,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 124729922,
+        "industry": 2381322,
+        "urban": 12743512,
+        "eco": 19755644
+      },
+      "supply": {
+        "qLocal": 257061452,
+        "qAvail": 257061452,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465403",
+      "downstreamReach": [
+        "PF_465403",
+        "PF_465401",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465405",
+      "name": "孝感·城区1",
+      "pfafId": 465405,
+      "code": "PF_465405",
+      "adminCities": [
+        "Xiaogan"
+      ],
+      "areaKm2": 836.16962,
+      "population": 467637.312,
+      "centroid": [
+        113.6775,
+        31.2225
+      ],
+      "zonalProxy": {
+        "croplandHa": 65884.77,
+        "builtupHa": 4676.4,
+        "industrialWeight": 6174.166678431,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 179725795,
+        "industry": 24247876,
+        "urban": 58007707,
+        "eco": 25877838
+      },
+      "supply": {
+        "qLocal": 378771459,
+        "qAvail": 378771459,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465403",
+      "downstreamReach": [
+        "PF_465403",
+        "PF_465401",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465403",
+      "name": "孝感·城区3",
+      "pfafId": 465403,
+      "code": "PF_465403",
+      "adminCities": [
+        "Xiaogan"
+      ],
+      "areaKm2": 600.412724,
+      "population": 411096.5,
+      "centroid": [
+        113.78667,
+        31.03083
+      ],
+      "zonalProxy": {
+        "croplandHa": 54870.21,
+        "builtupHa": 4367.97,
+        "industrialWeight": 6859.268937767,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 149816129,
+        "industry": 26963096,
+        "urban": 51040732,
+        "eco": 1593261
+      },
+      "supply": {
+        "qLocal": 271977357,
+        "qAvail": 907810268,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465401",
+      "downstreamReach": [
+        "PF_465401",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465401",
+      "name": "武汉·城区1",
+      "pfafId": 465401,
+      "code": "PF_465401",
+      "adminCities": [
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 2028.758335,
+      "population": 4031460.25,
+      "centroid": [
+        114.07583,
+        30.88625
+      ],
+      "zonalProxy": {
+        "croplandHa": 145547.55,
+        "builtupHa": 36971.01,
+        "industrialWeight": 325935.430446647,
+        "precipMm": 1170.9,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 337833137,
+        "industry": 820170763,
+        "urban": 620086320,
+        "eco": 40562410
+      },
+      "supply": {
+        "qLocal": 950189254,
+        "qAvail": 2848078439,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465309",
+      "downstreamReach": [
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465622",
+      "name": "孝感·城区4",
+      "pfafId": 465622,
+      "code": "PF_465622",
+      "adminCities": [
+        "Xiaogan"
+      ],
+      "areaKm2": 352.482816,
+      "population": 267456.844,
+      "centroid": [
+        113.55667,
+        30.95667
+      ],
+      "zonalProxy": {
+        "croplandHa": 31081.59,
+        "builtupHa": 2323.8,
+        "industrialWeight": 4661.989120775,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 84816007,
+        "industry": 18315376,
+        "urban": 33187877,
+        "eco": 3654044
+      },
+      "supply": {
+        "qLocal": 159669076,
+        "qAvail": 159669076,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465621",
+      "downstreamReach": [
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465624",
+      "name": "天门·农业区1",
+      "pfafId": 465624,
+      "code": "PF_465624",
+      "adminCities": [
+        "Tianmen",
+        "Xiaogan"
+      ],
+      "areaKm2": 167.29213,
+      "population": 49334.898,
+      "centroid": [
+        113.32,
+        30.83083
+      ],
+      "zonalProxy": {
+        "croplandHa": 15682.23,
+        "builtupHa": 625.32,
+        "industrialWeight": 615.517020965,
+        "precipMm": 1121.96,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 49608131,
+        "industry": 2625677,
+        "urban": 14889280,
+        "eco": 8287962
+      },
+      "supply": {
+        "qLocal": 75078031,
+        "qAvail": 75078031,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465623",
+      "downstreamReach": [
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465626",
+      "name": "天门·农业区4",
+      "pfafId": 465626,
+      "code": "PF_465626",
+      "adminCities": [
+        "Tianmen"
+      ],
+      "areaKm2": 259.40137,
+      "population": 71370.266,
+      "centroid": [
+        113.04458,
+        30.74125
+      ],
+      "zonalProxy": {
+        "croplandHa": 24839.01,
+        "builtupHa": 474.21,
+        "industrialWeight": 547.556319115,
+        "precipMm": 1191.64,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 79290267,
+        "industry": 2347214,
+        "urban": 22438671,
+        "eco": 13112983
+      },
+      "supply": {
+        "qLocal": 123645219,
+        "qAvail": 123645219,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465625",
+      "downstreamReach": [
+        "PF_465625",
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465628",
+      "name": "天门·农业区2",
+      "pfafId": 465628,
+      "code": "PF_465628",
+      "adminCities": [
+        "Tianmen"
+      ],
+      "areaKm2": 22.053692,
+      "population": 5780.997,
+      "centroid": [
+        112.77833,
+        30.78583
+      ],
+      "zonalProxy": {
+        "croplandHa": 2166.21,
+        "builtupHa": 38.07,
+        "industrialWeight": 33.016786754,
+        "precipMm": 1032.24,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 6907470,
+        "industry": 141381,
+        "urban": 1815580,
+        "eco": 22758
+      },
+      "supply": {
+        "qLocal": 9105881,
+        "qAvail": 9105881,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465627",
+      "downstreamReach": [
+        "PF_465627",
+        "PF_465625",
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465629",
+      "name": "天门·城区1",
+      "pfafId": 465629,
+      "code": "PF_465629",
+      "adminCities": [
+        "Tianmen"
+      ],
+      "areaKm2": 12.241289,
+      "population": 5337.13,
+      "centroid": [
+        112.80527,
+        30.8075
+      ],
+      "zonalProxy": {
+        "croplandHa": 1178.46,
+        "builtupHa": 45.18,
+        "industrialWeight": 32.465758295,
+        "precipMm": 1032.24,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 3751160,
+        "industry": 138776,
+        "urban": 1673219,
+        "eco": 10197
+      },
+      "supply": {
+        "qLocal": 5054379,
+        "qAvail": 5054379,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465627",
+      "downstreamReach": [
+        "PF_465627",
+        "PF_465625",
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465627",
+      "name": "天门·城区2",
+      "pfafId": 465627,
+      "code": "PF_465627",
+      "adminCities": [
+        "Tianmen"
+      ],
+      "areaKm2": 374.309981,
+      "population": 247640.859,
+      "centroid": [
+        112.84792,
+        30.69667
+      ],
+      "zonalProxy": {
+        "croplandHa": 35420.58,
+        "builtupHa": 1793.79,
+        "industrialWeight": 3411.277662491,
+        "precipMm": 1191.64,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 113105249,
+        "industry": 14627917,
+        "urban": 77883171,
+        "eco": 4532604
+      },
+      "supply": {
+        "qLocal": 178417098,
+        "qAvail": 192577358,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465625",
+      "downstreamReach": [
+        "PF_465625",
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465625",
+      "name": "天门·农业区3",
+      "pfafId": 465625,
+      "code": "PF_465625",
+      "adminCities": [
+        "Tianmen"
+      ],
+      "areaKm2": 334.243434,
+      "population": 95404.625,
+      "centroid": [
+        113.23667,
+        30.7425
+      ],
+      "zonalProxy": {
+        "croplandHa": 31452.66,
+        "builtupHa": 810.0,
+        "industrialWeight": 1359.838288729,
+        "precipMm": 1191.64,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 100551000,
+        "industry": 5837872,
+        "urban": 30039498,
+        "eco": 24334512
+      },
+      "supply": {
+        "qLocal": 159319138,
+        "qAvail": 475541715,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465623",
+      "downstreamReach": [
+        "PF_465623",
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465623",
+      "name": "孝感·农业区3",
+      "pfafId": 465623,
+      "code": "PF_465623",
+      "adminCities": [
+        "Tianmen",
+        "Xiaogan"
+      ],
+      "areaKm2": 468.326267,
+      "population": 79658.719,
+      "centroid": [
+        113.44542,
+        30.85167
+      ],
+      "zonalProxy": {
+        "croplandHa": 42480.09,
+        "builtupHa": 849.6,
+        "industrialWeight": 768.990804114,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 119063279,
+        "industry": 3065859,
+        "urban": 12260348,
+        "eco": 17318819
+      },
+      "supply": {
+        "qLocal": 212144306,
+        "qAvail": 762764052,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465621",
+      "downstreamReach": [
+        "PF_465621",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465621",
+      "name": "孝感·城区5",
+      "pfafId": 465621,
+      "code": "PF_465621",
+      "adminCities": [
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 542.557438,
+      "population": 246547.281,
+      "centroid": [
+        113.67375,
+        30.80917
+      ],
+      "zonalProxy": {
+        "croplandHa": 45685.62,
+        "builtupHa": 3557.25,
+        "industrialWeight": 7141.63498978,
+        "precipMm": 1132.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 123975214,
+        "industry": 27660492,
+        "urban": 30909284,
+        "eco": 9946840
+      },
+      "supply": {
+        "qLocal": 245769838,
+        "qAvail": 1168202966,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465610",
+      "downstreamReach": [
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465632",
+      "name": "天门·城区3",
+      "pfafId": 465632,
+      "code": "PF_465632",
+      "adminCities": [
+        "Qianjiang",
+        "Tianmen",
+        "Xiaogan"
+      ],
+      "areaKm2": 1580.078979,
+      "population": 887616.0,
+      "centroid": [
+        113.46458,
+        30.62083
+      ],
+      "zonalProxy": {
+        "croplandHa": 141269.31,
+        "builtupHa": 7822.53,
+        "industrialWeight": 16367.512017367,
+        "precipMm": 1188.33,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 422013934,
+        "industry": 67607387,
+        "urban": 203342131,
+        "eco": 110716913
+      },
+      "supply": {
+        "qLocal": 751062101,
+        "qAvail": 751062101,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465631",
+      "downstreamReach": [
+        "PF_465631",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465634",
+      "name": "潜江·城区",
+      "pfafId": 465634,
+      "code": "PF_465634",
+      "adminCities": [
+        "Qianjiang",
+        "Tianmen"
+      ],
+      "areaKm2": 651.965885,
+      "population": 346255.25,
+      "centroid": [
+        112.72036,
+        30.46167
+      ],
+      "zonalProxy": {
+        "croplandHa": 59629.14,
+        "builtupHa": 4345.74,
+        "industrialWeight": 7716.837562037,
+        "precipMm": 1114.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 207345200,
+        "industry": 48494320,
+        "urban": 158331622,
+        "eco": 67252897
+      },
+      "supply": {
+        "qLocal": 290635960,
+        "qAvail": 290635960,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465633",
+      "downstreamReach": [
+        "PF_465633",
+        "PF_465631",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465635",
+      "name": "天门·城区4",
+      "pfafId": 465635,
+      "code": "PF_465635",
+      "adminCities": [
+        "Qianjiang",
+        "Tianmen"
+      ],
+      "areaKm2": 136.21109,
+      "population": 16181.854,
+      "centroid": [
+        112.70375,
+        30.59333
+      ],
+      "zonalProxy": {
+        "croplandHa": 9942.57,
+        "builtupHa": 1626.21,
+        "industrialWeight": 564.108023529,
+        "precipMm": 1114.46,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 33127502,
+        "industry": 2977588,
+        "urban": 6235232,
+        "eco": 77780122
+      },
+      "supply": {
+        "qLocal": 60720725,
+        "qAvail": 60720725,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465633",
+      "downstreamReach": [
+        "PF_465633",
+        "PF_465631",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465633",
+      "name": "天门·城区5",
+      "pfafId": 465633,
+      "code": "PF_465633",
+      "adminCities": [
+        "Qianjiang",
+        "Tianmen",
+        "Wuhan",
+        "Xiantao",
+        "Xiaogan"
+      ],
+      "areaKm2": 795.598551,
+      "population": 409717.25,
+      "centroid": [
+        113.24792,
+        30.49664
+      ],
+      "zonalProxy": {
+        "croplandHa": 67084.74,
+        "builtupHa": 4739.58,
+        "industrialWeight": 7491.017476674,
+        "precipMm": 1188.33,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 207941075,
+        "industry": 30598319,
+        "urban": 108086351,
+        "eco": 133762005
+      },
+      "supply": {
+        "qLocal": 378173450,
+        "qAvail": 729530135,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465631",
+      "downstreamReach": [
+        "PF_465631",
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465631",
+      "name": "孝感·城区6",
+      "pfafId": 465631,
+      "code": "PF_465631",
+      "adminCities": [
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 28.384181,
+      "population": 36343.828,
+      "centroid": [
+        113.85042,
+        30.65
+      ],
+      "zonalProxy": {
+        "croplandHa": 1636.74,
+        "builtupHa": 610.29,
+        "industrialWeight": 2296.460382184,
+        "precipMm": 1185.02,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 4329162,
+        "industry": 8349437,
+        "urban": 4737210,
+        "eco": 1174322
+      },
+      "supply": {
+        "qLocal": 13454329,
+        "qAvail": 1494046565,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465610",
+      "downstreamReach": [
+        "PF_465610",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465610",
+      "name": "武汉·城区4",
+      "pfafId": 465610,
+      "code": "PF_465610",
+      "adminCities": [
+        "Wuhan",
+        "Xiaogan"
+      ],
+      "areaKm2": 330.319623,
+      "population": 563488.938,
+      "centroid": [
+        113.91167,
+        30.56583
+      ],
+      "zonalProxy": {
+        "croplandHa": 21936.69,
+        "builtupHa": 5667.75,
+        "industrialWeight": 41761.044804756,
+        "precipMm": 1185.02,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 44722364,
+        "industry": 64321088,
+        "urban": 98202377,
+        "eco": 10846767
+      },
+      "supply": {
+        "qLocal": 156574144,
+        "qAvail": 20371823675,
+        "externalInflow": 17553000000,
+        "mainstemInflow": 17553000000,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465500",
+      "downstreamReach": [
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465702",
+      "name": "武汉·城区6",
+      "pfafId": 465702,
+      "code": "PF_465702",
+      "adminCities": [
+        "Wuhan",
+        "Xiantao",
+        "Xiaogan"
+      ],
+      "areaKm2": 1341.097631,
+      "population": 592323.125,
+      "centroid": [
+        113.85833,
+        30.43417
+      ],
+      "zonalProxy": {
+        "croplandHa": 108589.86,
+        "builtupHa": 10334.25,
+        "industrialWeight": 42277.750496417,
+        "precipMm": 1185.02,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 260732809,
+        "industry": 90507664,
+        "urban": 104084067,
+        "eco": 74748107
+      },
+      "supply": {
+        "qLocal": 635691006,
+        "qAvail": 635691006,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465701",
+      "downstreamReach": [
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465704",
+      "name": "咸宁·农业区2",
+      "pfafId": 465704,
+      "code": "PF_465704",
+      "adminCities": [
+        "Wuhan",
+        "Xianning"
+      ],
+      "areaKm2": 2628.102598,
+      "population": 938900.062,
+      "centroid": [
+        114.15958,
+        29.99417
+      ],
+      "zonalProxy": {
+        "croplandHa": 142098.57,
+        "builtupHa": 12342.06,
+        "industrialWeight": 21338.198776327,
+        "precipMm": 1293.66,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 310840948,
+        "industry": 92705283,
+        "urban": 103138299,
+        "eco": 54087545
+      },
+      "supply": {
+        "qLocal": 1359948483,
+        "qAvail": 1359948483,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465703",
+      "downstreamReach": [
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465706",
+      "name": "仙桃·城区",
+      "pfafId": 465706,
+      "code": "PF_465706",
+      "adminCities": [
+        "Qianjiang",
+        "Tianmen",
+        "Wuhan",
+        "Xiantao"
+      ],
+      "areaKm2": 2691.928436,
+      "population": 1494044.25,
+      "centroid": [
+        113.23458,
+        30.30833
+      ],
+      "zonalProxy": {
+        "croplandHa": 247000.5,
+        "builtupHa": 12734.01,
+        "industrialWeight": 31254.727327319,
+        "precipMm": 1188.33,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 804380067,
+        "industry": 97808398,
+        "urban": 396304661,
+        "eco": 218771348
+      },
+      "supply": {
+        "qLocal": 1279559727,
+        "qAvail": 1279559727,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465705",
+      "downstreamReach": [
+        "PF_465705",
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465708",
+      "name": "咸宁·农业区4",
+      "pfafId": 465708,
+      "code": "PF_465708",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 3851.53416,
+      "population": 1222392.5,
+      "centroid": [
+        114.00125,
+        29.47667
+      ],
+      "zonalProxy": {
+        "croplandHa": 123080.58,
+        "builtupHa": 9523.26,
+        "industrialWeight": 11276.100277476,
+        "precipMm": 1241.41,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 278591416,
+        "industry": 60205769,
+        "urban": 106501720,
+        "eco": 4997578
+      },
+      "supply": {
+        "qLocal": 1912533209,
+        "qAvail": 1912533209,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465707",
+      "downstreamReach": [
+        "PF_465707",
+        "PF_465705",
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465709",
+      "name": "咸宁·农业区3",
+      "pfafId": 465709,
+      "code": "PF_465709",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 468.428713,
+      "population": 64328.477,
+      "centroid": [
+        113.62859,
+        29.6925
+      ],
+      "zonalProxy": {
+        "croplandHa": 22408.65,
+        "builtupHa": 738.45,
+        "industrialWeight": 738.089117652,
+        "precipMm": 1241.41,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 50607922,
+        "industry": 3931992,
+        "urban": 5592086,
+        "eco": 467852
+      },
+      "supply": {
+        "qLocal": 232604835,
+        "qAvail": 232604835,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465707",
+      "downstreamReach": [
+        "PF_465707",
+        "PF_465705",
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465707",
+      "name": "咸宁·农业区1",
+      "pfafId": 465707,
+      "code": "PF_465707",
+      "adminCities": [
+        "Wuhan",
+        "Xianning"
+      ],
+      "areaKm2": 403.866269,
+      "population": 147845.625,
+      "centroid": [
+        113.91859,
+        30.0125
+      ],
+      "zonalProxy": {
+        "croplandHa": 24606.81,
+        "builtupHa": 2628.27,
+        "industrialWeight": 3101.637961506,
+        "precipMm": 1219.11,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 55555425,
+        "industry": 16515927,
+        "urban": 12851790,
+        "eco": 265313
+      },
+      "supply": {
+        "qLocal": 196942963,
+        "qAvail": 2342081007,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465705",
+      "downstreamReach": [
+        "PF_465705",
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465705",
+      "name": "咸宁·城区",
+      "pfafId": 465705,
+      "code": "PF_465705",
+      "adminCities": [
+        "Wuhan",
+        "Xianning"
+      ],
+      "areaKm2": 246.934678,
+      "population": 56801.723,
+      "centroid": [
+        113.94703,
+        30.265
+      ],
+      "zonalProxy": {
+        "croplandHa": 16885.53,
+        "builtupHa": 2186.55,
+        "industrialWeight": 4768.226680521,
+        "precipMm": 1185.02,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 35933976,
+        "industry": 17040969,
+        "urban": 7236428,
+        "eco": 4889208
+      },
+      "supply": {
+        "qLocal": 117049013,
+        "qAvail": 3738689747,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465703",
+      "downstreamReach": [
+        "PF_465703",
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465703",
+      "name": "武汉·城区7",
+      "pfafId": 465703,
+      "code": "PF_465703",
+      "adminCities": [
+        "Wuhan"
+      ],
+      "areaKm2": 55.219957,
+      "population": 18714.885,
+      "centroid": [
+        114.16458,
+        30.39708
+      ],
+      "zonalProxy": {
+        "croplandHa": 2075.31,
+        "builtupHa": 1310.04,
+        "industrialWeight": 14319.397249647,
+        "precipMm": 1242.1,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 4040394,
+        "industry": 17510781,
+        "urban": 3386055,
+        "eco": 4274164
+      },
+      "supply": {
+        "qLocal": 27435483,
+        "qAvail": 5126073713,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465701",
+      "downstreamReach": [
+        "PF_465701",
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465701",
+      "name": "武汉·城区5",
+      "pfafId": 465701,
+      "code": "PF_465701",
+      "adminCities": [
+        "Wuhan"
+      ],
+      "areaKm2": 781.073633,
+      "population": 3957928.5,
+      "centroid": [
+        114.32708,
+        30.45583
+      ],
+      "zonalProxy": {
+        "croplandHa": 29871.18,
+        "builtupHa": 32273.46,
+        "industrialWeight": 635383.159341994,
+        "precipMm": 1242.1,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 58155816,
+        "industry": 776991888,
+        "urban": 716101762,
+        "eco": 31931968
+      },
+      "supply": {
+        "qLocal": 388068624,
+        "qAvail": 6149833343,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465500",
+      "downstreamReach": [
+        "PF_465500",
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465500",
+      "name": "武汉·城区3",
+      "pfafId": 465500,
+      "code": "PF_465500",
+      "adminCities": [
+        "Wuhan"
+      ],
+      "areaKm2": 217.09376,
+      "population": 1886882.25,
+      "centroid": [
+        114.36083,
+        30.5675
+      ],
+      "zonalProxy": {
+        "croplandHa": 4349.7,
+        "builtupHa": 11247.03,
+        "industrialWeight": 310474.965479443,
+        "precipMm": 1242.1,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 8468375,
+        "industry": 379670953,
+        "urban": 341390630,
+        "eco": 12227789
+      },
+      "supply": {
+        "qLocal": 107860864,
+        "qAvail": 381904517882,
+        "externalInflow": 355275000000,
+        "mainstemInflow": 355275000000,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465309",
+      "downstreamReach": [
+        "PF_465309",
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465309",
+      "name": "武汉·城区2",
+      "pfafId": 465309,
+      "code": "PF_465309",
+      "adminCities": [
+        "Wuhan"
+      ],
+      "areaKm2": 38.63433,
+      "population": 104963.656,
+      "centroid": [
+        114.40917,
+        30.65917
+      ],
+      "zonalProxy": {
+        "croplandHa": 746.1,
+        "builtupHa": 1818.36,
+        "industrialWeight": 24920.952425048,
+        "precipMm": 1242.1,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 1452572,
+        "industry": 30475120,
+        "urban": 18990909,
+        "eco": 2598477
+      },
+      "supply": {
+        "qLocal": 19195081,
+        "qAvail": 384771791402,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465307",
+      "downstreamReach": [
+        "PF_465307",
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465307",
+      "name": "黄冈·城区1",
+      "pfafId": 465307,
+      "code": "PF_465307",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang",
+        "Wuhan"
+      ],
+      "areaKm2": 2387.64014,
+      "population": 1302085.0,
+      "centroid": [
+        114.61792,
+        31.00542
+      ],
+      "zonalProxy": {
+        "croplandHa": 152793.72,
+        "builtupHa": 16736.49,
+        "industrialWeight": 59095.38157095,
+        "precipMm": 1170.9,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 369539786,
+        "industry": 107386896,
+        "urban": 152507488,
+        "eco": 55905032
+      },
+      "supply": {
+        "qLocal": 1118275136,
+        "qAvail": 387174246603,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465305",
+      "downstreamReach": [
+        "PF_465305",
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465305",
+      "name": "黄冈·城区2",
+      "pfafId": 465305,
+      "code": "PF_465305",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang",
+        "Wuhan"
+      ],
+      "areaKm2": 369.207042,
+      "population": 191626.672,
+      "centroid": [
+        114.8325,
+        30.59042
+      ],
+      "zonalProxy": {
+        "croplandHa": 25970.04,
+        "builtupHa": 3826.17,
+        "industrialWeight": 12139.110741594,
+        "precipMm": 1285.58,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 79966072,
+        "industry": 84773817,
+        "urban": 15891942,
+        "eco": 443411
+      },
+      "supply": {
+        "qLocal": 189858076,
+        "qAvail": 389235175045,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465303",
+      "downstreamReach": [
+        "PF_465303",
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465303",
+      "name": "鄂州·城区",
+      "pfafId": 465303,
+      "code": "PF_465303",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang"
+      ],
+      "areaKm2": 79.883232,
+      "population": 330132.125,
+      "centroid": [
+        114.8975,
+        30.3875
+      ],
+      "zonalProxy": {
+        "croplandHa": 1687.77,
+        "builtupHa": 3430.89,
+        "industrialWeight": 46367.24908732,
+        "precipMm": 1285.58,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 5923895,
+        "industry": 590407084,
+        "urban": 29979973,
+        "eco": 237426
+      },
+      "supply": {
+        "qLocal": 41078514,
+        "qAvail": 390937561174,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465301",
+      "downstreamReach": [
+        "PF_465301",
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465301",
+      "name": "黄冈·城区3",
+      "pfafId": 465301,
+      "code": "PF_465301",
+      "adminCities": [
+        "Ezhou",
+        "Huanggang",
+        "Huangshi"
+      ],
+      "areaKm2": 7597.524797,
+      "population": 3639764.0,
+      "centroid": [
+        115.47917,
+        30.51292
+      ],
+      "zonalProxy": {
+        "croplandHa": 345746.43,
+        "builtupHa": 48723.48,
+        "industrialWeight": 79193.328925516,
+        "precipMm": 1298.47,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 928282679,
+        "industry": 681856401,
+        "urban": 334851202,
+        "eco": 16502575
+      },
+      "supply": {
+        "qLocal": 3946063209,
+        "qAvail": 396667867458,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465100",
+      "downstreamReach": [
+        "PF_465100",
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465100",
+      "name": "黄冈·城区6",
+      "pfafId": 465100,
+      "code": "PF_465100",
+      "adminCities": [
+        "Huanggang",
+        "Huangshi"
+      ],
+      "areaKm2": 186.456889,
+      "population": 67576.859,
+      "centroid": [
+        115.77374,
+        29.805
+      ],
+      "zonalProxy": {
+        "croplandHa": 8218.26,
+        "builtupHa": 2853.27,
+        "industrialWeight": 2757.851981618,
+        "precipMm": 1384.72,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 21870756,
+        "industry": 14957535,
+        "urban": 5709799,
+        "eco": 324506
+      },
+      "supply": {
+        "qLocal": 103276233,
+        "qAvail": 399358535647,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_463099",
+      "downstreamReach": [
+        "PF_463099",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_463099",
+      "name": "黄冈·城区5",
+      "pfafId": 463099,
+      "code": "PF_463099",
+      "adminCities": [
+        "Huanggang"
+      ],
+      "areaKm2": 10.066383,
+      "population": 396.592,
+      "centroid": [
+        115.9999,
+        29.80875
+      ],
+      "zonalProxy": {
+        "croplandHa": 356.22,
+        "builtupHa": 83.7,
+        "industrialWeight": 0.0,
+        "precipMm": 1384.72,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 954014,
+        "industry": 0,
+        "urban": 29915,
+        "eco": 23732
+      },
+      "supply": {
+        "qLocal": 5575649,
+        "qAvail": 399364111296,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465802",
+      "name": "仙桃·农业区",
+      "pfafId": 465802,
+      "code": "PF_465802",
+      "adminCities": [
+        "Xiantao"
+      ],
+      "areaKm2": 0.043028,
+      "population": 1.076,
+      "centroid": [
+        113.58525,
+        30.08
+      ],
+      "zonalProxy": {
+        "croplandHa": 4.05,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.0,
+        "precipMm": 1219.11,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 11246,
+        "industry": 0,
+        "urban": 207,
+        "eco": 3569
+      },
+      "supply": {
+        "qLocal": 20982,
+        "qAvail": 20982,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465804",
+      "name": "潜江·农业区2",
+      "pfafId": 465804,
+      "code": "PF_465804",
+      "adminCities": [
+        "Qianjiang",
+        "Xiantao"
+      ],
+      "areaKm2": 185.642932,
+      "population": 38947.961,
+      "centroid": [
+        112.82833,
+        30.22875
+      ],
+      "zonalProxy": {
+        "croplandHa": 18135.27,
+        "builtupHa": 341.37,
+        "industrialWeight": 404.554818235,
+        "precipMm": 1203.27,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 62834510,
+        "industry": 2483010,
+        "urban": 17458082,
+        "eco": 4696236
+      },
+      "supply": {
+        "qLocal": 89351428,
+        "qAvail": 89351428,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465808",
+      "name": "潜江·农业区1",
+      "pfafId": 465808,
+      "code": "PF_465808",
+      "adminCities": [
+        "Qianjiang"
+      ],
+      "areaKm2": 523.252174,
+      "population": 124354.484,
+      "centroid": [
+        112.66226,
+        30.25208
+      ],
+      "zonalProxy": {
+        "croplandHa": 50001.84,
+        "builtupHa": 1361.07,
+        "industrialWeight": 1468.706501799,
+        "precipMm": 1151.74,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 173907068,
+        "industry": 9231962,
+        "urban": 56877429,
+        "eco": 52988260
+      },
+      "supply": {
+        "qLocal": 241060184,
+        "qAvail": 241060184,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465807",
+      "downstreamReach": [
+        "PF_465807",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465809",
+      "name": "潜江·农业区3",
+      "pfafId": 465809,
+      "code": "PF_465809",
+      "adminCities": [
+        "Qianjiang"
+      ],
+      "areaKm2": 80.813743,
+      "population": 9753.516,
+      "centroid": [
+        112.60638,
+        30.12333
+      ],
+      "zonalProxy": {
+        "croplandHa": 7919.37,
+        "builtupHa": 84.78,
+        "industrialWeight": 93.231764493,
+        "precipMm": 1151.74,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 27441441,
+        "industry": 583859,
+        "urban": 4444519,
+        "eco": 4236477
+      },
+      "supply": {
+        "qLocal": 37230568,
+        "qAvail": 37230568,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "PF_465807",
+      "downstreamReach": [
+        "PF_465807",
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_465807",
+      "name": "潜江·农业区4",
+      "pfafId": 465807,
+      "code": "PF_465807",
+      "adminCities": [
+        "Qianjiang"
+      ],
+      "areaKm2": 1.092448,
+      "population": 278.576,
+      "centroid": [
+        112.81333,
+        30.07958
+      ],
+      "zonalProxy": {
+        "croplandHa": 96.39,
+        "builtupHa": 1.35,
+        "industrialWeight": 1.675892321,
+        "precipMm": 1203.27,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 335408,
+        "industry": 10539,
+        "urban": 127477,
+        "eco": 633803
+      },
+      "supply": {
+        "qLocal": 525804,
+        "qAvail": 278816556,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_466106",
+      "name": "咸宁·农业丘陵1",
+      "pfafId": 466106,
+      "code": "PF_466106",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 15.827758,
+      "population": 188.048,
+      "centroid": [
+        113.66894,
+        29.36167
+      ],
+      "zonalProxy": {
+        "croplandHa": 51.12,
+        "builtupHa": 0.27,
+        "industrialWeight": 0.623114534,
+        "precipMm": 1241.41,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 113738,
+        "industry": 3270,
+        "urban": 16105,
+        "eco": 29787
+      },
+      "supply": {
+        "qLocal": 7859495,
+        "qAvail": 7859495,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    },
+    {
+      "id": "PF_466212",
+      "name": "咸宁·农业丘陵4",
+      "pfafId": 466212,
+      "code": "PF_466212",
+      "adminCities": [
+        "Xianning"
+      ],
+      "areaKm2": 3.257324,
+      "population": 41.504,
+      "centroid": [
+        113.93251,
+        29.04802
+      ],
+      "zonalProxy": {
+        "croplandHa": 10.62,
+        "builtupHa": 0.0,
+        "industrialWeight": 0.121251615,
+        "precipMm": 1439.27,
+        "nightlightSource": "world_bank_light_every_night_12month_ncf_weighted_with_adjacent_month_interpolation"
+      },
+      "demand": {
+        "agri": 22348,
+        "industry": 602,
+        "urban": 3362,
+        "eco": 5797
+      },
+      "supply": {
+        "qLocal": 1875267,
+        "qAvail": 1875267,
+        "externalInflow": 0,
+        "mainstemInflow": 0,
+        "runoffCoeff": 0.4
+      },
+      "healthWeight": {
+        "urban": 1.0,
+        "eco": 0.7,
+        "agri": 0.1,
+        "industry": -0.25
+      },
+      "downstream": "OUTLET",
+      "downstreamReach": [
+        "OUTLET"
+      ]
+    }
+  ]
+}
