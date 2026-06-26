@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="武汉都市圈水权交易与健康韧性研究版静态前端">
+  <meta name="theme-color" content="#17212b">
+  <title>研究版 | 水权交易与健康韧性</title>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="title-block">
+        <p class="eyebrow">Wuhan Metropolitan Research Prototype</p>
+        <h1>水权交易与健康韧性：空间网络研究版</h1>
+      </div>
+      <p class="research-badge">研究级·真实数据；部门用水为遥感+统计反演估算；生态底线按本地产流/支流口径；长江过境水不作为保留比例基数</p>
+    </header>
+
+    <main class="layout">
+      <aside class="side-panel parameter-panel" aria-label="参数面板">
+        <div class="panel-heading">
+          <p class="panel-kicker">Parameters</p>
+          <h2>网络求解参数</h2>
+        </div>
+
+        <form id="controls" class="controls">
+          <label class="control-block" for="tau">
+            <span class="control-row">
+              <span>τ Health tax</span>
+              <strong id="tau-value">24%</strong>
+            </span>
+            <input id="tau" name="tau" type="range" min="0" max="50" value="24" step="1">
+            <span class="range-labels"><span>0</span><span>25%</span><span>50%</span></span>
+          </label>
+
+          <label class="control-block" for="demand-elasticity">
+            <span class="control-row">
+              <span>工业用水弹性</span>
+              <strong id="elasticity-value">0.90</strong>
+            </span>
+            <input id="demand-elasticity" name="demandElasticity" type="range" min="0.30" max="1.20" value="0.90" step="0.05">
+            <span class="range-labels"><span>0.30</span><span>0.75</span><span>1.20</span></span>
+          </label>
+
+          <label class="control-block" for="climate">
+            <span class="control-row">
+              <span>Climate</span>
+            </span>
+            <select id="climate" name="climate">
+              <option value="historical">历史校准</option>
+              <option value="ssp245" selected>SSP2-4.5 中等压力</option>
+              <option value="ssp585">SSP5-8.5 高压力</option>
+              <option value="dry">连续干旱冲击</option>
+            </select>
+          </label>
+
+          <label class="control-block" for="trade-scope">
+            <span class="control-row">
+              <span>水权交易范围</span>
+            </span>
+            <select id="trade-scope" name="tradeScope">
+              <option value="external" selected>外部调水</option>
+              <option value="internal">内部解决</option>
+            </select>
+          </label>
+
+          <label class="control-block" for="health-floor">
+            <span class="control-row">
+              <span>Health floor</span>
+              <strong id="floor-value">26%</strong>
+            </span>
+            <input id="health-floor" name="healthFloor" type="range" min="10" max="45" value="26" step="1">
+            <span class="range-labels"><span>10%</span><span>28%</span><span>45%</span></span>
+          </label>
+
+          <label class="control-block" for="eco-floor">
+            <span class="control-row">
+              <span>Local eco floor</span>
+              <strong id="eco-floor-value">15%</strong>
+            </span>
+            <input id="eco-floor" name="ecoFloor" type="range" min="10" max="40" value="15" step="1">
+            <span class="range-labels"><span>10%</span><span>25%</span><span>40%</span></span>
+          </label>
+
+          <label class="control-block" for="trading-cost">
+            <span class="control-row">
+              <span>Trading cost</span>
+              <strong id="cost-value">10%</strong>
+            </span>
+            <input id="trading-cost" name="tradingCost" type="range" min="2" max="24" value="10" step="1">
+            <span class="range-labels"><span>2%</span><span>13%</span><span>24%</span></span>
+          </label>
+        </form>
+
+        <div class="status-panel" id="scenario-status">
+          <div class="status-line">
+            <span>Data</span>
+            <strong id="data-status">加载中</strong>
+          </div>
+          <div class="status-line">
+            <span>Model</span>
+            <strong id="model-status">等待求解</strong>
+          </div>
+          <div class="status-line">
+            <span>Solver</span>
+            <strong id="solver-status">--</strong>
+          </div>
+          <div class="status-line">
+            <span>Scope</span>
+            <strong id="region-status">全域</strong>
+          </div>
+          <div class="status-line solver-warning" id="solver-note" hidden>
+            <span>Note</span>
+            <strong>启发式求解，LP spike 待完成</strong>
+          </div>
+          <div class="status-line">
+            <span>Basins</span>
+            <strong id="basin-count">--</strong>
+          </div>
+        </div>
+      </aside>
+
+      <section class="map-panel" aria-label="子流域地图">
+        <div class="map-toolbar">
+          <div>
+            <p class="panel-kicker">Subbasin Network</p>
+            <h2>武汉都市圈子流域</h2>
+          </div>
+          <div class="map-actions">
+            <div class="layer-tabs" role="group" aria-label="地图着色指标">
+              <button type="button" class="layer-tab active" data-layer="healthGain">健康收益</button>
+              <button type="button" class="layer-tab" data-layer="stressIndex">水压力</button>
+              <button type="button" class="layer-tab" data-layer="taxIntensity">税强度</button>
+              <button type="button" class="layer-tab" data-layer="inequity">不公平</button>
+              <button type="button" class="layer-tab" data-layer="netTrade">交易净额</button>
+            </div>
+            <div class="region-tools" role="group" aria-label="地图选区工具">
+              <button type="button" id="region-draw-toggle" class="region-tool" data-map-action="draw-region" aria-pressed="false">圈选区域</button>
+              <button type="button" id="region-clear" class="region-tool ghost" data-map-action="clear-region" disabled>清除选区</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="map" class="map-canvas" aria-label="子流域空间网络地图">
+          <div id="svg-fallback" class="svg-fallback" aria-hidden="true"></div>
+        </div>
+
+        <div id="map-stats" class="map-stats">
+          <div class="map-stat">
+            <span>Layer</span>
+            <strong id="active-layer-label">健康收益</strong>
+          </div>
+          <div class="map-stat">
+            <span>Selected</span>
+            <strong id="selected-basin">全域</strong>
+          </div>
+          <div class="map-stat">
+            <span>Downstream</span>
+            <strong id="downstream-summary">未选中</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side-panel dashboard-panel" aria-label="研究仪表盘">
+        <div class="panel-heading">
+          <p class="panel-kicker">Dashboard</p>
+          <h2>水权市场指标</h2>
+        </div>
+        <div id="dashboard" class="dashboard">
+          <div class="empty-state">等待数据加载</div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="rich-panel-band rich-bottom-panel" aria-label="本区域计算依据与市场可视化">
+      <div id="rich-panels" class="rich-panels">
+        <div class="rich-empty">等待模型结果</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script type="module" src="js/glpkLoader.js?v=region-lp-20260615"></script>
+  <script src="js/networkModel.js?v=elasticity-20260616"></script>
+  <script src="js/regionSelect.js?v=trade-scope-20260616"></script>
+  <script src="js/tradeAggregate.js?v=round2-qa-20260615"></script>
+  <script src="js/map.js?v=trade-viz-qa-20260615"></script>
+  <script src="js/dashboard.js?v=health-tax-20260616"></script>
+  <script src="js/sankey.js?v=round2-qa-20260615"></script>
+  <script src="js/marketChart.js?v=trade-viz-20260615"></script>
+  <script src="js/tauResponseChart.js?v=eco-flow-20260616"></script>
+  <script src="js/richPanels.js?v=health-tax-20260616"></script>
+  <script src="js/main.js?v=elasticity-20260616"></script>
+</body>
+</html>

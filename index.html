@@ -1,45 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Water Rights Trading for Health Resilience — An interactive decision-support tool for health-prioritized water markets under climate uncertainty">
-  <meta name="theme-color" content="#0c4a6e">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💧</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Water Rights Trading for Health Resilience | ACTION Hackathon</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="水权交易与健康韧性研究级交互工具">
+  <meta http-equiv="refresh" content="0; url=research/">
+  <title>水权交易与健康韧性</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f7f8;
+      color: #17212b;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    main {
+      width: min(520px, calc(100vw - 48px));
+      padding: 32px;
+      border: 1px solid #d7e2e5;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 18px 45px rgba(23, 33, 43, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: #52616f;
+      line-height: 1.7;
+    }
+
+    a {
+      color: #137885;
+      font-weight: 700;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <header id="header">
-      <h1>Water Rights Trading for Health Resilience</h1>
-      <p class="subtitle">An interactive decision-support tool for health-prioritized water markets under climate uncertainty</p>
-    </header>
-    <main id="main">
-      <aside id="panel-left">
-        <h2>Parameters</h2>
-        <div id="controls"></div>
-      </aside>
-      <section id="panel-center">
-        <div id="map"></div>
-        <div id="map-stats"></div>
-      </section>
-      <aside id="panel-right">
-        <h2>Health Dashboard</h2>
-        <div id="dashboard"></div>
-      </aside>
-    </main>
-    <footer id="footer">
-      <span>ACTION Hackathon — Theme 4: Water, Climate &amp; Health Adaptation</span>
-    </footer>
-  </div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/model.js"></script>
-  <script src="js/map.js"></script>
-  <script src="js/dashboard.js"></script>
-  <script src="js/main.js"></script>
+  <main>
+    <h1>水权交易与健康韧性</h1>
+    <p>正在打开研究级交互工具。</p>
+    <a href="research/">进入工具</a>
+  </main>
 </body>
 </html>
