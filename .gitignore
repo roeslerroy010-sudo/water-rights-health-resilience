@@ -11,7 +11,7 @@ node_modules/
 /create_pptx.js
 /ppt/
 /images/
-/ACTION*.png
+/ACTION-POSTER/
 *.docx
 
 research/tools/bake/raw/
