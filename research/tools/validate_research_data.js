@@ -8,7 +8,6 @@ const ATTRS_PATH = path.join(DATA_DIR, "wuhan-attrs.json");
 const SUBBASINS_PATH = path.join(DATA_DIR, "wuhan-subbasins.geojson");
 const RIVERS_PATH = path.join(DATA_DIR, "wuhan-rivers.geojson");
 const PROVENANCE_PATH = path.join(DATA_DIR, "provenance.json");
-const PROVENANCE_SAMPLE_PATH = path.join(DATA_DIR, "provenance.sample.json");
 const BBOX = { minLng: 112.5, minLat: 29.0, maxLng: 116.0, maxLat: 31.5 };
 const SECTORS = ["agri", "industry", "urban", "eco"];
 const REQUIRED_CITIES = [
@@ -69,16 +68,12 @@ function fail(message) {
 }
 
 function printHelp() {
-  console.log(`Usage: node research/tools/validate_research_data.js [--sample|--full-bake|--help]
+  console.log(`Usage: node research/tools/validate_research_data.js [--full-bake|--sample|--help]
 
 Modes:
-  --sample     Validate the current hand-authored MVP sample. This is the default.
-  --full-bake  Validate a future real-data offline bake.
+  --full-bake  Validate the current Wuhan Metropolitan full-bake data. This is the default.
+  --sample     Validate the historical hand-authored MVP sample contract.
   --help       Show this help message.
-
-Sample mode requires meta.demoSample=true, meta.estimated=true,
-meta.synthetic=true, and meta.realDataReady=false. It accepts 8-12
-subbasins as the small scaffold and warns below the full 30-subbasin target.
 
 Full-bake mode requires meta.demoSample=false, meta.synthetic=false,
 meta.realDataReady=true, 66 named subbasins, non-placeholder source text,
@@ -86,11 +81,14 @@ data/provenance.json with source files for every required input category,
 exact Wuhan 1+8 citySectorDemand coverage, finite supply qLocal/qAvail/
 externalInflow/mainstemInflow fields, Chinese readable subbasin.name values
 that are not Pfaf/PF code labels, preserved id/pfafId/code technical IDs,
-and non-empty river flowThrough arrays.`);
+and non-empty river flowThrough arrays.
+
+Sample mode is retained only for the historical 10-subbasin scaffold. It is not
+the acceptance gate for this repository state.`);
 }
 
 function parseArgs(argv) {
-  let mode = MODES.SAMPLE;
+  let mode = MODES.FULL_BAKE;
   for (const arg of argv) {
     if (arg === "--help" || arg === "-h") {
       printHelp();
@@ -656,7 +654,7 @@ function checkProvenance(mode) {
     if (mode === MODES.FULL_BAKE) {
       fail(`provenance.json is required for full-bake validation at ${relativeToCwd(PROVENANCE_PATH)}`);
     } else {
-      warn(`provenance.json is optional in sample mode; use ${relativeToCwd(PROVENANCE_SAMPLE_PATH)} as a template, not as full-bake evidence`);
+      warn("provenance.json is optional in sample mode; sample provenance templates are no longer kept in the cleaned repository.");
     }
     return;
   }

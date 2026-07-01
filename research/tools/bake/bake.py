@@ -4115,7 +4115,6 @@ def step_bake_preflight(_: argparse.Namespace) -> list[Path]:
         "subbasinsGeojsonBytes": file_size(DATA_DIR / "wuhan-subbasins.geojson"),
         "riversGeojsonBytes": file_size(DATA_DIR / "wuhan-rivers.geojson"),
         "provenanceExists": (DATA_DIR / "provenance.json").exists(),
-        "provenanceSampleExists": (DATA_DIR / "provenance.sample.json").exists(),
         "mustNotTreatAsFullBake": not final_data_contract_ready,
     }
     if current_research_data["attrsExists"] and not final_data_contract_ready:
@@ -4135,18 +4134,6 @@ def step_bake_preflight(_: argparse.Namespace) -> list[Path]:
                 "reason": "Current research/data is the honest 10-subbasin sample and is not the real bake output.",
             }
         )
-    if current_research_data["provenanceSampleExists"] and not current_research_data["provenanceExists"]:
-        artifact_risks.append(
-            {
-                "artifact": "sample-provenance",
-                "path": rel(DATA_DIR / "provenance.sample.json"),
-                "exists": True,
-                "sizeBytes": file_size(DATA_DIR / "provenance.sample.json"),
-                "mustNotConsume": True,
-                "reason": "Sample provenance is not research/data/provenance.json.",
-            }
-        )
-
     sample_records = []
     for basin_id in sorted(canonical)[:10]:
         landpop = landpop_by_id.get(basin_id, {})

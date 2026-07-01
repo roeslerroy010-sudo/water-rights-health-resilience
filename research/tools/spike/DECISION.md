@@ -46,6 +46,6 @@ Phase 3 may proceed with real-time LP integration rather than an offline pre-bak
 
 ## License Risk
 
-`glpk.js@5.0.0` is recorded in `package-lock.json` with license `GPL-3.0`. Before shipping, distributing, or using this in a closed-source/public demo package, the project owner must confirm GPL-3.0 compatibility or replace the solver with a license-compatible LP engine.
+The cleaned repository vendors the minimal `glpk.js` runtime under `research/vendor/glpk.js/`, whose license is `GPL-3.0`. Before shipping, distributing, or using this in a closed-source/public demo package, the project owner must confirm GPL-3.0 compatibility or replace the solver with a license-compatible LP engine.
 
 This decision selects Path A for engineering direction; it does not close the licensing review or browser-loading validation.

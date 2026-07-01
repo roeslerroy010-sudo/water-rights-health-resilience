@@ -1,6 +1,6 @@
 {
   "kind": "research-network-phase2a-spike-benchmark",
-  "generatedAt": "2026-06-16T02:36:59.035Z",
+  "generatedAt": "2026-06-15T17:10:17.388Z",
   "fixtureDir": "fixtures",
   "runsPerCase": 5,
   "solverStatus": "glpk-js-wired",
@@ -9,7 +9,7 @@
   "decisionEligible": true,
   "decision": "PATH A: browser real-time LP solve is acceptable for the 30-80 node target.",
   "nextStep": "Keep the real-time LP path and add browser bundle-size/worker loading checks before frontend release.",
-  "maxLpSolveMs": 7.127,
+  "maxLpSolveMs": 6.46,
   "thresholdMs": 300,
   "targetLpSolveMs": 300,
   "licenseNote": "glpk.js is GPL-3.0; any browser/distribution release must confirm license compatibility or replace the solver before shipping.",
@@ -30,32 +30,32 @@
         "nodeCount": 3,
         "total": 186.145
       },
-      "lpSolveMs": 1.874,
+      "lpSolveMs": 2.208,
       "lpSolveRunsMs": [
-        5.916,
-        1.806,
-        1.87,
-        1.874,
-        2.421
+        8.964,
+        2.141,
+        2.125,
+        2.208,
+        2.298
       ],
       "lpSolveStatus": "optimal",
       "lpGlpkStatus": 5,
-      "lpObjectiveValue": 3244.136668,
-      "interfaceGenerationMs": 0.262,
+      "lpObjectiveValue": 23592.697832,
+      "interfaceGenerationMs": 0.202,
       "interfaceGenerationRunsMs": [
-        0.988,
-        0.262,
-        1.45,
-        0.26,
-        0.242
+        1.051,
+        0.448,
+        0.163,
+        0.202,
+        0.186
       ],
-      "heuristicSolveMs": 1.043,
+      "heuristicSolveMs": 1.098,
       "heuristicSolveRunsMs": [
-        2.91,
-        1.425,
-        1.043,
-        0.966,
-        0.998
+        2.469,
+        1.163,
+        1.098,
+        0.741,
+        0.655
       ],
       "variableCounts": {
         "allocation": 90,
@@ -80,23 +80,23 @@
         "totalConstraints": 676
       },
       "constraints": {
-        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
-        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
-        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "demandCaps": "0 <= x_i_s <= D_i_s",
+        "routingBalance": "Q_i = qLocal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * naturalFlow_i, legacy demand.eco_i), capped at 0.95 * naturalFlow_i",
         "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
         "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
       },
       "heuristicSummary": {
-        "tradeFlowCount": 18,
-        "totalWithdrawn": 1706.824599,
-        "outletOutflowApprox": 118.467063,
-        "marketPrice": 0.421339
+        "tradeFlowCount": 0,
+        "totalWithdrawn": 448.735,
+        "outletOutflowApprox": 1363.15422,
+        "marketPrice": 0.427746
       },
       "lpSummary": {
         "tradeFlowCount": 29,
-        "totalWithdrawn": 1706.8246,
-        "outletOutflowApprox": 118.467063,
-        "marketPrice": 0.421339
+        "totalWithdrawn": 408.542677,
+        "outletOutflowApprox": 1403.346544,
+        "marketPrice": 0.427746
       },
       "checks": {
         "syntheticFixture": true,
@@ -120,32 +120,32 @@
         "nodeCount": 3,
         "total": 203.182
       },
-      "lpSolveMs": 3.191,
+      "lpSolveMs": 3.717,
       "lpSolveRunsMs": [
-        4.102,
-        3.191,
-        3.068,
-        3.937,
-        2.943
+        4.709,
+        4.065,
+        3.416,
+        3.669,
+        3.717
       ],
       "lpSolveStatus": "optimal",
       "lpGlpkStatus": 5,
-      "lpObjectiveValue": 5319.577319,
-      "interfaceGenerationMs": 0.216,
+      "lpObjectiveValue": 54254.900212,
+      "interfaceGenerationMs": 0.119,
       "interfaceGenerationRunsMs": [
-        0.367,
-        0.216,
-        0.212,
-        0.211,
-        0.314
+        0.148,
+        0.119,
+        0.116,
+        0.114,
+        0.258
       ],
-      "heuristicSolveMs": 2.07,
+      "heuristicSolveMs": 1.87,
       "heuristicSolveRunsMs": [
-        2.61,
-        2.308,
-        2.07,
-        1.937,
-        1.721
+        1.996,
+        1.87,
+        1.633,
+        1.764,
+        2.076
       ],
       "variableCounts": {
         "allocation": 150,
@@ -170,23 +170,23 @@
         "totalConstraints": 1506
       },
       "constraints": {
-        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
-        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
-        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "demandCaps": "0 <= x_i_s <= D_i_s",
+        "routingBalance": "Q_i = qLocal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * naturalFlow_i, legacy demand.eco_i), capped at 0.95 * naturalFlow_i",
         "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
         "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
       },
       "heuristicSummary": {
-        "tradeFlowCount": 31,
-        "totalWithdrawn": 2763.566586,
-        "outletOutflowApprox": 148.097918,
-        "marketPrice": 0.463245
+        "tradeFlowCount": 0,
+        "totalWithdrawn": 756.585,
+        "outletOutflowApprox": 2140.4504,
+        "marketPrice": 0.467419
       },
       "lpSummary": {
         "tradeFlowCount": 49,
-        "totalWithdrawn": 2763.566587,
-        "outletOutflowApprox": 148.097918,
-        "marketPrice": 0.463245
+        "totalWithdrawn": 656.884653,
+        "outletOutflowApprox": 2240.150746,
+        "marketPrice": 0.467419
       },
       "checks": {
         "syntheticFixture": true,
@@ -210,32 +210,32 @@
         "nodeCount": 3,
         "total": 284.021
       },
-      "lpSolveMs": 7.127,
+      "lpSolveMs": 6.46,
       "lpSolveRunsMs": [
-        7.127,
-        7.438,
-        8.419,
-        6.48,
-        6.695
+        6.46,
+        6.145,
+        6.259,
+        7.057,
+        6.616
       ],
       "lpSolveStatus": "optimal",
       "lpGlpkStatus": 5,
-      "lpObjectiveValue": 8440.487964,
-      "interfaceGenerationMs": 0.342,
+      "lpObjectiveValue": 134621.991841,
+      "interfaceGenerationMs": 0.267,
       "interfaceGenerationRunsMs": [
-        0.385,
-        0.556,
-        0.342,
-        0.342,
-        0.32
+        0.326,
+        0.202,
+        0.211,
+        0.323,
+        0.267
       ],
-      "heuristicSolveMs": 4.879,
+      "heuristicSolveMs": 4.431,
       "heuristicSolveRunsMs": [
-        4.879,
-        4.864,
-        5.047,
-        4.764,
-        5.134
+        5.327,
+        4.077,
+        4.431,
+        4.39,
+        4.819
       ],
       "variableCounts": {
         "allocation": 240,
@@ -260,23 +260,23 @@
         "totalConstraints": 3590
       },
       "constraints": {
-        "demandCaps": "0 <= x_i_s <= effectiveD_i_s; industry effectiveD = D * max(0.40, 1 - elasticity * tau * healthLoss)",
-        "routingBalance": "Q_i = qLocal_i + qExternal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
-        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * localRunoff_i, legacy demand.eco_i), capped at 0.95 * localRunoff_i",
+        "demandCaps": "0 <= x_i_s <= D_i_s",
+        "routingBalance": "Q_i = qLocal_i + upstreamOutflow_i - sum_s x_i_s; out_i >= ecoBaseFlow_i; out_i earns riverRetentionValue in the objective",
+        "ecoBaseFlow": "ecoBaseFlow_i = max(ecoFloor * naturalFlow_i, legacy demand.eco_i), capped at 0.95 * naturalFlow_i",
         "healthFloor": "urban allocation should meet the health floor subject to withdrawable availability",
         "tradeDirection": "t_ij is allowed only when j is downstream-reachable from i"
       },
       "heuristicSummary": {
-        "tradeFlowCount": 55,
-        "totalWithdrawn": 4391.743521,
-        "outletOutflowApprox": 232.401653,
-        "marketPrice": 0.452798
+        "tradeFlowCount": 0,
+        "totalWithdrawn": 1196.593,
+        "outletOutflowApprox": 3407.10266,
+        "marketPrice": 0.456518
       },
       "lpSummary": {
         "tradeFlowCount": 79,
-        "totalWithdrawn": 4391.743522,
-        "outletOutflowApprox": 232.401653,
-        "marketPrice": 0.452798
+        "totalWithdrawn": 1066.433624,
+        "outletOutflowApprox": 3537.262036,
+        "marketPrice": 0.456518
       },
       "checks": {
         "syntheticFixture": true,

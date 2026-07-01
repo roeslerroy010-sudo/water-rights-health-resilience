@@ -209,45 +209,6 @@
       "notes": "Final full-bake input item recorded from the raw checksum manifest and consumed by the formal offline bake."
     },
     {
-      "category": "hydrosheds",
-      "inputFileName": "hybas_as_lev01-12_v1c.zip",
-      "path": "raw/hydrosheds/hybas_as_lev01-12_v1c.zip",
-      "sourceUrl": "https://www.hydrosheds.org/",
-      "downloadDate": "2026-06-14",
-      "sha256": "5f2a9c384829b59a22b2857c79bc294602aaa29c8794abd1e7bd7cf01057cc4a",
-      "license": "HydroSHEDS terms",
-      "processingScript": "bake.py",
-      "processingStep": "T1.2 subbasins/topology fallback",
-      "processingScriptSha256": "f9eeda62bc631eab47f6babfb957fe5fff31611ccb6cf40e12b32fd3c62f0f74",
-      "notes": "Final full-bake input item recorded from the raw checksum manifest and consumed by the formal offline bake."
-    },
-    {
-      "category": "hydrosheds",
-      "inputFileName": "hyd_as_acc_15s.zip",
-      "path": "raw/hydrosheds/hyd_as_acc_15s.zip",
-      "sourceUrl": "https://www.hydrosheds.org/",
-      "downloadDate": "2026-06-14",
-      "sha256": "c5052918b94f87e6e3726ee769d561de36075305a06736399eee2d5902461ddd",
-      "license": "HydroSHEDS terms",
-      "processingScript": "bake.py",
-      "processingStep": "T1.2 subbasins/topology fallback",
-      "processingScriptSha256": "f9eeda62bc631eab47f6babfb957fe5fff31611ccb6cf40e12b32fd3c62f0f74",
-      "notes": "Final full-bake input item recorded from the raw checksum manifest and consumed by the formal offline bake."
-    },
-    {
-      "category": "hydrosheds",
-      "inputFileName": "hyd_as_dir_15s.zip",
-      "path": "raw/hydrosheds/hyd_as_dir_15s.zip",
-      "sourceUrl": "https://www.hydrosheds.org/",
-      "downloadDate": "2026-06-14",
-      "sha256": "b130225e2dbf470656448d76522d955e9f78d18accb032670c84abb059087892",
-      "license": "HydroSHEDS terms",
-      "processingScript": "bake.py",
-      "processingStep": "T1.2 subbasins/topology fallback",
-      "processingScriptSha256": "f9eeda62bc631eab47f6babfb957fe5fff31611ccb6cf40e12b32fd3c62f0f74",
-      "notes": "Final full-bake input item recorded from the raw checksum manifest and consumed by the formal offline bake."
-    },
-    {
       "category": "merit",
       "inputFileName": "Basin_Asia.gdb.zip",
       "path": "raw/merit/Basin_Asia.gdb.zip",

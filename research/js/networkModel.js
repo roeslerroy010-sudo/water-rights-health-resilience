@@ -1626,7 +1626,10 @@
 
   async function loadNodeGlpkInstance() {
     if (typeof require === "function") {
-      const mod = await import("glpk.js/node");
+      const path = require("path");
+      const { pathToFileURL } = require("url");
+      const vendorPath = path.join(__dirname, "..", "vendor", "glpk.js", "dist", "glpk.js");
+      const mod = await import(pathToFileURL(vendorPath).href);
       const factory = mod.default || mod;
       return factory();
     }

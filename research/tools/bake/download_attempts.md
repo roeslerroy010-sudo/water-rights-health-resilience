@@ -107,7 +107,7 @@ curl --fail --location --continue-at - --output research/tools/bake/raw/hydroshe
 curl --fail --location --continue-at - --output research/tools/bake/raw/hydrosheds/hyd_as_acc_15s.zip https://data.hydrosheds.org/file/hydrosheds-v1-acc/hyd_as_acc_15s.zip
 ```
 
-Evidence: direct downloads succeeded; `file` reports all four as ZIP archives.
+Evidence: direct downloads succeeded; `file` reported all four as ZIP archives. Cleanup note, 2026-06-26: the current formal route reads `HydroRIVERS_v10_as_shp.zip` only. The backup HydroBASINS/core files `hybas_as_lev01-12_v1c.zip`, `hyd_as_dir_15s.zip`, and `hyd_as_acc_15s.zip` were removed from local raw storage and can be re-downloaded from the commands above if the pipeline returns to that route.
 
 ### Climate Fallback: NASA POWER
 

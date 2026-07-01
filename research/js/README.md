@@ -1,6 +1,6 @@
-# Research network model MVP
+# Research Network Model
 
-`networkModel.js` is a browser-safe, dependency-free MVP for the research version described in `../../REAL-DATA-UPGRADE-SPEC.md`.
+`networkModel.js` is a browser-safe network model for the current research frontend.
 
 It exports CommonJS in Node and attaches the same API to `window.ResearchNetworkModel` in browsers:
 
@@ -19,20 +19,20 @@ It exports CommonJS in Node and attaches the same API to `window.ResearchNetwork
 - `solveNetworkLpAsync(params)`
 - `loadNodeGlpkInstance()`
 
-The primary Phase 2a path is a real `glpk.js` LP solve when a ready synchronous GLPK instance is supplied through `params.glpk`, `params.glpkInstance`, or `globalThis.glpk`. The LP includes demand caps, node water balance, non-negative routed outflow, and health-floor constraints. `solveNetworkLpAsync()` is the Node helper that loads `glpk.js/node` and returns the same solution shape.
+The primary path is a real `glpk.js` LP solve when a ready synchronous GLPK instance is supplied through `params.glpk`, `params.glpkInstance`, or `globalThis.glpk`. The LP includes demand caps, node water balance, non-negative routed outflow, and health-floor constraints. `solveNetworkLpAsync()` is the Node helper that loads the local `research/vendor/glpk.js` runtime and returns the same solution shape.
 
 The deterministic heuristic is still kept as the fallback. It routes water lots through the DAG, so upstream withdrawals reduce downstream `qAvail`; downstream use of upstream-origin water is recorded as an OD trade flow only when the target is hydrologically downstream of the origin. Local runoff and pass-through mainstem water are both consumed into available supply: input aliases include `supply.externalInflow`, `supply.mainstemInflow`, top-level `externalInflow`, and top-level `mainstemInflow`. Both solvers include `tau`, climate availability, health floor, and trading cost parameters. Industrial health tax is based on downstream population-weighted exposure.
 
-Phase 2b model-side coverage in `networkModel.test.js` now locks the following contracts:
+Model-side coverage in `networkModel.test.js` locks the following contracts:
 
 - Mainstem/pass-through injection raises the entry subbasin `qAvail` and routes surplus water to downstream demand.
 - Industrial health tax detail rises with downstream population-weighted exposure.
 - Higher upstream industrial allocation raises the current tax-base proxy, `allocation.industry * healthTax.taxPerM3`.
 - Incentive diagnostics locate violations by subbasin and sector via `flag.nodeId`, `flag.sector`, and `violatingNodeSectors`.
 
-`buildLpProblemInterface()` and `estimateProblemSize()` remain diagnostic Phase 2a spike hooks for reporting the full downstream-OD interface size. The production LP path is `buildGlpkProblem()` plus `solveWithGlpkInstance()`. `solveNetwork()` enters the LP path when `solver:"lp"`, `preferLp`, `useLp`, a custom `lpSolver`, `glpk`, `glpkInstance`, or global `glpk`/`window.glpk` is detected; without a working adapter it keeps the heuristic fallback and reports `lpReady:false`.
+`buildLpProblemInterface()` and `estimateProblemSize()` remain diagnostic hooks for reporting the full downstream-OD interface size. The production LP path is `buildGlpkProblem()` plus `solveWithGlpkInstance()`. `solveNetwork()` enters the LP path when `solver:"lp"`, `preferLp`, `useLp`, a custom `lpSolver`, `glpk`, `glpkInstance`, or global `glpk`/`window.glpk` is detected; without a working adapter it keeps the heuristic fallback and reports `lpReady:false`.
 
-## Phase 2a spike harness
+## Benchmark Harness
 
 `research/tools/spike/generate-fixtures.js` creates deterministic 30/50/80-node synthetic hydrologic DAG fixtures under `research/tools/spike/fixtures/`. Each fixture declares `synthetic:true` and includes four-sector demand, local supply, and explicit transit injection.
 
@@ -45,7 +45,7 @@ Phase 2b model-side coverage in `networkModel.test.js` now locks the following c
 - True `glpk.js` LP solve time and raw run timings.
 - `solverStatus`, `lpSolveStatus`, `decisionEligible`, and the 300 ms decision threshold.
 
-The 2026-06-14 benchmark selected **Path A: browser real-time LP solve** for the 30-80 node target. The measured true LP medians were 1.740 ms, 2.384 ms, and 4.743 ms for 30/50/80 nodes, all below the 300 ms threshold. `research/tools/spike/DECISION.md` records the evidence and the remaining risks: browser bundle/worker loading and `glpk.js@5.0.0` GPL-3.0 license compatibility.
+The 2026-06-14 benchmark selected browser real-time LP solve for the 30-80 node target. The measured true LP medians were 1.740 ms, 2.384 ms, and 4.743 ms for 30/50/80 nodes, all below the 300 ms threshold. `research/tools/spike/DECISION.md` records the evidence and the remaining risks.
 
 Minimal input shape:
 
