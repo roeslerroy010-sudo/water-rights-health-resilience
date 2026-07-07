@@ -35,12 +35,21 @@
   let latestPayload = null;
   let selectedRegion = null;
   let internalSelectedIds = new Set();
-  let drawMode = false;
+  let drawMode = false; // false | 'rect' | 'lasso'
   let drawCapture = null;
   let drawBox = null;
+  let drawLassoSvg = null;
+  let drawLassoPath = null;
   let drawing = null;
   let regionDrawButton = null;
+  let regionLassoButton = null;
   let clearRegionButton = null;
+  let expandUpstreamButton = null;
+  let expandDownstreamButton = null;
+  let citySelectControl = null;
+  let thresholdSelectControl = null;
+  let previewIds = new Set();
+  let previewFrame = null;
   let localActiveLayer = null;
   let previousFlowVolumes = new Map();
   let changedFlowKeys = new Set();
@@ -105,6 +114,7 @@
     if (basinLayer) basinLayer.remove();
     if (riverLayer) riverLayer.remove();
     if (flowLayer) flowLayer.remove();
+    previewIds = new Set();
 
     riverLayer = L.geoJSON(network.riversGeojson, {
       style: {
@@ -130,7 +140,7 @@
     flowLayer = L.layerGroup();
     renderFlowLines(flowLayer, network, result, selectionState);
     flowLayer.addTo(leafletMap);
-    updateLeafletRegionBox(selectionState.region);
+    updateLeafletRegionShape(selectionState.region);
 
     const bounds = basinLayer.getBounds && basinLayer.getBounds();
     const boundsKey = getNetworkBoundsKey(network);
@@ -357,8 +367,15 @@
   }
 
   function buildSvgRegionBox(region, project) {
-    const normalized = normalizeBboxRegion(region);
-    if (!normalized) return '';
+    const normalized = normalizeRegion(region);
+    if (!normalized || normalized.type === 'ids') return '';
+
+    if (normalized.type === 'Polygon') {
+      const path = ringToPath(normalized.coordinates[0] || [], project);
+      if (!path) return '';
+      return `<path class="fallback-selection-box" d="${path}"></path>`;
+    }
+
     const a = project([normalized.sw[1], normalized.sw[0]]);
     const b = project([normalized.ne[1], normalized.ne[0]]);
     const x = Math.min(a[0], b[0]);
@@ -674,18 +691,116 @@
   function bindRegionControls() {
     regionDrawButton = document.getElementById('region-draw-toggle')
       || document.querySelector('[data-map-action="draw-region"]');
+    regionLassoButton = document.getElementById('region-lasso-toggle')
+      || document.querySelector('[data-map-action="lasso-region"]');
     clearRegionButton = document.getElementById('region-clear')
       || document.querySelector('[data-map-action="clear-region"]');
 
     if (regionDrawButton && !regionDrawButton.dataset.regionToolBound) {
       regionDrawButton.dataset.regionToolBound = 'true';
-      regionDrawButton.addEventListener('click', () => setDrawMode(!drawMode));
+      regionDrawButton.addEventListener('click', () => setDrawMode(drawMode === 'rect' ? false : 'rect'));
+    }
+
+    if (regionLassoButton && !regionLassoButton.dataset.regionToolBound) {
+      regionLassoButton.dataset.regionToolBound = 'true';
+      regionLassoButton.addEventListener('click', () => setDrawMode(drawMode === 'lasso' ? false : 'lasso'));
     }
 
     if (clearRegionButton && !clearRegionButton.dataset.regionToolBound) {
       clearRegionButton.dataset.regionToolBound = 'true';
       clearRegionButton.addEventListener('click', () => clearRegion({ notify: true }));
     }
+
+    bindSmartSelectControls();
+  }
+
+  function bindSmartSelectControls() {
+    expandUpstreamButton = document.getElementById('region-expand-upstream');
+    expandDownstreamButton = document.getElementById('region-expand-downstream');
+    citySelectControl = document.getElementById('region-city-select');
+    thresholdSelectControl = document.getElementById('coverage-threshold');
+
+    if (expandUpstreamButton && !expandUpstreamButton.dataset.regionToolBound) {
+      expandUpstreamButton.dataset.regionToolBound = 'true';
+      expandUpstreamButton.addEventListener('click', () => expandSelection('upstream'));
+    }
+
+    if (expandDownstreamButton && !expandDownstreamButton.dataset.regionToolBound) {
+      expandDownstreamButton.dataset.regionToolBound = 'true';
+      expandDownstreamButton.addEventListener('click', () => expandSelection('downstream'));
+    }
+
+    if (citySelectControl && !citySelectControl.dataset.regionToolBound) {
+      citySelectControl.dataset.regionToolBound = 'true';
+      citySelectControl.addEventListener('change', () => {
+        const option = citySelectControl.options[citySelectControl.selectedIndex];
+        const city = citySelectControl.value;
+        const label = option ? option.textContent : city;
+        citySelectControl.value = '';
+        if (city) selectCityRegion(city, label);
+      });
+    }
+
+    if (thresholdSelectControl && !thresholdSelectControl.dataset.regionToolBound) {
+      thresholdSelectControl.dataset.regionToolBound = 'true';
+      thresholdSelectControl.addEventListener('change', () => {
+        // Re-evaluate the current drawn region with the new threshold.
+        if (selectedRegion && selectedRegion.type !== 'ids') {
+          internalSelectedIds = selectIdsInRegion(selectedRegion, latestPayload && latestPayload.network);
+          if (latestPayload) update(latestPayload);
+          notifyRegionChange(selectedRegion, internalSelectedIds);
+        }
+      });
+    }
+  }
+
+  function getCoverageThreshold() {
+    const value = thresholdSelectControl ? Number(thresholdSelectControl.value) : NaN;
+    if (Number.isFinite(value) && value > 0 && value <= 1) return value;
+    return 0.3;
+  }
+
+  function getSeedIds() {
+    if (internalSelectedIds.size) return Array.from(internalSelectedIds);
+    const scope = getPayloadScope(latestPayload);
+    if (scope && scope.mode === 'region' && Array.isArray(scope.selectedIds) && scope.selectedIds.length) {
+      return scope.selectedIds.map(String);
+    }
+    if (latestPayload && latestPayload.selectedId) return [String(latestPayload.selectedId)];
+    return [];
+  }
+
+  function expandSelection(direction) {
+    const api = window.ResearchRegionSelect;
+    const network = latestPayload && latestPayload.network;
+    if (!api || !network || !network.topology) return;
+    const seeds = getSeedIds();
+    if (!seeds.length) return;
+    const expand = direction === 'upstream' ? api.expandUpstream : api.expandDownstream;
+    if (typeof expand !== 'function') return;
+    const ids = expand(seeds, network.topology);
+    applyIdsRegion(ids, direction === 'upstream' ? '上游扩选' : '下游路径', direction);
+  }
+
+  function selectCityRegion(city, label) {
+    const api = window.ResearchRegionSelect;
+    const network = latestPayload && latestPayload.network;
+    if (!api || typeof api.selectByCity !== 'function' || !network) return;
+    const ids = api.selectByCity(city, network.basins || network.subbasinsGeojson);
+    if (!ids.length) return;
+    applyIdsRegion(ids, `城市扩选 · ${label}`, 'city');
+  }
+
+  function applyIdsRegion(ids, label, source) {
+    const list = Array.from(new Set(toArray(ids).map(String)));
+    if (!list.length) return;
+    setDrawMode(false);
+    selectedRegion = { type: 'ids', ids: list, source: source || null, label: label || null };
+    internalSelectedIds = new Set(list);
+    updateLeafletRegionShape(selectedRegion);
+    if (latestPayload) update(latestPayload);
+    else syncRegionControls();
+    notifyRegionChange(selectedRegion, internalSelectedIds);
   }
 
   function ensureDrawOverlay(mapElement) {
@@ -697,6 +812,13 @@
     drawBox = document.createElement('div');
     drawBox.className = 'map-draw-box';
     drawCapture.appendChild(drawBox);
+
+    drawLassoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    drawLassoSvg.setAttribute('class', 'map-draw-lasso');
+    drawLassoPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    drawLassoSvg.appendChild(drawLassoPath);
+    drawCapture.appendChild(drawLassoSvg);
+
     mapElement.appendChild(drawCapture);
 
     drawCapture.addEventListener('pointerdown', handleDrawPointerDown);
@@ -705,23 +827,27 @@
     drawCapture.addEventListener('pointercancel', cancelActiveDraw);
   }
 
-  function setDrawMode(active) {
-    drawMode = Boolean(active);
+  function setDrawMode(mode) {
+    drawMode = mode === true ? 'rect' : (mode === 'rect' || mode === 'lasso' ? mode : false);
+    const active = Boolean(drawMode);
     const mapElement = document.getElementById('map');
-    if (mapElement) mapElement.classList.toggle('region-draw-active', drawMode);
+    if (mapElement) mapElement.classList.toggle('region-draw-active', active);
 
     if (leafletMap && leafletMap.dragging) {
-      if (drawMode) leafletMap.dragging.disable();
+      if (active) leafletMap.dragging.disable();
       else leafletMap.dragging.enable();
     }
     if (leafletMap && leafletMap.doubleClickZoom) {
-      if (drawMode) leafletMap.doubleClickZoom.disable();
+      if (active) leafletMap.doubleClickZoom.disable();
       else leafletMap.doubleClickZoom.enable();
     }
 
     cancelActiveDraw();
     syncRegionControls();
   }
+
+  const LASSO_MIN_STEP_PX = 3;
+  const LASSO_MAX_POINTS = 512;
 
   function handleDrawPointerDown(event) {
     if (!drawMode || !drawCapture) return;
@@ -730,16 +856,19 @@
 
     const point = getLocalPoint(event);
     drawing = {
+      mode: drawMode,
       pointerId: event.pointerId,
       startPoint: point,
       currentPoint: point,
       startLatLng: pointToLatLng(point),
+      points: drawMode === 'lasso' ? [point] : null,
     };
     drawCapture.setPointerCapture(event.pointerId);
     drawCapture.classList.add('drawing');
     const mapElement = document.getElementById('map');
     if (mapElement) mapElement.classList.add('region-drawing');
-    updateDrawBox(point, point);
+    if (drawing.mode === 'lasso') updateLassoPath(drawing.points);
+    else updateDrawBox(point, point);
   }
 
   function handleDrawPointerMove(event) {
@@ -748,7 +877,19 @@
     event.stopPropagation();
     const point = getLocalPoint(event);
     drawing.currentPoint = point;
-    updateDrawBox(drawing.startPoint, point);
+    if (drawing.mode === 'lasso') {
+      const last = drawing.points[drawing.points.length - 1];
+      const dx = point.x - last.x;
+      const dy = point.y - last.y;
+      if ((dx * dx + dy * dy) >= LASSO_MIN_STEP_PX * LASSO_MIN_STEP_PX
+        && drawing.points.length < LASSO_MAX_POINTS) {
+        drawing.points.push(point);
+        updateLassoPath(drawing.points);
+      }
+    } else {
+      updateDrawBox(drawing.startPoint, point);
+    }
+    schedulePreview();
   }
 
   function handleDrawPointerUp(event) {
@@ -758,11 +899,19 @@
 
     const finishedDraw = drawing;
     const endPoint = getLocalPoint(event);
+    cancelActiveDraw();
+
+    if (finishedDraw.mode === 'lasso') {
+      const region = lassoRegionFromPoints(finishedDraw.points);
+      if (!region) return;
+      applyRegion(region, { notify: true });
+      setDrawMode(false);
+      return;
+    }
+
     const width = Math.abs(endPoint.x - finishedDraw.startPoint.x);
     const height = Math.abs(endPoint.y - finishedDraw.startPoint.y);
     const endLatLng = pointToLatLng(endPoint);
-    cancelActiveDraw();
-
     if (width < 8 || height < 8) return;
 
     const region = regionFromLatLngs(finishedDraw.startLatLng, endLatLng);
@@ -775,10 +924,111 @@
       drawCapture.releasePointerCapture(drawing.pointerId);
     }
     drawing = null;
+    clearPreview();
     if (drawCapture) drawCapture.classList.remove('drawing');
     if (drawBox) drawBox.style.display = 'none';
+    if (drawLassoPath) drawLassoPath.setAttribute('d', '');
+    if (drawLassoSvg) drawLassoSvg.style.display = 'none';
     const mapElement = document.getElementById('map');
     if (mapElement) mapElement.classList.remove('region-drawing');
+  }
+
+  function updateLassoPath(points) {
+    if (!drawLassoSvg || !drawLassoPath || !points || !points.length) return;
+    drawLassoSvg.style.display = 'block';
+    const path = points
+      .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`)
+      .join(' ');
+    drawLassoPath.setAttribute('d', `${path} Z`);
+  }
+
+  function lassoRegionFromPoints(points) {
+    if (!Array.isArray(points) || points.length < 3) return null;
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    points.forEach((point) => {
+      if (point.x < minX) minX = point.x;
+      if (point.x > maxX) maxX = point.x;
+      if (point.y < minY) minY = point.y;
+      if (point.y > maxY) maxY = point.y;
+    });
+    if (maxX - minX < 8 || maxY - minY < 8) return null;
+
+    const ring = points.map((point) => {
+      const latLng = pointToLatLng(point);
+      return [latLng.lng, latLng.lat];
+    });
+    const first = ring[0];
+    const last = ring[ring.length - 1];
+    if (first[0] !== last[0] || first[1] !== last[1]) ring.push([first[0], first[1]]);
+    return { type: 'Polygon', coordinates: [ring] };
+  }
+
+  function buildDraftRegion() {
+    if (!drawing) return null;
+    if (drawing.mode === 'lasso') {
+      return lassoRegionFromPoints(drawing.points);
+    }
+    return regionFromLatLngs(drawing.startLatLng, pointToLatLng(drawing.currentPoint));
+  }
+
+  function schedulePreview() {
+    if (previewFrame) return;
+    previewFrame = window.requestAnimationFrame(() => {
+      previewFrame = null;
+      renderPreview();
+    });
+  }
+
+  function renderPreview() {
+    if (!drawing || !basinLayer) return;
+    const region = buildDraftRegion();
+    const ids = region
+      ? selectIdsInRegion(region, latestPayload && latestPayload.network)
+      : new Set();
+    applyPreviewStyles(ids);
+  }
+
+  const PREVIEW_STYLE = {
+    color: '#0b7285',
+    weight: 3.2,
+    dashArray: '4 3',
+    fillOpacity: 0.9,
+  };
+
+  function applyPreviewStyles(ids) {
+    if (!basinLayer) {
+      previewIds = ids;
+      return;
+    }
+    basinLayer.eachLayer((layer) => {
+      const id = String((layer.feature && layer.feature.properties && layer.feature.properties.id) || '');
+      const inNew = ids.has(id);
+      const inOld = previewIds.has(id);
+      if (inNew && !inOld && typeof layer.setStyle === 'function') {
+        layer.setStyle(PREVIEW_STYLE);
+        if (typeof layer.bringToFront === 'function') layer.bringToFront();
+      } else if (!inNew && inOld && typeof basinLayer.resetStyle === 'function') {
+        basinLayer.resetStyle(layer);
+      }
+    });
+    previewIds = ids;
+  }
+
+  function clearPreview() {
+    if (previewFrame) {
+      window.cancelAnimationFrame(previewFrame);
+      previewFrame = null;
+    }
+    if (basinLayer && previewIds.size && typeof basinLayer.resetStyle === 'function') {
+      basinLayer.eachLayer((layer) => {
+        const id = String((layer.feature && layer.feature.properties && layer.feature.properties.id) || '');
+        if (previewIds.has(id)) basinLayer.resetStyle(layer);
+      });
+    }
+    previewIds = new Set();
   }
 
   function updateDrawBox(start, end) {
@@ -829,14 +1079,14 @@
   }
 
   function applyRegion(region, options = {}) {
-    const normalized = normalizeBboxRegion(region);
+    const normalized = normalizeRegion(region);
     if (!normalized) return;
     selectedRegion = normalized;
     internalSelectedIds = selectIdsInRegion(normalized, latestPayload && latestPayload.network);
 
     if (latestPayload) update(latestPayload);
     else {
-      updateLeafletRegionBox(normalized);
+      updateLeafletRegionShape(normalized);
       syncRegionControls();
       updateSelectionSummary({ hasSelection: true, ids: internalSelectedIds, region: normalized }, latestPayload);
     }
@@ -848,7 +1098,7 @@
     selectedRegion = null;
     internalSelectedIds = new Set();
     setDrawMode(false);
-    updateLeafletRegionBox(null);
+    updateLeafletRegionShape(null);
 
     if (latestPayload) update(latestPayload);
     else {
@@ -892,8 +1142,8 @@
     const downstreamIds = toIdSet(payload && payload.downstreamHighlightIds);
     const selectedId = payload && payload.selectedId ? String(payload.selectedId) : null;
     const payloadRegion = hasOwn(payload, 'region') ? payload.region : null;
-    const region = normalizeBboxRegion(payloadRegion)
-      || normalizeBboxRegion(scope && scope.region)
+    const region = normalizeRegion(payloadRegion)
+      || normalizeRegion(scope && scope.region)
       || selectedRegion;
     const useInternalRegion = Boolean(selectedRegion && region && regionsEqual(region, selectedRegion) && scopeMode === 'global');
     const effectiveExplicitIds = useInternalRegion ? null : explicitIds;
@@ -970,6 +1220,31 @@
     return [];
   }
 
+  function normalizeRegion(region) {
+    if (!region) return null;
+    if (region.type === 'ids' && Array.isArray(region.ids)) {
+      const ids = region.ids.map(String).filter(Boolean);
+      if (!ids.length) return null;
+      return {
+        type: 'ids',
+        ids,
+        source: region.source || null,
+        label: region.label || null,
+      };
+    }
+    const polygon = normalizePolygonRegionShape(region);
+    if (polygon) return polygon;
+    return normalizeBboxRegion(region);
+  }
+
+  function normalizePolygonRegionShape(region) {
+    const geometry = region.type === 'Feature' ? region.geometry : region;
+    if (!geometry || geometry.type !== 'Polygon' || !Array.isArray(geometry.coordinates)) return null;
+    const ring = geometry.coordinates[0];
+    if (!Array.isArray(ring) || ring.length < 4) return null;
+    return { type: 'Polygon', coordinates: geometry.coordinates };
+  }
+
   function normalizeBboxRegion(region) {
     if (!region) return null;
     if (region.type === 'bbox' && Array.isArray(region.sw) && Array.isArray(region.ne)) {
@@ -993,15 +1268,30 @@
   }
 
   function selectIdsInRegion(region, network) {
-    const normalized = normalizeBboxRegion(region);
+    const normalized = normalizeRegion(region);
     if (!normalized || !network) return new Set();
+
+    if (normalized.type === 'ids') return new Set(normalized.ids);
+
+    const api = window.ResearchRegionSelect;
+    if (api && typeof api.selectByCoverage === 'function' && network.subbasinsGeojson) {
+      try {
+        const ids = api.selectByCoverage(normalized, network.subbasinsGeojson, {
+          threshold: getCoverageThreshold(),
+        });
+        return new Set(ids.map(String));
+      } catch (error) {
+        // Fall through to the centroid heuristic below.
+      }
+    }
+
     const basins = Array.isArray(network.basins) ? network.basins : [];
     const ids = new Set();
 
     basins.forEach((basin) => {
       const centroid = getBasinCentroid(basin);
       if (!centroid) return;
-      if (isLngLatInsideBbox(centroid, normalized)) ids.add(String(basin.id));
+      if (isLngLatInsideRegion(centroid, normalized)) ids.add(String(basin.id));
     });
 
     if (ids.size || !network.subbasinsGeojson) return ids;
@@ -1009,9 +1299,32 @@
     (network.subbasinsGeojson.features || []).forEach((feature) => {
       const id = String((feature.properties && feature.properties.id) || '');
       const centroid = getFeatureCentroid(feature);
-      if (id && centroid && isLngLatInsideBbox(centroid, normalized)) ids.add(id);
+      if (id && centroid && isLngLatInsideRegion(centroid, normalized)) ids.add(id);
     });
     return ids;
+  }
+
+  function isLngLatInsideRegion(point, normalized) {
+    if (normalized.type === 'Polygon') {
+      return pointInLngLatRing(point, normalized.coordinates[0] || []);
+    }
+    return isLngLatInsideBbox(point, normalized);
+  }
+
+  function pointInLngLatRing(point, ring) {
+    const lng = Number(point[0]);
+    const lat = Number(point[1]);
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const xi = Number(ring[i][0]);
+      const yi = Number(ring[i][1]);
+      const xj = Number(ring[j][0]);
+      const yj = Number(ring[j][1]);
+      const intersects = ((yi > lat) !== (yj > lat))
+        && (lng < ((xj - xi) * (lat - yi)) / ((yj - yi) || 1e-12) + xi);
+      if (intersects) inside = !inside;
+    }
+    return inside;
   }
 
   function getBasinCentroid(basin) {
@@ -1111,28 +1424,38 @@
       .filter((flow) => flow.from && flow.to && Number(flow.volume) > 0);
   }
 
-  function updateLeafletRegionBox(region) {
+  const REGION_SHAPE_STYLE = {
+    className: 'leaflet-region-selection',
+    color: '#17212b',
+    weight: 2,
+    opacity: 0.95,
+    fillColor: '#1f7a8c',
+    fillOpacity: 0.08,
+    dashArray: '7 5',
+    interactive: false,
+  };
+
+  function updateLeafletRegionShape(region) {
     if (!leafletMap || !window.L) return;
     if (regionRectLayer) {
       regionRectLayer.remove();
       regionRectLayer = null;
     }
 
-    const normalized = normalizeBboxRegion(region);
-    if (!normalized) return;
+    const normalized = normalizeRegion(region);
+    if (!normalized || normalized.type === 'ids') return;
+
+    if (normalized.type === 'Polygon') {
+      const latLngs = (normalized.coordinates[0] || []).map((vertex) => [vertex[1], vertex[0]]);
+      if (latLngs.length < 3) return;
+      regionRectLayer = window.L.polygon(latLngs, REGION_SHAPE_STYLE).addTo(leafletMap);
+      return;
+    }
+
     regionRectLayer = window.L.rectangle([
       [normalized.sw[0], normalized.sw[1]],
       [normalized.ne[0], normalized.ne[1]],
-    ], {
-      className: 'leaflet-region-selection',
-      color: '#17212b',
-      weight: 2,
-      opacity: 0.95,
-      fillColor: '#1f7a8c',
-      fillOpacity: 0.08,
-      dashArray: '7 5',
-      interactive: false,
-    }).addTo(leafletMap);
+    ], REGION_SHAPE_STYLE).addTo(leafletMap);
   }
 
   function updateSelectionSummary(selectionState, payload) {
@@ -1175,9 +1498,16 @@
 
   function syncRegionControls() {
     if (regionDrawButton) {
-      regionDrawButton.classList.toggle('active', drawMode);
-      regionDrawButton.setAttribute('aria-pressed', drawMode ? 'true' : 'false');
-      regionDrawButton.textContent = drawMode ? '取消圈选' : '圈选区域';
+      const active = drawMode === 'rect';
+      regionDrawButton.classList.toggle('active', active);
+      regionDrawButton.setAttribute('aria-pressed', active ? 'true' : 'false');
+      regionDrawButton.textContent = active ? '取消圈选' : '矩形圈选';
+    }
+    if (regionLassoButton) {
+      const active = drawMode === 'lasso';
+      regionLassoButton.classList.toggle('active', active);
+      regionLassoButton.setAttribute('aria-pressed', active ? 'true' : 'false');
+      regionLassoButton.textContent = active ? '取消套索' : '套索圈选';
     }
     if (clearRegionButton) {
       const selectionState = latestPayload ? getSelectionState(latestPayload) : {
@@ -1185,11 +1515,26 @@
       };
       clearRegionButton.disabled = !selectionState.hasSelection;
     }
+    const hasSeed = getSeedIds().length > 0;
+    const hasTopology = Boolean(latestPayload && latestPayload.network && latestPayload.network.topology);
+    if (expandUpstreamButton) expandUpstreamButton.disabled = !hasSeed || !hasTopology;
+    if (expandDownstreamButton) expandDownstreamButton.disabled = !hasSeed || !hasTopology;
+    if (citySelectControl) citySelectControl.disabled = !latestPayload || !latestPayload.network;
   }
 
   function regionsEqual(a, b) {
     if (!a || !b) return false;
-    return a.sw[0] === b.sw[0]
+    if (a.type !== b.type) return false;
+    if (a.type === 'Polygon') {
+      return JSON.stringify(a.coordinates) === JSON.stringify(b.coordinates);
+    }
+    if (a.type === 'ids') {
+      if (a.ids.length !== b.ids.length) return false;
+      const other = new Set(b.ids);
+      return a.ids.every((id) => other.has(id));
+    }
+    return Array.isArray(a.sw) && Array.isArray(b.sw)
+      && a.sw[0] === b.sw[0]
       && a.sw[1] === b.sw[1]
       && a.ne[0] === b.ne[0]
       && a.ne[1] === b.ne[1];
@@ -1388,7 +1733,7 @@
     init,
     update,
     setRegion: (region, selectedIds) => {
-      const normalized = normalizeBboxRegion(region);
+      const normalized = normalizeRegion(region);
       if (!normalized) return;
       selectedRegion = normalized;
       internalSelectedIds = selectedIds === undefined
@@ -1396,13 +1741,17 @@
         : toIdSet(selectedIds);
       if (latestPayload) update(latestPayload);
       else {
-        updateLeafletRegionBox(normalized);
+        updateLeafletRegionShape(normalized);
         syncRegionControls();
       }
     },
     clearRegion,
-    startRegionDraw: () => setDrawMode(true),
+    startRegionDraw: () => setDrawMode('rect'),
+    startLassoDraw: () => setDrawMode('lasso'),
     stopRegionDraw: () => setDrawMode(false),
+    expandUpstream: () => expandSelection('upstream'),
+    expandDownstream: () => expandSelection('downstream'),
+    selectCity: (city, label) => selectCityRegion(city, label || city),
     getRegion: () => selectedRegion,
     getSelectedIds: () => Array.from(internalSelectedIds),
     refresh: () => latestPayload && update(latestPayload),

@@ -391,17 +391,232 @@
       && point[1] <= bbox[3] + EPS;
   }
 
-  function selectSubbasins(region, subbasins) {
+  function geometryBbox(geometry) {
+    if (!geometry || !Array.isArray(geometry.coordinates)) return null;
+    let minLng = Infinity;
+    let minLat = Infinity;
+    let maxLng = -Infinity;
+    let maxLat = -Infinity;
+    const visit = (node) => {
+      if (!Array.isArray(node)) return;
+      if (node.length >= 2 && typeof node[0] === "number" && typeof node[1] === "number") {
+        if (node[0] < minLng) minLng = node[0];
+        if (node[0] > maxLng) maxLng = node[0];
+        if (node[1] < minLat) minLat = node[1];
+        if (node[1] > maxLat) maxLat = node[1];
+        return;
+      }
+      node.forEach(visit);
+    };
+    visit(geometry.coordinates);
+    if (![minLng, minLat, maxLng, maxLat].every(Number.isFinite)) return null;
+    return [minLng, minLat, maxLng, maxLat];
+  }
+
+  function bboxesIntersect(a, b) {
+    return Boolean(a) && Boolean(b)
+      && a[0] <= b[2] + EPS && b[0] <= a[2] + EPS
+      && a[1] <= b[3] + EPS && b[1] <= a[3] + EPS;
+  }
+
+  function pointInBbox(point, bbox) {
+    return Boolean(bbox)
+      && point[0] >= bbox[0] - EPS && point[0] <= bbox[2] + EPS
+      && point[1] >= bbox[1] - EPS && point[1] <= bbox[3] + EPS;
+  }
+
+  function firstRingVertexMean(geometry) {
+    const ring = geometry.type === "Polygon"
+      ? geometry.coordinates && geometry.coordinates[0]
+      : geometry.coordinates && geometry.coordinates[0] && geometry.coordinates[0][0];
+    if (!Array.isArray(ring) || !ring.length) return null;
+    let sumLng = 0;
+    let sumLat = 0;
+    let count = 0;
+    ring.forEach((vertex) => {
+      const lng = finiteNumber(vertex && vertex[0], NaN);
+      const lat = finiteNumber(vertex && vertex[1], NaN);
+      if (Number.isFinite(lng) && Number.isFinite(lat)) {
+        sumLng += lng;
+        sumLat += lat;
+        count += 1;
+      }
+    });
+    return count ? [sumLng / count, sumLat / count] : null;
+  }
+
+  function sampleGrid(geometry, bbox, resolution) {
+    const points = [];
+    const stepLng = (bbox[2] - bbox[0]) / resolution;
+    const stepLat = (bbox[3] - bbox[1]) / resolution;
+    for (let i = 0; i < resolution; i += 1) {
+      for (let j = 0; j < resolution; j += 1) {
+        const point = [bbox[0] + (i + 0.5) * stepLng, bbox[1] + (j + 0.5) * stepLat];
+        if (pointInGeometry(point, geometry)) points.push(point);
+      }
+    }
+    return points;
+  }
+
+  const MIN_SAMPLE_POINTS = 10;
+
+  function buildSamplePoints(geometry, options = {}) {
+    const normalized = asGeometry(geometry) || geometry;
+    const bbox = geometryBbox(normalized);
+    if (!normalized || !bbox) return [];
+    if (bbox[2] - bbox[0] < EPS || bbox[3] - bbox[1] < EPS) {
+      return [[(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2]];
+    }
+    const baseResolution = Math.max(4, Math.round(Math.sqrt(finiteNumber(options.target, 256))));
+    let points = sampleGrid(normalized, bbox, baseResolution);
+    if (points.length < MIN_SAMPLE_POINTS) {
+      points = sampleGrid(normalized, bbox, baseResolution * 2);
+    }
+    if (!points.length) {
+      const fallbacks = [
+        readCentroid(options.fallback ? { centroid: options.fallback } : null),
+        firstRingVertexMean(normalized),
+        [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2],
+      ].filter(Boolean);
+      const inside = fallbacks.find((point) => pointInGeometry(point, normalized));
+      points = [inside || fallbacks[fallbacks.length - 1]];
+    }
+    return points;
+  }
+
+  const sampleCache = new WeakMap();
+
+  function getSamplePointsFor(geometry, options) {
+    if (!isObject(geometry)) return [];
+    if (sampleCache.has(geometry)) return sampleCache.get(geometry);
+    const points = buildSamplePoints(geometry, options);
+    sampleCache.set(geometry, points);
+    return points;
+  }
+
+  function readGeometry(item) {
+    if (!item) return null;
+    if (item.feature && item.feature.geometry) return asGeometry(item.feature.geometry);
+    if (item.geometry) return asGeometry(item.geometry);
+    if (item.type === "Polygon" || item.type === "MultiPolygon") return item;
+    return null;
+  }
+
+  const sampleIndexCache = new WeakMap();
+
+  function buildSampleIndex(subbasinsGeojson) {
+    if (!isObject(subbasinsGeojson)) return new Map();
+    if (sampleIndexCache.has(subbasinsGeojson)) return sampleIndexCache.get(subbasinsGeojson);
+    const index = new Map();
+    getSubbasinItems(subbasinsGeojson).forEach((item, i) => {
+      const id = readId(item, i);
+      const geometry = readGeometry(item);
+      if (!id || !geometry || index.has(id)) return;
+      index.set(id, {
+        points: getSamplePointsFor(geometry, { fallback: readCentroid(item) }),
+        bbox: geometryBbox(geometry),
+      });
+    });
+    sampleIndexCache.set(subbasinsGeojson, index);
+    return index;
+  }
+
+  function regionToGeometry(region) {
+    if (!region) return null;
+    if (region.type === "ids") return null;
+    const geometry = asGeometry(region);
+    if (geometry) return geometry;
+    const bbox = normalizeBbox(region);
+    if (!bbox) return null;
+    return {
+      type: "Polygon",
+      coordinates: [[
+        [bbox[0], bbox[1]],
+        [bbox[2], bbox[1]],
+        [bbox[2], bbox[3]],
+        [bbox[0], bbox[3]],
+        [bbox[0], bbox[1]],
+      ]],
+    };
+  }
+
+  function coverageFraction(sample, regionGeometry, regionBbox) {
+    if (!sample || !Array.isArray(sample.points) || !sample.points.length || !regionGeometry) return 0;
+    const bbox = regionBbox || geometryBbox(regionGeometry);
+    if (sample.bbox && bbox && !bboxesIntersect(sample.bbox, bbox)) return 0;
+    let inside = 0;
+    sample.points.forEach((point) => {
+      if (bbox && !pointInBbox(point, bbox)) return;
+      if (pointInGeometry(point, regionGeometry)) inside += 1;
+    });
+    return inside / sample.points.length;
+  }
+
+  const DEFAULT_COVERAGE_THRESHOLD = 0.3;
+
+  function normalizeThreshold(value) {
+    const n = finiteNumber(value, NaN);
+    if (!Number.isFinite(n)) return DEFAULT_COVERAGE_THRESHOLD;
+    return Math.min(1, Math.max(0, n));
+  }
+
+  function selectByCoverage(region, subbasinsGeojson, options = {}) {
+    const regionGeometry = regionToGeometry(region);
+    if (!regionGeometry) return [];
+    const threshold = normalizeThreshold(options.threshold);
+    const index = options.sampleIndex instanceof Map ? options.sampleIndex : buildSampleIndex(subbasinsGeojson);
+    const regionBbox = geometryBbox(regionGeometry);
+    const selected = [];
+    index.forEach((sample, id) => {
+      if (coverageFraction(sample, regionGeometry, regionBbox) >= threshold - EPS) selected.push(id);
+    });
+    return selected;
+  }
+
+  function selectSubbasins(region, subbasins, options = {}) {
     const items = getSubbasinItems(subbasins);
     if (!region || !items.length) return [];
+
+    if (region.type === "ids" && Array.isArray(region.ids)) {
+      const wanted = new Set(region.ids.map(cleanId).filter(Boolean));
+      const selected = [];
+      items.forEach((item, index) => {
+        const id = readId(item, index);
+        if (id && wanted.has(id)) {
+          wanted.delete(id);
+          selected.push(id);
+        }
+      });
+      return selected;
+    }
+
+    const regionGeometry = regionToGeometry(region);
+    const threshold = normalizeThreshold(options && options.threshold);
+    const sampleIndex = options && options.sampleIndex instanceof Map ? options.sampleIndex : null;
+    const regionBbox = regionGeometry ? geometryBbox(regionGeometry) : null;
 
     const selected = [];
     const seen = new Set();
     items.forEach((item, index) => {
       const id = readId(item, index);
+      if (!id || seen.has(id)) return;
+
+      const geometry = regionGeometry ? readGeometry(item) : null;
+      if (geometry) {
+        const sample = (sampleIndex && sampleIndex.get(id)) || {
+          points: getSamplePointsFor(geometry, { fallback: readCentroid(item) }),
+          bbox: geometryBbox(geometry),
+        };
+        if (coverageFraction(sample, regionGeometry, regionBbox) >= threshold - EPS) {
+          seen.add(id);
+          selected.push(id);
+        }
+        return;
+      }
+
       const centroid = readCentroid(item);
-      if (!id || !centroid) return;
-      if (pointInRegion(centroid, region) && !seen.has(id)) {
+      if (!centroid) return;
+      if (pointInRegion(centroid, region)) {
         seen.add(id);
         selected.push(id);
       }
@@ -442,6 +657,71 @@
     Object.keys(topology).forEach((id) => {
       computeDownstreamReach(id, topology);
     });
+  }
+
+  function buildUpstreamIndex(topology) {
+    const index = {};
+    Object.entries(isObject(topology) ? topology : {}).forEach(([id, downstream]) => {
+      const from = cleanId(id);
+      const to = cleanId(downstream);
+      if (!from || !to || to === OUTLET) return;
+      if (!index[to]) index[to] = [];
+      index[to].push(from);
+    });
+    return index;
+  }
+
+  function cleanSeedIds(seedIds) {
+    return (Array.isArray(seedIds) ? seedIds : [seedIds]).map(cleanId).filter(Boolean);
+  }
+
+  function expandUpstream(seedIds, topology) {
+    const upstream = buildUpstreamIndex(topology);
+    const result = new Set(cleanSeedIds(seedIds));
+    const queue = [...result];
+    while (queue.length) {
+      const id = queue.pop();
+      (upstream[id] || []).forEach((up) => {
+        if (!result.has(up)) {
+          result.add(up);
+          queue.push(up);
+        }
+      });
+    }
+    return [...result];
+  }
+
+  function expandDownstream(seedIds, topology) {
+    const map = isObject(topology) ? topology : {};
+    const result = new Set(cleanSeedIds(seedIds));
+    [...result].forEach((id) => {
+      if (!own(map, id)) return;
+      computeDownstreamReach(id, topology).forEach((downstream) => {
+        if (downstream !== OUTLET) result.add(downstream);
+      });
+    });
+    return [...result];
+  }
+
+  function selectByCity(city, source) {
+    const target = cleanId(city);
+    if (!target) return [];
+    const items = getSubbasinItems(source);
+    const selected = [];
+    const seen = new Set();
+    items.forEach((item, index) => {
+      const props = item && item.properties ? item.properties : {};
+      const cities = Array.isArray(item && item.adminCities)
+        ? item.adminCities
+        : (Array.isArray(props.adminCities) ? props.adminCities : []);
+      if (!cities.some((value) => cleanId(value) === target)) return;
+      const id = readId(item, index);
+      if (id && !seen.has(id)) {
+        seen.add(id);
+        selected.push(id);
+      }
+    });
+    return selected;
   }
 
   function extractMeta(source) {
@@ -568,6 +848,16 @@
   return {
     selectSubbasins,
     extractSubNetwork,
+    geometryBbox,
+    buildSamplePoints,
+    buildSampleIndex,
+    regionToGeometry,
+    coverageFraction,
+    selectByCoverage,
+    buildUpstreamIndex,
+    expandUpstream,
+    expandDownstream,
+    selectByCity,
     _internals: {
       pointInRegion,
       normalizeBbox,

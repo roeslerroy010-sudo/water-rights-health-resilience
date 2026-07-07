@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#17212b">
   <title>研究版 | 水权交易与健康韧性</title>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=lasso-topo-20260706">
 </head>
 <body>
   <div class="app-shell">
@@ -138,8 +138,30 @@
               <button type="button" class="layer-tab" data-layer="netTrade">交易净额</button>
             </div>
             <div class="region-tools" role="group" aria-label="地图选区工具">
-              <button type="button" id="region-draw-toggle" class="region-tool" data-map-action="draw-region" aria-pressed="false">圈选区域</button>
+              <button type="button" id="region-draw-toggle" class="region-tool ghost" data-map-action="draw-region" aria-pressed="false">矩形圈选</button>
+              <button type="button" id="region-lasso-toggle" class="region-tool ghost" data-map-action="lasso-region" aria-pressed="false">套索圈选</button>
               <button type="button" id="region-clear" class="region-tool ghost" data-map-action="clear-region" disabled>清除选区</button>
+            </div>
+            <div class="region-tools region-smart-tools" role="group" aria-label="拓扑智能扩选">
+              <button type="button" id="region-expand-upstream" class="region-tool ghost" title="沿水文拓扑选中当前选区的全部上游集水区" disabled>扩选上游</button>
+              <button type="button" id="region-expand-downstream" class="region-tool ghost" title="沿水文拓扑选中当前选区通往出口的下游路径" disabled>扩选下游</button>
+              <select id="region-city-select" class="region-tool ghost region-select" aria-label="按城市选择" disabled>
+                <option value="">按城市选择</option>
+                <option value="Wuhan">武汉</option>
+                <option value="Huangshi">黄石</option>
+                <option value="Ezhou">鄂州</option>
+                <option value="Huanggang">黄冈</option>
+                <option value="Xiaogan">孝感</option>
+                <option value="Xianning">咸宁</option>
+                <option value="Xiantao">仙桃</option>
+                <option value="Tianmen">天门</option>
+                <option value="Qianjiang">潜江</option>
+              </select>
+              <select id="coverage-threshold" class="region-tool ghost region-select" aria-label="圈选覆盖阈值" title="子流域被圈中面积占比达到该阈值才会被选中">
+                <option value="0.1">覆盖≥10%</option>
+                <option value="0.3" selected>覆盖≥30%</option>
+                <option value="0.5">覆盖≥50%</option>
+              </select>
             </div>
           </div>
         </div>
@@ -185,14 +207,14 @@
   <script src="vendor/leaflet/leaflet.js"></script>
   <script type="module" src="js/glpkLoader.js?v=region-lp-20260615"></script>
   <script src="js/networkModel.js?v=elasticity-20260616"></script>
-  <script src="js/regionSelect.js?v=trade-scope-20260616"></script>
+  <script src="js/regionSelect.js?v=lasso-topo-20260706"></script>
   <script src="js/tradeAggregate.js?v=round2-qa-20260615"></script>
-  <script src="js/map.js?v=trade-viz-qa-20260615"></script>
+  <script src="js/map.js?v=lasso-topo-20260706"></script>
   <script src="js/dashboard.js?v=health-tax-20260616"></script>
   <script src="js/sankey.js?v=round2-qa-20260615"></script>
   <script src="js/marketChart.js?v=trade-viz-20260615"></script>
   <script src="js/tauResponseChart.js?v=eco-flow-20260616"></script>
   <script src="js/richPanels.js?v=health-tax-20260616"></script>
-  <script src="js/main.js?v=elasticity-20260616"></script>
+  <script src="js/main.js?v=lasso-topo-20260706"></script>
 </body>
 </html>
