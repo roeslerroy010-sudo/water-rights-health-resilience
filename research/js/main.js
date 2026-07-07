@@ -212,6 +212,8 @@
         || value.type === 'Feature'
         || value.type === 'Polygon'
         || value.type === 'MultiPolygon'
+        || (value.type === 'polygon' && Array.isArray(value.coordinates))
+        || (value.type === 'ids' && Array.isArray(value.ids))
         || value.geometry
       )
     );
@@ -718,7 +720,12 @@
 
     const selectedIds = resolveRegionSelectedIds(baseInput);
     const totalCount = baseInput.basins.length;
-    const selectionLabel = selectedIds.length ? `选区 ${selectedIds.length} 个子流域` : '选区为空';
+    const regionSourceLabel = state.region && typeof state.region.label === 'string' && state.region.label
+      ? ` · ${state.region.label}`
+      : '';
+    const selectionLabel = selectedIds.length
+      ? `选区 ${selectedIds.length} 个子流域${regionSourceLabel}`
+      : '选区为空';
     const scopeBase = {
       mode: 'region',
       selectedIds,
@@ -807,6 +814,10 @@
     }
 
     if (!state.region) return [];
+
+    if (state.region.type === 'ids' && Array.isArray(state.region.ids)) {
+      return sanitizeSelectedIds(state.region.ids, baseInput.basins);
+    }
 
     const api = getRegionSelectApi();
     const selector = api && typeof api.selectSubbasins === 'function'
@@ -2001,6 +2012,7 @@
         healthWeight: merged.healthWeight || merged.health_weight || {},
         downstream: merged.downstream || topology[id] || null,
         downstreamReach: Array.isArray(merged.downstreamReach) ? merged.downstreamReach : [],
+        adminCities: Array.isArray(merged.adminCities) ? merged.adminCities.slice() : [],
         centroid,
         feature,
       };
