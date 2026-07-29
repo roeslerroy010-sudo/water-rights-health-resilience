@@ -690,10 +690,32 @@
     state.result.meta.lpSpikePending = hasLpSpikePending(state.result);
     state.tradeAggregate = buildTradeAggregateContext();
     state.result.tradeAggregate = state.tradeAggregate;
+    reconcileTradingCost(state.result);
     setText('model-status', state.result.meta.modelLabel);
     updateSolverStatus(state.result);
     updateScopeStatus(state.result.meta.scope);
     renderAll();
+  }
+
+  // 交易摩擦只应对「真正换手的水」计费。此前 tradingCostCny 回退到
+  // tradableWater（= 全域取水量 ~186 亿 m³）× 单位成本，等于给每一方
+  // 未参与交易的水都收一遍过路费，使 NPV 在整个 τ 区间恒为负。
+  // 成交量口径与 methodology 的「口径 R」一致：withTrade − autarky
+  // 的净买方增量，即 tradeFlows 的成交总量。
+  function computeTradedVolume(result) {
+    const flows = (result && result.tradeAggregate && result.tradeAggregate.tradeFlows) || [];
+    return flows.reduce((sum, flow) => sum + Math.max(0, numberOr(flow.volume, 0)), 0);
+  }
+
+  function reconcileTradingCost(result) {
+    const aggregate = result && result.aggregate;
+    if (!aggregate) return;
+    const unitCost = Math.max(0, numberOr(state.params && state.params.tradingCost, 0));
+    const tradedVolume = computeTradedVolume(result);
+    const tradingCostCny = tradedVolume * unitCost;
+    aggregate.tradedVolume = tradedVolume;
+    aggregate.tradingCostCny = tradingCostCny;
+    aggregate.economicNpvCny = numberOr(aggregate.healthBenefitCny, 0) - tradingCostCny;
   }
 
   function buildBaseModelInput(params) {
@@ -2209,7 +2231,14 @@
       const downstreamPopulation = numberOr(node.healthTax && node.healthTax.downstreamPopulation, 0);
       const healthTax = numberOr(node.healthTax && node.healthTax.taxPerM3, 0);
       const taxIntensity = clamp01(healthTax / Math.max((solution.marketPrice || 0) + healthTax, 1));
-      const dalyAvoided = Math.max(0, node.population / 100000 * 16 * urbanCoverage * (0.72 + input.params.healthFloor + input.params.tau * 0.55));
+      // 优先采用求解器自己算出的 dalyAvoided：它含气候压力项
+      // （networkModel.computeNodeDalyAvoided），本地兜底公式没有，
+      // 若在此覆盖会让气候情景对健康产出完全失效。
+      const dalyAvoided = numberOr(
+        node.dalyAvoided ?? node.totalDalyAvoided,
+        Math.max(0, node.population / 100000 * 16 * urbanCoverage
+          * (0.72 + input.params.healthFloor + input.params.tau * 0.55))
+      );
       const inequity = clamp01(stressIndex * 0.62 + (downstreamPopulation / 9000000) * 0.22 + taxIntensity * 0.16 - input.params.healthFloor * 0.18);
 
       return {

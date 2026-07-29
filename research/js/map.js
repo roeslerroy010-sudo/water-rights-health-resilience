@@ -29,6 +29,10 @@
   let legend = null;
   let regionRectLayer = null;
   let fittedBoundsKey = null;
+  let fittedViewportKey = null;
+  let userAdjustedView = false;
+  let programmaticViewChange = false;
+  let mapResizeObserver = null;
   let onSelectBasin = null;
   let onRegionChange = null;
   let onClearRegion = null;
@@ -82,12 +86,60 @@
 
       mapElement.classList.add('leaflet-map-active');
       addLegend();
+      watchMapViewport(mapElement);
     }
 
     ensureDrawOverlay(mapElement);
     bindRegionControls();
     ensureNetTradeLayerControl();
     syncRegionControls();
+  }
+
+  // 容器尺寸在首帧往往尚未稳定。若此刻 fitBounds，缩放会按错误的容器
+  // 尺寸算出来，并被 fittedBoundsKey 永久锁定（实测 AOI 只占画面 2%）。
+  // 这里监听尺寸变化让 Leaflet 重新量容器，并在用户尚未手动操作地图时
+  // 重新取景；一旦用户自己平移或缩放过，就不再自动改动视野。
+  function watchMapViewport(mapElement) {
+    if (!leafletMap) return;
+
+    leafletMap.on('zoomstart movestart', () => {
+      if (!programmaticViewChange) userAdjustedView = true;
+    });
+
+    const handleResize = () => {
+      if (!leafletMap) return;
+      leafletMap.invalidateSize({ animate: false });
+      refitBoundsIfNeeded();
+    };
+
+    if (typeof ResizeObserver === 'function') {
+      mapResizeObserver = new ResizeObserver(handleResize);
+      mapResizeObserver.observe(mapElement);
+    } else if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+    }
+  }
+
+  // 20px 粒度：忽略滚动条等微小抖动，只在容器真正变形时才重新取景
+  function getViewportKey() {
+    if (!leafletMap) return null;
+    const size = leafletMap.getSize();
+    return Math.round(size.x / 20) + 'x' + Math.round(size.y / 20);
+  }
+
+  function fitToBasins(bounds) {
+    if (!leafletMap || !bounds || !bounds.isValid()) return;
+    programmaticViewChange = true;
+    leafletMap.invalidateSize({ animate: false });
+    leafletMap.fitBounds(bounds.pad(0.12), { maxZoom: 9, animate: false });
+    programmaticViewChange = false;
+    fittedViewportKey = getViewportKey();
+  }
+
+  function refitBoundsIfNeeded() {
+    if (userAdjustedView || !basinLayer) return;
+    if (getViewportKey() === fittedViewportKey) return;
+    fitToBasins(basinLayer.getBounds && basinLayer.getBounds());
   }
 
   function update(payload) {
@@ -144,8 +196,13 @@
 
     const bounds = basinLayer.getBounds && basinLayer.getBounds();
     const boundsKey = getNetworkBoundsKey(network);
-    if (bounds && bounds.isValid() && boundsKey !== fittedBoundsKey) {
-      leafletMap.fitBounds(bounds.pad(0.12), { maxZoom: 9 });
+    const networkChanged = boundsKey !== fittedBoundsKey;
+    // 网络变了必须重新取景；网络没变但容器尺寸变过（首帧布局未稳定、
+    // 窗口缩放）也要补一次，除非用户已经自己动过地图
+    const viewportChanged = !userAdjustedView && getViewportKey() !== fittedViewportKey;
+    if (bounds && bounds.isValid() && (networkChanged || viewportChanged)) {
+      if (networkChanged) userAdjustedView = false;
+      fitToBasins(bounds);
       fittedBoundsKey = boundsKey;
     }
     updateLegend(activeLayer);
@@ -712,6 +769,31 @@
     }
 
     bindSmartSelectControls();
+    bindRegionKeyboardShortcuts();
+  }
+
+  // 徒手绘制本身依赖指针拖拽；键盘用户的等价路径是「按城市选择」加
+  // 「扩选上游/下游」（均为原生 button/select，可 Tab 到并回车触发）。
+  // 这里补上 Escape：绘制态会禁用地图拖拽，此前只能用鼠标退出。
+  function bindRegionKeyboardShortcuts() {
+    if (typeof document === 'undefined' || !document.body) return;
+    if (document.body.dataset.regionKeyboardBound) return;
+    document.body.dataset.regionKeyboardBound = 'true';
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (drawing) {
+        cancelActiveDraw();
+        event.preventDefault();
+        return;
+      }
+      if (drawMode) {
+        const activeButton = drawMode === 'lasso' ? regionLassoButton : regionDrawButton;
+        setDrawMode(false);
+        if (activeButton && typeof activeButton.focus === 'function') activeButton.focus();
+        event.preventDefault();
+      }
+    });
   }
 
   function bindSmartSelectControls() {

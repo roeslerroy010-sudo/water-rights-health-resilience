@@ -47,6 +47,8 @@
     baseline: 1.0,
     current: 1.0,
     normal: 1.0,
+    // UI 的「历史校准」选项值；显式列出，避免只靠未命中时的兜底返回 1
+    historical: 1.0,
     wet: 1.08,
     dry: 0.82,
     drought: 0.72,

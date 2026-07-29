@@ -115,7 +115,13 @@ h2 {
 .layout {
   display: grid;
   grid-template-columns: minmax(260px, 300px) minmax(460px, 1fr) minmax(300px, 350px);
-  min-height: calc(100vh - 82px);
+  /* 定高而非 min-height。原来用 min-height 时行高被最长的 dashboard
+     撑开（实测 1355px），三栏的 overflow-y:auto 永不生效，地图被推到
+     折叠线以下 480px。钉死为一屏减去 topbar，三栏各自内部滚动；
+     底部 rich-panel-band 仍在首屏之下，靠页面滚动到达（原设计如此）。 */
+  height: calc(100vh - 82px);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .side-panel {
@@ -1473,6 +1479,9 @@ select.region-select {
 
   .layout {
     grid-template-columns: 280px minmax(420px, 1fr);
+    /* 窄屏改为内容驱动高度，解除一屏约束 */
+    height: auto;
+    min-height: 0;
     overflow: visible;
   }
 
