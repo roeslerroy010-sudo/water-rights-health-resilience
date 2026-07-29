@@ -8,11 +8,14 @@ node_modules/
 
 /package.json
 /package-lock.json
-/create_pptx.js
-/ppt/
-/images/
 /ACTION-POSTER/
 *.docx
+
+# 本地留存，不进 GitHub
+/archive/
+/submission/
+/0729_todolist.md
+*.pptx
 
 research/tools/bake/raw/
 research/tools/bake/intermediate/

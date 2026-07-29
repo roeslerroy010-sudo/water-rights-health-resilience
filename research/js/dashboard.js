@@ -59,7 +59,7 @@
       <section class="metric-card inequity">
         <div class="metric-label">经济 NPV</div>
         <div class="metric-value">${formatMoney(aggregate.economicNpvCny)}</div>
-        <p class="metric-sub">健康货币化收益扣除交易摩擦</p>
+        <p class="metric-sub">健康货币化收益扣除交易摩擦（摩擦按实际成交量 ${formatWater(aggregate.tradedVolume)} 计）</p>
       </section>
 
       <section class="metric-card incentive ${compatible ? '' : 'bad'}">

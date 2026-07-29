@@ -114,7 +114,7 @@
           </div>
           <div class="status-line solver-warning" id="solver-note" hidden>
             <span>Note</span>
-            <strong>启发式求解，LP spike 待完成</strong>
+            <strong>本地 GLPK 未就绪，已回退启发式求解，结果为近似解</strong>
           </div>
           <div class="status-line">
             <span>Basins</span>
@@ -138,8 +138,8 @@
               <button type="button" class="layer-tab" data-layer="netTrade">交易净额</button>
             </div>
             <div class="region-tools" role="group" aria-label="地图选区工具">
-              <button type="button" id="region-draw-toggle" class="region-tool ghost" data-map-action="draw-region" aria-pressed="false">矩形圈选</button>
-              <button type="button" id="region-lasso-toggle" class="region-tool ghost" data-map-action="lasso-region" aria-pressed="false">套索圈选</button>
+              <button type="button" id="region-draw-toggle" class="region-tool ghost" data-map-action="draw-region" aria-pressed="false" aria-keyshortcuts="Escape" title="在地图上拖拽绘制矩形；按 Esc 退出绘制">矩形圈选</button>
+              <button type="button" id="region-lasso-toggle" class="region-tool ghost" data-map-action="lasso-region" aria-pressed="false" aria-keyshortcuts="Escape" title="在地图上拖拽绘制任意形状；按 Esc 退出绘制">套索圈选</button>
               <button type="button" id="region-clear" class="region-tool ghost" data-map-action="clear-region" disabled>清除选区</button>
             </div>
             <div class="region-tools region-smart-tools" role="group" aria-label="拓扑智能扩选">
