@@ -53,6 +53,24 @@ externalInflow  = externalInflowBase × (1 − 0.6 × (1 − climateAvailability
 
 过境水只承担 60% 的折减幅度——长江与汉江干流过境水受本地气候影响弱于本地产流。
 
+### 2.1b 干流取水许可（2026-07-30 新增）
+
+过境客水在中国水资源核算中**不计入水资源总量**，干流水须凭取水许可按量取用。
+模型据此把过境水拆成两部分：
+
+```
+permittedTransit_i = transitShare_i × min(1, quota / totalTransit)
+passThrough_i      = transitShare_i − permittedTransit_i
+qSupply_i          = qLocal_i + permittedTransit_i          # 进入优化，可被取用
+```
+
+`passThrough` 仍在河道物理下泄，单独报告，**不计入 `environmentalFlow`**
+（后者是本地可配置水量的河道留存，口径见 methodology.md）。
+
+`quota` 默认 **40 亿 m³/yr**，UI 可调。改此参数前请先读
+[`parameter-dossier.md`](parameter-dossier.md) §1——旧版把全部 3,552.8 亿 m³
+过境水当作可配置供给，是导致模型全域无稀缺的根因。
+
 ### 2.2 路由
 
 沿拓扑排序自上游向下游累加：
@@ -113,13 +131,29 @@ scale                = 0.02（healthTaxScale）
 
 ### 3.3 市场出清价
 
+**出清价 = LP 水量平衡约束的对偶值**（2026-07-30 起）。对偶值 λᵢ 的量纲是
+元/m³，经济含义是节点 i 水的稀缺租金，即水权市场的出清价。这是求解器直接
+解出的均衡价格，不是外生假定。展示的单一价格取按取水量加权的平均值，
+同时报告空间价差区间与稀缺节点数。
+
 ```
-P_market = 0.35 + scarcity × 0.9 + τ × 0.04 + tradingCost × 0.5
-scarcity = max(0, totalDemand − totalSupply) / totalDemand
+λ_i        = dual(balance_i)                     # 元/m³，LP 直接给出
+P_market   = Σ_i λ_i · withdrawn_i / Σ_i withdrawn_i
 ```
 
-默认参数（τ=24%、交易成本 10%、SSP2-4.5）下供水充裕，`scarcity ≈ 0`，
-故 `P_market ≈ 0.35 + 0.0096 + 0.05 = 0.4096 元/m³`。
+默认参数（τ=24%、摩擦 0.10 元/m³、SSP2-4.5、干流许可 40 亿 m³）下
+`P_market = 0.1612 元/m³`，空间价差 0.000–1.172 元/m³，8/66 节点稀缺。
+SSP5-8.5 下升至 0.7946 元/m³，66/66 节点稀缺。
+
+> **外部验证**：该值落在《水资源税改革试点实施办法》（财税〔2024〕28 号）
+> 湖北地表水最低平均税额 0.1 元/m³ 与试点期平均 0.43 元/m³ 之间。
+> 见 [`parameter-dossier.md`](parameter-dossier.md) §3。
+
+**旧公式**（保留为启发式回退路径的取值，`marketPriceFormula`）：
+`0.35 + scarcity×0.9 + τ×0.04 + tradingCost×0.5`。该式在默认参数下报价
+0.4096 元/m³，而同一次求解的真实影子价格为 0——因为当时整条长江被当作
+可自由配置供给注入，全域不存在稀缺。详见
+[`economics-audit.md`](economics-audit.md) F1/F2。
 
 ---
 
@@ -222,11 +256,25 @@ healthFloorSignal = clamp( healthFloor , 0 , 1 )
 ### 疾病例数与货币化
 
 ```
-diseaseCases  = dalyAvoided / 0.18          （DISEASE_CASE_DALY，前端代理折算）
-healthBenefit = dalyAvoided × ¥125,000      （VALUE_PER_DALY）
-tradingCost   = tradedVolume × 单位交易成本
-economicNpv   = healthBenefit − tradingCost
+diseaseCases     = dalyAvoided / 0.18       （DISEASE_CASE_DALY，前端代理折算）
+healthBenefit    = dalyAvoided × ¥125,000   （VALUE_PER_DALY）
+tradingCost      = tradedVolume × 单位交易成本(元/m³)
+deadweightLoss   = Σ_i ½ · Δq_i · taxPerM3_i   ← 庇古税的社会成本
+taxRevenue       = Σ_i taxPerM3_i · x_industry_i  ← 转移支付，不计入社会成本
+netSocialBenefit = healthBenefit − tradingCost − deadweightLoss
 ```
+
+**为什么社会成本是无谓损失三角形而不是被减掉的水的全价**：企业面对水价上涨
+不会等比例减产，而是投资节水与循环利用。弹性 ε 已经蕴含「企业可以替代」，
+按全价计损失等于既承认弹性又假装没有弹性。默认参数下两种口径相差 30 倍
+（0.29 亿元 vs 8.65 亿元），详见 [`economics-audit.md`](economics-audit.md) §4.1。
+
+**「NPV」已更名为「年度净社会收益」**：原口径是单年、无贴现、无年限，
+叫 NPV 不成立。若要做真 NPV，社会折现率可引国家发改委《建设项目经济评价
+方法与参数（第三版）》的 8%。
+
+默认参数下：健康收益 9.92 亿元 − 无谓损失 0.29 亿元 − 摩擦 0 = **9.63 亿元/年**；
+另有健康税收入 **4.60 亿元/年**（转移支付，可定向用于供水管网与 WASH 投资）。
 
 ---
 
@@ -240,13 +288,16 @@ economicNpv   = healthBenefit − tradingCost
 **交易效率面板里工业用水上升不等于健康税失效**——那是交易让缺水部门买到水的
 效率效应。混读这两个面板是本项目最容易被误解的地方。
 
-实测健康税方向（默认 SSP2-4.5，全域）：
+实测健康税方向（默认 SSP2-4.5、干流许可 40 亿 m³，全域；2026-07-30 复算）：
 
-| τ | 可交易水量 | DALY 避免 | 经济 NPV |
-|---|---|---|---|
-| 0% | 191.91 亿 m³ | 5,129.4 | 6.41 亿元 |
-| 24% | 185.94 亿 m³ | 7,937.9 | 9.92 亿元 |
-| 50% | 179.48 亿 m³ | 10,980.4 | 13.73 亿元 |
+| τ | 水影子价格 | DALY 避免 | 健康收益 | 无谓损失 | 税收收入 | **年度净社会收益** |
+|---|---|---|---|---|---|---|
+| 0% | 0.3384 元/m³ | 5,129.4 | 6.41 亿 | 0 | 0 | **6.41 亿元** |
+| 24% | 0.1612 元/m³ | 7,937.9 | 9.92 亿 | 0.29 亿 | 4.60 亿 | **9.63 亿元** |
+| 50% | 0.1243 元/m³ | 10,980.4 | 13.73 亿 | 1.26 亿 | 8.27 亿 | **12.46 亿元** |
+
+> **一个内生结论**：健康税提高会**降低**水的影子价格（0.338 → 0.161 → 0.124）。
+> 税压缩了工业需求，缓解了稀缺，租金随之下降。这不是假设出来的，是解出来的。
 
 ---
 
@@ -260,35 +311,42 @@ economicNpv   = healthBenefit − tradingCost
 | 水权交易范围 | 外部调水 | 外部调水 / 内部解决 |
 | Health floor | 26% | 10–45% |
 | Local eco floor | 15% | 10–40% |
-| Trading cost | 10% | 2–24% |
+| Trading cost | 0.10 元/m³ | 0.02–0.24 元/m³ |
+| 干流取水许可 | 40 亿 m³/yr | 可调 |
 
 ---
 
-## 9. 参数出处状态 —— ⚠️ 待补
+## 9. 参数出处状态
 
 **物理与水文数据**溯源完整：`research/data/provenance.json` 共 41 条目，覆盖
 CLCD / WorldCover / WorldPop / VIIRS / MERIT / HydroSHEDS / 气候 / GADM / 湖北水资源公报
 九类来源，并显式标注 `estimated: true` 与低置信度字段。
 
-**经济与健康行为参数目前没有文献出处**，均为代码内标定值：
+**经济参数**已建档，见 [`parameter-dossier.md`](parameter-dossier.md)。摘要：
 
-| 常量 | 值 | 出处状态 |
+| 常量 | 值 | 状态 |
 |---|---|---|
-| `DEFAULT_SECTOR_VALUE` | urban 3.2 / eco 2.4 / industry 1.45 / agri 1.15 元每 m³ | ⚠️ 无引用 |
-| `HEALTH_LOSS_COEFF.industry` | 0.52 | ⚠️ 无引用 |
-| `INDUSTRY_DEMAND_FLOOR_FRACTION` | 0.40 | ⚠️ 无引用 |
-| `CLIMATE_AVAILABILITY` | ssp245 0.86 / ssp585 0.70 / dry 0.82 | ⚠️ 无引用 |
-| `DEFAULT_COMPLIANCE_COST` | urban 0.28 / eco 0.08 / agri 0.18 / industry 0.52 | ⚠️ 无引用 |
-| `avoidedPer100k` 各项系数 | 9 / 28 / 11 / 18 | ⚠️ 无引用 |
-| `VALUE_PER_DALY` | ¥125,000 | ⚠️ 无引用 |
-| `DISEASE_CASE_DALY` | 0.18 | ⚠️ 无引用 |
+| 干流取水许可 | 40 亿 m³/yr | ✅ 依据武汉市水务局 2024 年过境客水与用水总量数据标定 |
+| 工业弹性 `ε` | 0.90 | ✅ 文献区间 0.3–2.3，需报区间；武汉重复利用率已 94.2%，中心值宜下调 |
+| 水影子价格（输出） | 0.1612 元/m³ | ✅ 落在财税〔2024〕28 号的 0.1–0.43 元/m³ 实际税率区间内 |
+| `VALUE_PER_DALY` | ¥125,000 | ✅ ≈1.46× 人均 GDP，须报 ¥86k–¥257k 区间 |
+| 交易摩擦 | 0.10 元/m³ | ⚠️ 量纲已修，取值待标定 |
+| `CLIMATE_AVAILABILITY` | 0.86/0.82/0.70 | 🟡 待查 CMIP6 |
+| `INDUSTRY_DEMAND_FLOOR_FRACTION` | 0.40 | 🟡 待查 DB42/T 用水定额 |
+| `DEFAULT_SECTOR_VALUE` | 3.2/2.4/1.45/1.15 | 🟡 待查 |
+| 健康底线罚则 | 100 元/m³ | ✅ 已从 big-M 1e6 改为可解释值 |
+| `DEFAULT_COMPLIANCE_COST` | 0.28/0.08/0.18/0.52 | 🔴 定义不明 + 代码里乘 0.01 疑似 bug |
+| `HEALTH_LOSS_COEFF.industry` | 0.52 | 🔴 同时充当税基与需求收缩系数，一值两用，须拆分 |
+| `avoidedPer100k` 9/28/11/18 | — | 🔴 应删除重构为剂量—反应，不是补引用 |
+| `DISEASE_CASE_DALY` | 0.18 | 🔴 依赖上一项定链后才有意义 |
 
-这是当前最需要补的一环：所有头条数字（DALY 避免、疾病减少、经济 NPV）都由上表
-决定。第一轮表单 Q26 已承诺在 mentored phase 对 GBD 与中国环境健康文献校准，
-并**报告不确定性区间而非点估计**。补完前，所有数值应表述为"选定参数下的模型
-模拟输出"，不作为真实成交或因果评估结论。
+⚠️ **仍未修复的最大问题**：健康产出目前**与配水量无关**。城市供水覆盖率在
+所有情景下恒为 1.0，公式塌缩为 `DALY = 人口 × 政策旋钮多项式`，且 τ 直接进入
+健康函数构成循环论证。这意味着头条 DALY 数字不由水模型决定。
+详见 [`economics-audit.md`](economics-audit.md) F3/F4，重构依赖 B1 的健康参数工作。
 
----
+补完前，所有健康数值应表述为"选定参数下的模型模拟输出"，不作为真实成交或
+因果评估结论。
 
 ## 10. 模型边界
 
