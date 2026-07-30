@@ -20,6 +20,8 @@ const {
 const Benchmark = require("./networkModel.benchmark");
 
 const WATER_SECTORS = ["urban", "agri", "industry"];
+// 健康底线罚则为 100 元/m³；影子价格若接近或超过它，说明价格被罚项污染而非真实稀缺租金。
+const HEALTH_FLOOR_PENALTY_PROBE = 100;
 const WUHAN_ATTRS_PATH = path.resolve(__dirname, "../data/wuhan-attrs.json");
 const HEALTH_TAX_TAU_GRID = [0, 0.1, 0.24, 0.3, 0.4, 0.5];
 const HEALTH_TAX_FULL_BAKE_PARAMS = Object.freeze({
@@ -89,6 +91,33 @@ function assertSectorUnmetNearZero(result, label, tolerance) {
       label + " " + sector + " unmet should be near zero, got " + result.totals.unmet[sector]
     );
   }
+}
+
+// 干流取水许可口径下，正常年份不再要求「所有部门都不缺水」。
+// 可配置水量 = 本地水资源总量 + 取水许可，过境客水不计入，因此缺口会出现。
+// 有经济含义的断言是缺口的**次序**：生活用水优先保障，工业按税后有效需求满足，
+// 农业作为边际用户承担调节。见 docs/economics-audit.md F1。
+function assertCurtailmentOrder(result, label, tolerance, maxIndustryRate) {
+  const rate = (sector) => {
+    const cap = result.totals.demandCap[sector] || 0;
+    return cap > 0 ? result.totals.unmet[sector] / cap : 0;
+  };
+  const urbanRate = rate("urban");
+  const industryRate = rate("industry");
+  const agriRate = rate("agri");
+  assert.ok(
+    urbanRate <= tolerance,
+    label + " urban demand must be fully met (health floor binds first), shortfall rate " + urbanRate
+  );
+  assert.ok(
+    agriRate > industryRate,
+    label + " agriculture must absorb curtailment ahead of industry, got agri " + agriRate + " vs industry " + industryRate
+  );
+  const industryCeiling = maxIndustryRate === undefined ? 0.01 : maxIndustryRate;
+  assert.ok(
+    industryRate < industryCeiling,
+    label + " industry stays within " + (industryCeiling * 100) + "% of its tax-adjusted effective demand cap, got " + industryRate
+  );
 }
 
 function assertNoEcoAllocation(node, label) {
@@ -737,6 +766,82 @@ async function run() {
   assert.strictEqual(asyncLpSolved.solver.type, "glpk.js", "solveNetworkLpAsync uses the glpk solver");
   assert.strictEqual(asyncLpSolved.solver.lpReady, true, "solveNetworkLpAsync returns a solved LP result");
   assertEcoFlowResult(asyncLpSolved, "async LP result");
+
+  // 出清价来自 LP 对偶值（水的稀缺租金），不是外生公式。
+  const realWuhanAttrs = readFullBakeWuhanAttrs();
+  const lpBaseline = await solveNetworkLpAsync({
+    network: realWuhanAttrs,
+    glpk,
+    tau: 0.24,
+    climate: "ssp245",
+    healthFloor: 0.26,
+    ecoFloor: 0.15,
+    tradingCost: 0.1,
+    demandElasticity: 0.9,
+  });
+  assert.strictEqual(lpBaseline.marketPriceSource, "lp-dual-shadow-price", "market price comes from the LP dual, not the heuristic formula");
+  assert.ok(lpBaseline.shadowPrice.scarceNodeCount > 0, "real Wuhan SSP2-4.5 has a positive water shadow price somewhere in the basin");
+  assert.ok(lpBaseline.shadowPrice.spread > 0, "shadow prices differ across space, which is what creates gains from trade");
+  assert.ok(lpBaseline.nodes.every((node) => node.shadowPriceCny !== null), "every node reports a shadow price");
+  assert.ok(lpBaseline.supplyScope.quotaBinding, "the mainstem abstraction quota binds, so transit water is not freely allocable");
+  assert.ok(
+    lpBaseline.supplyScope.transitAllocable < lpBaseline.supplyScope.transitAvailable,
+    "only the permitted share of mainstem transit enters the allocable pool"
+  );
+
+  // 庇古税的福利账：税收是转移支付，社会成本是无谓损失三角形。
+  assert.ok(lpBaseline.welfare.industrialWaterForgoneM3 > 0, "a positive health tax reduces industrial water demand");
+  assert.ok(lpBaseline.welfare.taxRevenueCny > 0, "the health tax raises revenue");
+  assert.ok(
+    lpBaseline.welfare.deadweightLossCny < lpBaseline.welfare.taxRevenueCny,
+    "deadweight loss is far smaller than the transfer, which is why the tax is welfare-improving"
+  );
+  assert.ok(
+    lpBaseline.welfare.deadweightLossCny
+      < lpBaseline.welfare.industrialWaterForgoneM3 * 1.45 * 0.25,
+    "social cost is the Harberger triangle, not the full value of the forgone water"
+  );
+  const lpNoTax = await solveNetworkLpAsync({
+    network: realWuhanAttrs,
+    glpk,
+    tau: 0,
+    climate: "ssp245",
+    healthFloor: 0.26,
+    ecoFloor: 0.15,
+    tradingCost: 0.1,
+    demandElasticity: 0.9,
+  });
+  assert.strictEqual(lpNoTax.welfare.taxRevenueCny, 0, "zero tax raises zero revenue");
+  assert.strictEqual(lpNoTax.welfare.deadweightLossCny, 0, "zero tax creates zero deadweight loss");
+
+  const lpStress = await solveNetworkLpAsync({
+    network: realWuhanAttrs,
+    glpk,
+    tau: 0.24,
+    climate: "ssp585",
+    healthFloor: 0.26,
+    ecoFloor: 0.15,
+    tradingCost: 0.1,
+    demandElasticity: 0.9,
+  });
+  assert.ok(
+    lpStress.shadowPrice.scarceNodeCount > lpBaseline.shadowPrice.scarceNodeCount,
+    "climate stress spreads scarcity to more of the basin"
+  );
+  assert.ok(
+    lpStress.totals.unmet.agri > lpBaseline.totals.unmet.agri,
+    "climate stress deepens agricultural curtailment"
+  );
+  // 默认取水许可标定在「生活用水健康底线处处达标」的水平，缺水集中在农业。
+  assert.ok(
+    lpBaseline.nodes.every((node) => node.healthFloorShortfall <= 1),
+    "the default abstraction quota keeps every subbasin's domestic health floor satisfied"
+  );
+  assert.ok(
+    lpBaseline.shadowPrice.max < HEALTH_FLOOR_PENALTY_PROBE,
+    "shadow prices stay in an interpretable range and are not contaminated by the health-floor penalty"
+  );
+
   assertHealthTaxLpStressTauGridAcceptance(glpk);
 
   const retentionNetwork = normalizeInputs(makeRiverRetentionFixture());
@@ -909,7 +1014,11 @@ async function run() {
   });
   assertEcoFlowResult(realBaselineDefault, "real Wuhan SSP2-4.5 baseline");
   assertEcoFlowResult(realStressDefault, "real Wuhan SSP5-8.5 stress");
-  assertSectorUnmetNearZero(realBaselineDefault, "real Wuhan SSP2-4.5 baseline", 1e-3);
+  assertCurtailmentOrder(realBaselineDefault, "real Wuhan SSP2-4.5 baseline", 1e-3);
+  assert.ok(
+    realBaselineDefault.totals.unmet.agri > 1e8,
+    "real Wuhan SSP2-4.5 baseline shows a real agricultural shortfall once mainstem transit is capped by an abstraction quota"
+  );
   assert.strictEqual(realBaselineDefault.params.riverRetentionValue, 0, "real Wuhan SSP2-4.5 does not activate retention pressure");
   assert.ok(realStressDefault.params.riverRetentionValue > 1, "real Wuhan SSP5-8.5 activates retention pressure");
   const realStressEffectiveUnmet = realStressDefault.totals.unmet;
@@ -917,7 +1026,12 @@ async function run() {
   assert.ok(sumSectorValues(realStressEffectiveUnmet) > 1e9, "real Wuhan SSP5-8.5 default exposes a visible effective-demand sector shortfall");
   assert.ok(realStressEffectiveUnmet.agri > 1e9, "real Wuhan SSP5-8.5 default exposes agricultural shortfall");
   assert.ok(realStressRawUnmet.industry > 1e8, "real Wuhan SSP5-8.5 default exposes industrial raw-demand shortfall");
-  assertSectorUnmetNearZero(realStressTau0, "real Wuhan SSP5-8.5 tau=0", 1e-3);
+  // 极端气候压力下工业也会被削减，但农业仍应承担更大比例——次序不变。
+  assertCurtailmentOrder(realStressTau0, "real Wuhan SSP5-8.5 tau=0", 1e-3, 0.15);
+  assert.ok(
+    realStressTau0.totals.unmet.agri > realBaselineDefault.totals.unmet.agri,
+    "agricultural curtailment deepens as climate stress rises"
+  );
   assert.ok(
     realStressHighTau.totals.allocation.industry < realStressTau0.totals.allocation.industry - 1e-6,
     "real Wuhan stress high tau lowers industrial withdrawal"

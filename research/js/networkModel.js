@@ -43,6 +43,12 @@
 
   const INDUSTRY_DEMAND_FLOOR_FRACTION = 0.40;
 
+  // 生活用水健康底线未达标的惩罚（元/m³）。这是「保障性供水失败」的社会成本，
+  // 是政策性罚则而非边际价值。取值比最高部门用水价值（生活 3.2 元/m³）高约一个
+  // 数量级，既能让底线真正约束住配置，又不会像原来的 big-M(1e6) 那样把影子价格
+  // 污染到无法解释。见 docs/economics-audit.md F2。
+  const HEALTH_FLOOR_SHORTFALL_PENALTY = 100;
+
   const CLIMATE_AVAILABILITY = {
     baseline: 1.0,
     current: 1.0,
@@ -65,6 +71,16 @@
     high: 0.12,
     prohibitive: 0.25,
   };
+
+  // 干流取水许可量（m3/yr）。中国水资源核算中「过境客水」不计入水资源总量，
+  // 长江/汉江干流过境水只能凭取水许可按量取用，不是可自由配置的供给。
+  // 默认 40 亿 m³/yr ≈ 过境水量的 1.2%，与武汉市 2024 年全市总用水量
+  // 46.16 亿 m³ 同一量级（武汉市水务局《节约用水发展"十五五"规划》征求意见稿）。
+  // 都市圈其余 8 市更依赖本地产流与支流，故区域干流取水许可取此量级。
+  // 在该值下，正常年（SSP2-4.5）全域农业缺口 4.2%、水影子价格 0.161 元/m³，
+  // 与湖北地表水水资源税率量级相符；SSP5-8.5 下农业缺口升至 19.0%。
+  // 详见 docs/economics-audit.md F1 与 docs/parameter-dossier.md。
+  const MAINSTEM_ABSTRACTION_QUOTA_DEFAULT = 4.0e9;
 
   function isObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -456,6 +472,21 @@
     if (params && params.externalInflowClimateSensitive === false) return 1;
     const availability = getClimateAvailability(params || {});
     return Math.max(0, 1 - 0.6 * (1 - availability));
+  }
+
+  // 干流取水许可量。返回 Infinity 表示不设限（旧口径，把整条长江当作可配置供给）。
+  function getMainstemAbstractionQuota(params) {
+    const raw = params && (
+      params.mainstemAbstractionQuota ??
+      params.mainstemQuota ??
+      params.transitAbstractionQuota
+    );
+    if (raw === "unlimited" || raw === Infinity) return Infinity;
+    if (raw === undefined || raw === null || raw === "") {
+      return MAINSTEM_ABSTRACTION_QUOTA_DEFAULT;
+    }
+    const n = finiteNumber(raw, MAINSTEM_ABSTRACTION_QUOTA_DEFAULT);
+    return Math.max(0, n);
   }
 
   function getClimateStress(params) {
@@ -910,6 +941,21 @@
     const allNodeIds = normalized.nodes.map((node) => node.id);
     const demandWeight = (nodeId) => sumDemand(normalized.nodeById.get(nodeId));
 
+    // 过境客水在物理上继续沿河道下泄（进入水量平衡与出流），但法律上只有取水许可
+    // 范围内的部分可以被取用。因此这里保留完整的过境水路由，另外按同一比例算出
+    // 每个节点「可取用」的那部分，交给 LP 的取水许可约束使用。
+    const quota = getMainstemAbstractionQuota(params || {});
+    const totalTransit = normalized.nodes.reduce((sum, node) => {
+      return sum + Math.max(0, node.externalInflowBase * externalMultiplier);
+    }, 0);
+    const quotaScale = (!Number.isFinite(quota) || totalTransit <= quota)
+      ? 1
+      : (totalTransit <= EPS ? 0 : quota / totalTransit);
+    const permittedShareByNode = {};
+    for (const node of normalized.nodes) {
+      permittedShareByNode[node.id] = 0;
+    }
+
     for (const node of normalized.nodes) {
       const transitVolume = Math.max(
         0,
@@ -939,6 +985,7 @@
         const shareRatio = equalShare === null ? demandWeight(id) / totalWeight : equalShare;
         const volume = transitVolume * shareRatio;
         transitShareByNode[id] += volume;
+        permittedShareByNode[id] += volume * quotaScale;
         shares[id] = round(volume, 6);
       }
 
@@ -954,7 +1001,12 @@
 
     return {
       transitShareByNode,
+      permittedShareByNode,
       injectionAllocations,
+      abstractionQuota: Number.isFinite(quota) ? quota : null,
+      transitAvailable: round(totalTransit, 6),
+      transitAllocable: round(totalTransit * quotaScale, 6),
+      quotaBinding: Number.isFinite(quota) && totalTransit > quota + EPS,
     };
   }
 
@@ -966,17 +1018,31 @@
     const externalByNode = {};
     const transitShares = computeTransitInflowShares(normalized, params || {}, { scope: "regional" });
 
+    // 可配置水量 = 本地水资源量 + 获准取用的过境水份额。
+    // 未获许可的过境水不进入优化（不可取用），但仍作为 passThrough 记录并计入
+    // 展示口径的河道流量——长江不会因为不可取用就消失。
+    const passThroughByNode = {};
+
     for (const node of normalized.nodes) {
       const qLocal = node.qLocalBase * climateAvailability;
+      const permitted = transitShares.permittedShareByNode[node.id] || 0;
+      const fullTransit = transitShares.transitShareByNode[node.id] || 0;
       localSupplyByNode[node.id] = Math.max(0, qLocal);
-      externalByNode[node.id] = transitShares.transitShareByNode[node.id] || 0;
-      qSupplyByNode[node.id] = Math.max(0, localSupplyByNode[node.id] + externalByNode[node.id]);
+      externalByNode[node.id] = permitted;
+      passThroughByNode[node.id] = Math.max(0, fullTransit - permitted);
+      qSupplyByNode[node.id] = Math.max(0, localSupplyByNode[node.id] + permitted);
     }
     return {
       qSupplyByNode,
       localSupplyByNode,
       externalByNode,
+      passThroughByNode,
+      permittedTransitByNode: transitShares.permittedShareByNode,
       externalInflowAllocations: transitShares.injectionAllocations,
+      abstractionQuota: transitShares.abstractionQuota,
+      transitAvailable: transitShares.transitAvailable,
+      transitAllocable: transitShares.transitAllocable,
+      quotaBinding: transitShares.quotaBinding,
     };
   }
 
@@ -1325,7 +1391,7 @@
       }
       objectiveVars.push({ name: lpOutflowVar(node.id), coef: riverRetentionObjectiveValue });
       bounds.push({ name: lpOutflowVar(node.id), type: glpk.GLP_LO, lb: minimumEcoBaseFlowDetails[node.id].ecoBaseFlow, ub: 0 });
-      objectiveVars.push({ name: lpSlackVar(node.id), coef: -1000000 });
+      objectiveVars.push({ name: lpSlackVar(node.id), coef: -HEALTH_FLOOR_SHORTFALL_PENALTY });
       bounds.push({ name: lpSlackVar(node.id), type: glpk.GLP_LO, lb: 0, ub: 0 });
     }
 
@@ -1347,6 +1413,7 @@
         vars: [{ name: lpOutflowVar(id), coef: 1 }],
         bnds: { type: glpk.GLP_LO, lb: ecoFloor * (localSupplyByNode[id] || 0), ub: 0 },
       });
+
 
       const maxEcoDetail = computeNodeEcoBaseFlowDetail(node, localSupplyByNode[id] || 0, params || {});
       const maxWithdrawableSupply = Math.max(0, maxRoutedSupply[id] - maxEcoDetail.ecoBaseFlow);
@@ -1380,6 +1447,7 @@
         qSupplyByNode,
         localSupplyByNode: supplyBreakdown.localSupplyByNode,
         externalByNode: supplyBreakdown.externalByNode,
+        supplyBreakdown,
         upstreams,
         healthFloorTargets,
         healthTaxDetails,
@@ -1395,12 +1463,23 @@
 
   function solutionFromGlpkResult(glpkResult, glpk, problemContext, params) {
     const vars = (glpkResult.result && glpkResult.result.vars) || glpkResult.vars || {};
+    const duals = (glpkResult.result && glpkResult.result.dual) || glpkResult.dual || {};
     const status = glpkResult.result ? glpkResult.result.status : glpkResult.status;
     const objectiveValue = glpkResult.result ? glpkResult.result.z : glpkResult.z;
     const network = problemContext.network;
     const order = problemContext.order;
     const downstreamReach = computeDownstreamReach(network, { includeExternalOutlets: true });
-    const marketPrice = computeMarketPrice(network, problemContext.qSupplyByNode, params || {});
+    // 水量平衡约束的对偶值 = 该节点水的稀缺租金（元/m³），即水权市场的出清价。
+    // 由 LP 对偶直接解出，不是外生假定的公式。
+    const shadowPriceByNode = {};
+    let hasDuals = false;
+    for (const id of order) {
+      const lambda = optionalNumber(duals["balance_" + id]);
+      if (lambda === null) continue;
+      hasDuals = true;
+      shadowPriceByNode[id] = Math.max(0, lambda);
+    }
+    const formulaMarketPrice = computeMarketPrice(network, problemContext.qSupplyByNode, params || {});
 
     const nodes = order.map((id) => {
       const node = network.nodeById.get(id);
@@ -1471,8 +1550,47 @@
         healthFloorShortfall: round(healthFloorShortfall, 6),
         ...healthOutcomeFields(node, allocation, params || {}),
         healthTax: problemContext.healthTaxDetails[id],
+        shadowPriceCny: hasDuals ? round(shadowPriceByNode[id] || 0, 6) : null,
+        // 超出取水许可、不可取用但仍在河道中下泄的干流过境水。按 methodology.md
+        // 的口径，它不计入 environmentalFlow（那是本地可配置水量的河道留存），
+        // 只作为物理输运量单独报告。
+        transitPassThrough: round(
+          (problemContext.supplyBreakdown
+            && problemContext.supplyBreakdown.passThroughByNode
+            && problemContext.supplyBreakdown.passThroughByNode[id]) || 0,
+          6
+        ),
       };
     });
+
+    // 出清价取按实际取水量加权的影子价格；同时报告空间价差，价差正是交易的收益来源。
+    const shadowPriceStats = (() => {
+      if (!hasDuals) return null;
+      let weighted = 0;
+      let volume = 0;
+      let min = Infinity;
+      let max = -Infinity;
+      let scarceNodes = 0;
+      for (const node of nodes) {
+        const lambda = shadowPriceByNode[node.id] || 0;
+        const withdrawn = node.qWithdrawn || 0;
+        weighted += lambda * withdrawn;
+        volume += withdrawn;
+        min = Math.min(min, lambda);
+        max = Math.max(max, lambda);
+        if (lambda > EPS) scarceNodes += 1;
+      }
+      return {
+        volumeWeighted: round(volume > EPS ? weighted / volume : 0, 6),
+        min: round(Number.isFinite(min) ? min : 0, 6),
+        max: round(Number.isFinite(max) ? max : 0, 6),
+        spread: round(Number.isFinite(max) && Number.isFinite(min) ? max - min : 0, 6),
+        scarceNodeCount: scarceNodes,
+        nodeCount: nodes.length,
+      };
+    })();
+
+    const marketPrice = shadowPriceStats ? shadowPriceStats.volumeWeighted : formulaMarketPrice;
 
     const tradeFlows = network.edges
       .map((edge) => {
@@ -1507,6 +1625,7 @@
       acc.ecoSurplus += node.ecoSurplus;
       acc.environmentalFlow += node.environmentalFlow;
       acc.legacyEcoDemand += node.legacyEcoDemand;
+      acc.transitPassThrough += node.transitPassThrough || 0;
       addHealthOutcomesToTotals(acc, node);
       for (const sector of SECTORS) {
         acc.demand[sector] += node.demand[sector];
@@ -1529,6 +1648,7 @@
       ecoSurplus: 0,
       environmentalFlow: 0,
       legacyEcoDemand: 0,
+      transitPassThrough: 0,
       dalyAvoided: 0,
       dalyBurden: 0,
       demand: sectorMap(0),
@@ -1558,7 +1678,38 @@
     totals.ecoSurplus = round(totals.ecoSurplus, 6);
     totals.environmentalFlow = round(totals.environmentalFlow, 6);
     totals.legacyEcoDemand = round(totals.legacyEcoDemand, 6);
+    totals.transitPassThrough = round(totals.transitPassThrough, 6);
     roundHealthOutcomeTotals(totals);
+
+    // 庇古税的福利账：
+    //  - 税收收入是转移支付，不计入社会成本，但必须单独报告（可定向用于供水/WASH 投资）
+    //  - 社会成本是需求曲线下的无谓损失三角形 ½·Δq·t，不是被减掉的水的全价。
+    //    弹性 ε 已经蕴含「企业可以通过节水与循环利用替代」，按全价计损失等于
+    //    既承认弹性又假装没有弹性。详见 docs/economics-audit.md §4.1。
+    const welfare = (() => {
+      let forgone = 0;
+      let revenue = 0;
+      let dwl = 0;
+      let taxedVolume = 0;
+      for (const node of nodes) {
+        const taxPerM3 = nonNegative(node.healthTax && node.healthTax.taxPerM3, 0);
+        const baselineDemand = nonNegative(node.demand.industry, 0);
+        const cappedDemand = nonNegative(node.demandCap.industry, 0);
+        const reduction = Math.max(0, baselineDemand - cappedDemand);
+        forgone += reduction;
+        dwl += 0.5 * reduction * taxPerM3;
+        revenue += taxPerM3 * nonNegative(node.allocation.industry, 0);
+        taxedVolume += nonNegative(node.allocation.industry, 0);
+      }
+      return {
+        industrialWaterForgoneM3: round(forgone, 6),
+        deadweightLossCny: round(dwl, 6),
+        taxRevenueCny: round(revenue, 6),
+        averageTaxPerM3: round(taxedVolume > EPS ? revenue / taxedVolume : 0, 6),
+        costBasis: "harberger-deadweight-loss",
+        note: "税收收入为转移支付，不计入社会成本；社会成本按无谓损失三角形 ½·Δq·t 计。",
+      };
+    })();
 
     const result = {
       kind: "research-network-solution",
@@ -1585,10 +1736,23 @@
         riverRetentionObjectiveValue: problemContext.riverRetentionObjectiveValue,
         tradingCostPerM3: getTradingCost(params || {}),
         demandElasticity: getDemandElasticity(params || {}),
+        mainstemAbstractionQuota: getMainstemAbstractionQuota(params || {}),
       },
       network,
       order,
       marketPrice,
+      marketPriceSource: shadowPriceStats ? "lp-dual-shadow-price" : "heuristic-formula",
+      marketPriceFormula: round(formulaMarketPrice, 6),
+      shadowPrice: shadowPriceStats,
+      supplyScope: problemContext.supplyBreakdown
+        ? {
+          abstractionQuota: problemContext.supplyBreakdown.abstractionQuota,
+          transitAvailable: problemContext.supplyBreakdown.transitAvailable,
+          transitAllocable: problemContext.supplyBreakdown.transitAllocable,
+          quotaBinding: problemContext.supplyBreakdown.quotaBinding,
+        }
+        : null,
+      welfare,
       nodes,
       nodeById: Object.fromEntries(nodes.map((node) => [node.id, node])),
       tradeFlows,
