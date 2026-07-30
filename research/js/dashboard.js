@@ -32,11 +32,7 @@
         <p class="metric-sub">${escapeHtml(scopeLabel)}</p>
       </section>
 
-      <section class="metric-card people">
-        <div class="metric-label">市场出清价</div>
-        <div class="metric-value">${formatPrice(aggregate.marketPrice)}</div>
-        <p class="metric-sub">当前参数下的区域统一价格</p>
-      </section>
+      ${renderWaterPricePanel(aggregate)}
 
       <section class="metric-card health">
         <div class="metric-label">DALY 避免</div>
@@ -57,9 +53,9 @@
       </section>
 
       <section class="metric-card inequity">
-        <div class="metric-label">经济 NPV</div>
-        <div class="metric-value">${formatMoney(aggregate.economicNpvCny)}</div>
-        <p class="metric-sub">健康货币化收益扣除交易摩擦（摩擦按实际成交量 ${formatWater(aggregate.tradedVolume)} 计）</p>
+        <div class="metric-label">年度净社会收益</div>
+        <div class="metric-value">${formatMoney(aggregate.netSocialBenefitCny)}</div>
+        <p class="metric-sub">健康收益 ${formatMoney(aggregate.healthBenefitCny)} − 无谓损失 ${formatMoney(aggregate.deadweightLossCny)} − 交易摩擦 ${formatMoney(aggregate.tradingCostCny)}（摩擦按实际成交量 ${formatWater(aggregate.tradedVolume)} 计）。单年口径，未贴现</p>
       </section>
 
       <section class="metric-card incentive ${compatible ? '' : 'bad'}">
@@ -70,6 +66,36 @@
 
       ${renderNoTaxEffectPanel(context && context.noTaxComparison)}
       ${renderViolationPanel(result)}
+    `;
+  }
+
+  // 水权出清价来自 LP 水量平衡约束的对偶值（水的稀缺租金），不是外生公式。
+  // 空间价差是交易收益的来源；税收收入是转移支付，单独展示。
+  function renderWaterPricePanel(aggregate) {
+    const shadow = aggregate && aggregate.shadowPrice;
+    if (!shadow) return '';
+    const fromDual = aggregate.marketPriceSource === 'lp-dual-shadow-price';
+    const scope = aggregate.supplyScope || {};
+    const quotaNote = scope.quotaBinding
+      ? `干流取水许可 ${formatWater(scope.abstractionQuota)} / 过境水量 ${formatWater(scope.transitAvailable)}`
+      : '干流取水许可未成为约束';
+    return `
+      <section class="metric-card market">
+        <div class="metric-label">水权出清价</div>
+        <div class="metric-value">${formatNumber(aggregate.marketPrice, 4)} 元/m³</div>
+        <p class="metric-sub">
+          ${fromDual ? 'LP 水量平衡约束对偶值（水的稀缺租金），按取水量加权' : '启发式回退估值，非对偶解'}
+          · 空间价差 ${formatNumber(shadow.min, 3)}–${formatNumber(shadow.max, 3)} 元/m³
+          · 稀缺节点 ${shadow.scarceNodeCount}/${shadow.nodeCount}
+          · ${quotaNote}
+        </p>
+      </section>
+
+      <section class="metric-card market">
+        <div class="metric-label">健康税收入</div>
+        <div class="metric-value">${formatMoney(aggregate.taxRevenueCny)}</div>
+        <p class="metric-sub">转移支付，不计入社会成本；可定向用于供水管网与 WASH 投资。对应工业减少取水 ${formatWater(aggregate.industrialWaterForgoneM3)}</p>
+      </section>
     `;
   }
 

@@ -240,7 +240,8 @@
     if (demandElasticity) setText('elasticity-value', Number(demandElasticity.value).toFixed(2));
     if (floor) setText('floor-value', `${floor.value}%`);
     if (ecoFloor) setText('eco-floor-value', `${ecoFloor.value}%`);
-    if (cost) setText('cost-value', `${cost.value}%`);
+    // 交易摩擦按「元/m³」计费（成交量 × 单价），不是百分比——此前 UI 标成 % 会误导。
+    if (cost) setText('cost-value', `${(Number(cost.value) / 100).toFixed(2)} 元/m³`);
   }
 
   function readParams() {
@@ -715,7 +716,20 @@
     const tradingCostCny = tradedVolume * unitCost;
     aggregate.tradedVolume = tradedVolume;
     aggregate.tradingCostCny = tradingCostCny;
-    aggregate.economicNpvCny = numberOr(aggregate.healthBenefitCny, 0) - tradingCostCny;
+
+    // 庇古税的社会成本是无谓损失三角形，不是被减掉的水的全价；税收收入是转移
+    // 支付，不计入社会成本。口径与推导见 docs/economics-audit.md §4.1。
+    const welfare = (result && result.raw && result.raw.welfare) || null;
+    const deadweightLossCny = welfare ? Math.max(0, numberOr(welfare.deadweightLossCny, 0)) : 0;
+    const taxRevenueCny = welfare ? Math.max(0, numberOr(welfare.taxRevenueCny, 0)) : 0;
+    aggregate.deadweightLossCny = deadweightLossCny;
+    aggregate.taxRevenueCny = taxRevenueCny;
+    aggregate.industrialWaterForgoneM3 = welfare ? numberOr(welfare.industrialWaterForgoneM3, 0) : 0;
+    // 单年口径：无贴现、无年限，因此叫「年度净社会收益」而不是 NPV。
+    aggregate.netSocialBenefitCny = numberOr(aggregate.healthBenefitCny, 0)
+      - tradingCostCny
+      - deadweightLossCny;
+    aggregate.economicNpvCny = aggregate.netSocialBenefitCny;
   }
 
   function buildBaseModelInput(params) {
@@ -1197,14 +1211,32 @@
     const incentiveFlags = collectIncentiveFlags(result);
     const environmentSummary = buildEnvironmentSummary(result, input);
 
+    const welfare = (result.raw && result.raw.welfare) || null;
+    const deadweightLossCny = numberOr(aggregate.deadweightLossCny, welfare ? numberOr(welfare.deadweightLossCny, 0) : 0);
+    const taxRevenueCny = numberOr(aggregate.taxRevenueCny, welfare ? numberOr(welfare.taxRevenueCny, 0) : 0);
+    const netSocialBenefitCny = numberOr(
+      aggregate.netSocialBenefitCny,
+      healthBenefitCny - tradingCostCny - deadweightLossCny
+    );
+
     result.aggregate = {
       ...aggregate,
       tradableWater,
       marketPrice,
+      marketPriceSource: (result.raw && result.raw.marketPriceSource) || null,
+      shadowPrice: (result.raw && result.raw.shadowPrice) || null,
+      supplyScope: (result.raw && result.raw.supplyScope) || null,
       dalyAvoided,
       diseaseCasesAvoided,
       healthBenefitCny,
-      economicNpvCny,
+      deadweightLossCny,
+      taxRevenueCny,
+      industrialWaterForgoneM3: numberOr(
+        aggregate.industrialWaterForgoneM3,
+        welfare ? numberOr(welfare.industrialWaterForgoneM3, 0) : 0
+      ),
+      netSocialBenefitCny,
+      economicNpvCny: netSocialBenefitCny,
       tradingCostCny,
       incentiveCompatible: aggregate.incentiveCompatible !== undefined
         ? aggregate.incentiveCompatible

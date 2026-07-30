@@ -152,9 +152,15 @@ check("C5 main.js 的 tradingCostCny 由成交量而非 tradableWater 推导", (
       && /const tradingCostCny = tradedVolume \* unitCost;/.test(mainSource),
     "摩擦成本必须 = 成交量 × 单位成本"
   );
+  // 2026-07-30：成本侧补齐后，净社会收益 = 健康收益 − 摩擦成本 − 庇古税的无谓损失。
+  // 税收收入是转移支付，不进这条式子。见 docs/economics-audit.md §4.1。
   assert.ok(
-    /aggregate\.economicNpvCny = numberOr\(aggregate\.healthBenefitCny, 0\) - tradingCostCny;/.test(mainSource),
-    "NPV 必须 = 健康收益 − 按成交量计的摩擦成本"
+    /aggregate\.netSocialBenefitCny = numberOr\(aggregate\.healthBenefitCny, 0\)\s*\n\s*- tradingCostCny\s*\n\s*- deadweightLossCny;/.test(mainSource),
+    "年度净社会收益必须 = 健康收益 − 按成交量计的摩擦成本 − 无谓损失"
+  );
+  assert.ok(
+    /aggregate\.taxRevenueCny = taxRevenueCny;/.test(mainSource),
+    "税收收入必须单独报告，不得混入社会成本"
   );
   assert.ok(
     /reconcileTradingCost\(state\.result\);/.test(mainSource),
