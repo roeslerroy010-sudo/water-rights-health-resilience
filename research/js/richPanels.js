@@ -177,7 +177,7 @@
           <span>τ ${formatPercent(params.tau)}</span>
           <span>健康底线 ${formatPercent(params.healthFloor)}</span>
           <span>生态底线 ${formatOptionalPercent(params.ecoFloor)}</span>
-          <span>交易成本 ${formatPercent(params.tradingCost)}</span>
+          <span>交易摩擦 ${formatNumber(params.tradingCost, 2)} 元/m³</span>
           <span>交易范围 ${escapeHtml(tradeScope ? tradeScope.label : '外部调水（含边界入流）')}</span>
           <span>径流系数 ${aggregate.runoffCoeff === null ? '样本缺省' : aggregate.runoffCoeff.toFixed(2)}</span>
           <span>健康权重：生活 1.0 / 农业 0.1 / 工业 -0.25；生态基流按本地产流/支流口径约束</span>
@@ -607,9 +607,11 @@
 
   function renderTradeScopeSummary(tradeScope) {
     if (!tradeScope) return '';
+    // 边界入流只在圈选子区域时有定义：全域没有「区外流入」这个概念。
+    // 此前一律显示「字段待接入」，会被误读为功能未完成。
     const boundaryText = tradeScope.boundaryKnown
       ? formatWater(tradeScope.boundaryInflow)
-      : '字段待接入';
+      : '全域口径不适用';
     const externalText = tradeScope.externalKnown
       ? formatWater(tradeScope.externalInflow)
       : '字段待接入';
