@@ -515,9 +515,11 @@ function assertHealthTaxDefaultNoTaxComparison() {
     current.environmentalFlow - noTax.environmentalFlow > meaningfulDelta(noTax.environmentalFlow),
     "current tau=0.24 should have a positive environmental-flow delta versus noTax"
   );
+  // 新口径：模型只输出健康「负担」，「避免量」= 反事实负担 − 当前负担，
+  // 由比较层计算。这里直接检验负担确实下降。
   assert.ok(
-    current.dalyAvoided - noTax.dalyAvoided > meaningfulDelta(noTax.dalyAvoided),
-    "current tau=0.24 should have a positive DALY avoided delta versus noTax"
+    noTax.dalyBurden - current.dalyBurden > meaningfulDelta(noTax.dalyBurden),
+    "current tau=0.24 should reduce DALY burden versus noTax"
   );
 }
 

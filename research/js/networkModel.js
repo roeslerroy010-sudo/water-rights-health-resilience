@@ -598,53 +598,147 @@
     return computeEcoBaseFlowDetail(naturalFlow, getLegacyEcoDemand(node), getEcoFloor(params || {}));
   }
 
-  function computeNodeDalyAvoided(node, allocation, params) {
-    const urbanDemand = Math.max(EPS, node.demand.urban || 0);
-    const urbanCoverage = clamp(nonNegative(allocation && allocation.urban, 0) / urbanDemand, 0, 1);
-    const climateStress = Math.max(0, 1 - getClimateAvailability(params || {}));
-    const tauSignal = clamp(getTau(params || {}) / 0.5, 0, 1);
-    const healthFloorSignal = clamp(getHealthFloor(params || {}), 0, 1);
-    const exposure = Math.max(0, node.population || 0) / 100000;
-    const avoidedPer100k = 9 + 28 * climateStress + 11 * healthFloorSignal + 18 * tauSignal;
-    return round(exposure * urbanCoverage * avoidedPer100k, 6);
-  }
+  // ==========================================================================
+  // 健康产出：剂量—反应链
+  //
+  // 政策旋钮（τ、healthFloor）**不得**出现在本节任何公式里。它们只能通过改变
+  // 配水结果间接影响健康：
+  //
+  //   τ ↑ → 工业取水 ↓ → 废水负荷 ↓ / 河道流量 ↑ → 浓度 ↓ → PAF ↓ → DALY ↓
+  //
+  // 旧实现 `avoidedPer100k = 9 + 28·climateStress + 11·healthFloor + 18·τSignal`
+  // 把 τ 直接写进健康收益，属循环论证；且城市供水覆盖率恒为 1，公式实际塌缩为
+  // 「人口 × 政策旋钮多项式」，与配水完全无关。详见 docs/economics-audit.md F3/F4。
+  //
+  // 两条暴露通路，都只以配水结果为自变量：
+  //   A 生活供水缺口 —— 供水不足导致的 WaSH 服务退化
+  //   B 河道稀释能力 —— 工业废水负荷相对受纳水体流量的浓度，污染沿河道累积，
+  //     上游排污由下游人口承担，这正是庇古税要内部化的外部性
+  // ==========================================================================
 
-  function computeNodeDalyBurden(node, allocation, params) {
-    const urbanDemand = Math.max(EPS, node.demand.urban || 0);
-    const urbanCoverage = clamp(nonNegative(allocation && allocation.urban, 0) / urbanDemand, 0, 1);
-    const climateStress = Math.max(0, 1 - getClimateAvailability(params || {}));
-    const tauSignal = clamp(getTau(params || {}) / 0.5, 0, 1);
-    const exposure = Math.max(0, node.population || 0) / 100000;
-    const baselineBurdenPer100k = 84 + 150 * climateStress;
-    const interventionRelief = 0.22 * urbanCoverage + 0.16 * tauSignal;
-    return round(exposure * Math.max(0, baselineBurdenPer100k * (1 - interventionRelief)), 6);
-  }
+  // 全球「不安全 WaSH」年 DALY 率（GBD 2019；JOGH 2024;14:04162）。
+  // 用作「生活供水完全失效」时的满暴露上限。⚠️ B1 待校准。
+  const WASH_DALY_RATE_PER_100K = 1244.29;
 
-  function healthOutcomeFields(node, allocation, params) {
-    const dalyAvoided = computeNodeDalyAvoided(node, allocation, params || {});
+  // 东亚「不安全 WaSH」年 DALY 率（同源，95% UI 65.07–123.33）。
+  // 用作水质通路的区域现况基准率。⚠️ B1 待校准。
+  const WATERBORNE_DALY_RATE_PER_100K = 92.42;
+
+  // 工业废水排放量 / 工业取水量。2022 年全国：146.7 亿 t / 968.4 亿 m³ = 0.151。
+  const INDUSTRY_DISCHARGE_COEFF = 0.151;
+
+  // 临界负荷比：废水体积占受纳水体流量的比例上限。
+  // 由两项国标推出——受纳水体要达 GB 3838-2002 III 类（COD ≤ 20 mg/L），
+  // 工业废水按 GB 8978-1996 一级标准排放（COD ≤ 100 mg/L），本底按 15 mg/L：
+  //   (100E + 15F)/(E+F) = 20  →  E/F = 0.0625
+  const CRITICAL_LOAD_RATIO = 0.0625;
+
+  // 暴露—反应斜率。⚠️ 纯占位值，B1 必须以 GBD 分病种 RR 替换。
+  const BETA_SERVICE_GAP = 2.0;
+  const BETA_DILUTION = 1.0;
+
+  // 废水沿拓扑向下游累积：上游排污由下游人口承担。order 为拓扑序，
+  // 因此每个节点被处理时其上游贡献已经就位。
+  function makeEffluentRouter() {
+    const upstream = {};
     return {
-      dalyAvoided,
-      totalDalyAvoided: dalyAvoided,
-      dalyBurden: computeNodeDalyBurden(node, allocation, params || {}),
+      take(nodeId) {
+        return upstream[nodeId] || 0;
+      },
+      push(node, cumulativeEffluent) {
+        const downstreamId = node && node.downstream;
+        if (!downstreamId || downstreamId === "OUTLET") return;
+        upstream[downstreamId] = (upstream[downstreamId] || 0) + nonNegative(cumulativeEffluent, 0);
+      },
+    };
+  }
+
+  // 相对危险度 → 人群归因分值
+  function riskToPaf(relativeRisk) {
+    const rr = Math.max(1, finiteNumber(relativeRisk, 1));
+    return (rr - 1) / rr;
+  }
+
+  // 通路 A：生活供水缺口
+  function computeServiceGap(node, allocation) {
+    const urbanDemand = nonNegative(node && node.demand && node.demand.urban, 0);
+    if (urbanDemand <= EPS) return 0;
+    const served = nonNegative(allocation && allocation.urban, 0);
+    return clamp(1 - served / urbanDemand, 0, 1);
+  }
+
+  // 通路 B：累积废水负荷相对河道流量的浓度指数。
+  // cumulativeEffluent 已含上游累积量，因此下游节点承担上游排污——不重复计人。
+  function computeLoadRatio(cumulativeEffluent, inStreamFlow) {
+    const flow = nonNegative(inStreamFlow, 0);
+    if (flow <= EPS) return nonNegative(cumulativeEffluent, 0) > EPS ? Infinity : 0;
+    return nonNegative(cumulativeEffluent, 0) / flow;
+  }
+
+  function computeNodeHealthBurdenDetail(node, allocation, context) {
+    const population = Math.max(0, (node && node.population) || 0);
+    const exposure = population / 100000;
+
+    const serviceGap = computeServiceGap(node, allocation);
+    const serviceRisk = 1 + BETA_SERVICE_GAP * serviceGap;
+    const servicePaf = riskToPaf(serviceRisk);
+    const serviceBurden = exposure * WASH_DALY_RATE_PER_100K * servicePaf;
+
+    const localEffluent = INDUSTRY_DISCHARGE_COEFF * nonNegative(allocation && allocation.industry, 0);
+    const cumulativeEffluent = nonNegative(context && context.upstreamEffluent, 0) + localEffluent;
+    const loadRatio = computeLoadRatio(cumulativeEffluent, context && context.inStreamFlow);
+    const excessLoad = Number.isFinite(loadRatio)
+      ? Math.max(0, loadRatio / CRITICAL_LOAD_RATIO - 1)
+      : 1e6;
+    const dilutionRisk = 1 + BETA_DILUTION * excessLoad;
+    const dilutionPaf = riskToPaf(dilutionRisk);
+    const dilutionBurden = exposure * WATERBORNE_DALY_RATE_PER_100K * dilutionPaf;
+
+    return {
+      serviceGap: round(serviceGap, 6),
+      servicePaf: round(servicePaf, 6),
+      serviceBurden: round(serviceBurden, 6),
+      localEffluent: round(localEffluent, 6),
+      cumulativeEffluent: round(cumulativeEffluent, 6),
+      loadRatio: Number.isFinite(loadRatio) ? round(loadRatio, 6) : null,
+      excessLoad: Number.isFinite(loadRatio) ? round(excessLoad, 6) : null,
+      dilutionPaf: round(dilutionPaf, 6),
+      dilutionBurden: round(dilutionBurden, 6),
+      dalyBurden: round(serviceBurden + dilutionBurden, 6),
+    };
+  }
+
+  // context: { inStreamFlow, upstreamEffluent }
+  // 「避免的 DALY」不在此计算——它需要一个反事实解（τ=0）才有意义，
+  // 由比较层用 burden(反事实) − burden(当前) 得到。见 main.js buildNoTaxComparison。
+  function healthOutcomeFields(node, allocation, context) {
+    const detail = computeNodeHealthBurdenDetail(node, allocation, context || {});
+    return {
+      dalyBurden: detail.dalyBurden,
+      health: detail,
     };
   }
 
   function addHealthOutcomesToTotals(acc, node) {
-    acc.dalyAvoided += node.dalyAvoided || 0;
     acc.dalyBurden += node.dalyBurden || 0;
+    acc.serviceBurden += (node.health && node.health.serviceBurden) || 0;
+    acc.dilutionBurden += (node.health && node.health.dilutionBurden) || 0;
+    acc.industrialEffluent += (node.health && node.health.localEffluent) || 0;
   }
 
   function roundHealthOutcomeTotals(totals) {
-    totals.dalyAvoided = round(totals.dalyAvoided, 6);
-    totals.totalDalyAvoided = totals.dalyAvoided;
     totals.dalyBurden = round(totals.dalyBurden, 6);
+    totals.serviceBurden = round(totals.serviceBurden, 6);
+    totals.dilutionBurden = round(totals.dilutionBurden, 6);
+    totals.industrialEffluent = round(totals.industrialEffluent, 6);
   }
 
   function aggregateSummary(totals) {
     return {
-      dalyAvoided: totals.dalyAvoided,
-      totalDalyAvoided: totals.dalyAvoided,
       dalyBurden: totals.dalyBurden,
+      serviceBurden: totals.serviceBurden,
+      dilutionBurden: totals.dilutionBurden,
+      industrialEffluent: totals.industrialEffluent,
       environmentalFlow: totals.environmentalFlow,
     };
   }
@@ -1137,6 +1231,7 @@
       healthTaxDetails[node.id] = computeHealthTaxDetail(node.id, { ...(params || {}), network, sector: "industry" }, network);
     }
 
+    const effluentRouter = makeEffluentRouter();
     const nodes = order.map((id) => {
       const node = network.nodeById.get(id);
       const waterRight = waterRights.waterRightByNode[id] || 0;
@@ -1163,6 +1258,11 @@
         externalInflow,
       });
 
+      const healthFields = healthOutcomeFields(node, allocation, {
+        inStreamFlow: qOutflow,
+        upstreamEffluent: effluentRouter.take(id),
+      });
+      effluentRouter.push(node, healthFields.health.cumulativeEffluent);
       return {
         id,
         name: node.name,
@@ -1200,7 +1300,7 @@
         rawUnmet: roundSectorMap(rawUnmet),
         healthFloorTarget: round(healthFloorTarget, 6),
         healthFloorShortfall: round(healthFloorShortfall, 6),
-        ...healthOutcomeFields(node, allocation, params || {}),
+        ...healthFields,
         healthTax: healthTaxDetails[id],
       };
     });
@@ -1247,8 +1347,10 @@
       transitDefaultShare: 0,
       qOwnWaterRight: 0,
       unusedWaterRight: 0,
-      dalyAvoided: 0,
       dalyBurden: 0,
+      serviceBurden: 0,
+      dilutionBurden: 0,
+      industrialEffluent: 0,
       demand: sectorMap(0),
       demandCap: sectorMap(0),
       effectiveDemand: sectorMap(0),
@@ -1481,6 +1583,7 @@
     }
     const formulaMarketPrice = computeMarketPrice(network, problemContext.qSupplyByNode, params || {});
 
+    const effluentRouter = makeEffluentRouter();
     const nodes = order.map((id) => {
       const node = network.nodeById.get(id);
       const incoming = problemContext.upstreams.get(id).reduce((sum, upstreamId) => {
@@ -1516,6 +1619,11 @@
         qAvail,
         externalInflow,
       });
+      const healthFields = healthOutcomeFields(node, allocation, {
+        inStreamFlow: qOutflow,
+        upstreamEffluent: effluentRouter.take(id),
+      });
+      effluentRouter.push(node, healthFields.health.cumulativeEffluent);
       return {
         id,
         name: node.name,
@@ -1548,7 +1656,7 @@
         rawUnmet: roundSectorMap(rawUnmet),
         healthFloorTarget: round(healthFloorTarget, 6),
         healthFloorShortfall: round(healthFloorShortfall, 6),
-        ...healthOutcomeFields(node, allocation, params || {}),
+        ...healthFields,
         healthTax: problemContext.healthTaxDetails[id],
         shadowPriceCny: hasDuals ? round(shadowPriceByNode[id] || 0, 6) : null,
         // 超出取水许可、不可取用但仍在河道中下泄的干流过境水。按 methodology.md
@@ -1649,8 +1757,10 @@
       environmentalFlow: 0,
       legacyEcoDemand: 0,
       transitPassThrough: 0,
-      dalyAvoided: 0,
       dalyBurden: 0,
+      serviceBurden: 0,
+      dilutionBurden: 0,
+      industrialEffluent: 0,
       demand: sectorMap(0),
       demandCap: sectorMap(0),
       effectiveDemand: sectorMap(0),
@@ -2051,6 +2161,7 @@
       healthTaxByNodeSector,
     };
 
+    const effluentRouter = makeEffluentRouter();
     for (const id of order) {
       const node = network.nodeById.get(id);
       const localVolume = qSupplyByNode[id];
@@ -2129,6 +2240,11 @@
         externalInflow: supplyBreakdown.externalByNode[id],
       });
 
+      const healthFields = healthOutcomeFields(node, allocation, {
+        inStreamFlow: qOutflow,
+        upstreamEffluent: effluentRouter.take(id),
+      });
+      effluentRouter.push(node, healthFields.health.cumulativeEffluent);
       const state = {
         id,
         name: node.name,
@@ -2161,7 +2277,7 @@
         rawUnmet: roundSectorMap(rawUnmet),
         healthFloorTarget: round(healthFloorTarget, 6),
         healthFloorShortfall: round(healthFloorShortfall, 6),
-        ...healthOutcomeFields(node, allocation, params || {}),
+        ...healthFields,
         healthTax: healthTaxDetails[id],
       };
       resultById.set(id, state);
@@ -2228,8 +2344,10 @@
       ecoSurplus: 0,
       environmentalFlow: 0,
       legacyEcoDemand: 0,
-      dalyAvoided: 0,
       dalyBurden: 0,
+      serviceBurden: 0,
+      dilutionBurden: 0,
+      industrialEffluent: 0,
       demand: sectorMap(0),
       demandCap: sectorMap(0),
       effectiveDemand: sectorMap(0),

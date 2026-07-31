@@ -20,7 +20,7 @@
   };
 
   const LAYER_LABELS = {
-    healthGain: '健康收益',
+    healthBurden: '健康负担',
     stressIndex: '水压力',
     taxIntensity: '税强度',
     inequity: '不公平',
@@ -37,7 +37,7 @@
     network: null,
     result: null,
     params: null,
-    activeLayer: 'healthGain',
+    activeLayer: 'healthBurden',
     selectedId: null,
     region: null,
     regionSelectedIds: null,
@@ -93,7 +93,7 @@
 
     document.querySelectorAll('.layer-tab').forEach((button) => {
       button.addEventListener('click', () => {
-        state.activeLayer = button.dataset.layer || 'healthGain';
+        state.activeLayer = button.dataset.layer || 'healthBurden';
         document.querySelectorAll('.layer-tab').forEach((item) => {
           item.classList.toggle('active', item === button);
         });
@@ -488,7 +488,9 @@
       delta: {
         industryWithdrawal: currentSummary.industryWithdrawal - baselineSummary.industryWithdrawal,
         environmentalFlow: currentSummary.environmentalFlow - baselineSummary.environmentalFlow,
-        dalyAvoided: currentSummary.dalyAvoided - baselineSummary.dalyAvoided,
+        // 负担下降为负值；「避免的 DALY」= 负担的减少量，见下。
+        dalyBurden: currentSummary.dalyBurden - baselineSummary.dalyBurden,
+        dalyAvoided: baselineSummary.dalyBurden - currentSummary.dalyBurden,
       },
     };
   }
@@ -498,17 +500,32 @@
     return {
       industryWithdrawal: numberOr(aggregate.industryWithdrawal, industryWithdrawalTotal(result)),
       environmentalFlow: numberOr(aggregate.environmentalFlow, environmentalFlowTotal(result)),
-      dalyAvoided: numberOr(aggregate.dalyAvoided, 0),
+      dalyBurden: numberOr(aggregate.dalyBurden, 0),
     };
   }
 
+  // 「避免的 DALY」只有相对反事实才有定义。反事实 = 同气候、同交易设置下 τ=0。
+  // 这样政策旋钮就只能通过改变配水来影响健康，循环论证被消除。
+  // 见 docs/economics-audit.md F4。
   function attachNoTaxComparison(current, noTaxResult, comparison) {
     if (!current) return;
     current.noTaxResult = noTaxResult;
     current.noTaxComparison = comparison;
+    const dalyAvoided = comparison ? Math.max(0, numberOr(comparison.delta.dalyAvoided, 0)) : 0;
+    const healthBenefitCny = dalyAvoided * VALUE_PER_DALY;
+    const aggregate = current.aggregate || {};
+    const tradingCostCny = numberOr(aggregate.tradingCostCny, 0);
+    const deadweightLossCny = numberOr(aggregate.deadweightLossCny, 0);
+    const netSocialBenefitCny = healthBenefitCny - tradingCostCny - deadweightLossCny;
     current.aggregate = {
-      ...(current.aggregate || {}),
+      ...aggregate,
       noTaxDelta: comparison ? comparison.delta : null,
+      dalyAvoided,
+      counterfactualDalyBurden: comparison ? numberOr(comparison.baseline.dalyBurden, 0) : null,
+      healthBenefitCny,
+      diseaseCasesAvoided: dalyAvoided / DISEASE_CASE_DALY,
+      netSocialBenefitCny,
+      economicNpvCny: netSocialBenefitCny,
     };
   }
 
@@ -1204,7 +1221,10 @@
     );
     const marketPrice = numberOr(aggregate.marketPrice, numberOr(result.raw && result.raw.marketPrice, 0));
     const tradingCostCny = numberOr(aggregate.tradingCostCny, tradableWater * numberOr(input.params && input.params.tradingCost, 0));
-    const dalyAvoided = numberOr(aggregate.dalyAvoided, sumBy(result.basinResults || [], 'dalyAvoided'));
+    // dalyAvoided 由反事实比较层填入（attachNoTaxComparison）；此处只做承接，
+    // 不再从各子流域求和——「避免量」不是节点局部可定义的量。
+    const dalyBurden = numberOr(aggregate.dalyBurden, sumBy(result.basinResults || [], 'dalyBurden'));
+    const dalyAvoided = numberOr(aggregate.dalyAvoided, 0);
     const healthBenefitCny = numberOr(aggregate.healthBenefitCny, dalyAvoided * VALUE_PER_DALY);
     const diseaseCasesAvoided = numberOr(aggregate.diseaseCasesAvoided, dalyAvoided / DISEASE_CASE_DALY);
     const economicNpvCny = numberOr(aggregate.economicNpvCny, healthBenefitCny - tradingCostCny);
@@ -1227,6 +1247,7 @@
       shadowPrice: (result.raw && result.raw.shadowPrice) || null,
       supplyScope: (result.raw && result.raw.supplyScope) || null,
       dalyAvoided,
+      dalyBurden,
       diseaseCasesAvoided,
       healthBenefitCny,
       deadweightLossCny,
@@ -2263,14 +2284,10 @@
       const downstreamPopulation = numberOr(node.healthTax && node.healthTax.downstreamPopulation, 0);
       const healthTax = numberOr(node.healthTax && node.healthTax.taxPerM3, 0);
       const taxIntensity = clamp01(healthTax / Math.max((solution.marketPrice || 0) + healthTax, 1));
-      // 优先采用求解器自己算出的 dalyAvoided：它含气候压力项
-      // （networkModel.computeNodeDalyAvoided），本地兜底公式没有，
-      // 若在此覆盖会让气候情景对健康产出完全失效。
-      const dalyAvoided = numberOr(
-        node.dalyAvoided ?? node.totalDalyAvoided,
-        Math.max(0, node.population / 100000 * 16 * urbanCoverage
-          * (0.72 + input.params.healthFloor + input.params.tau * 0.55))
-      );
+      // 健康产出改为「负担」口径：由剂量—反应链从配水结果算出，政策旋钮不直接进入。
+      // 「避免的 DALY」需要反事实（τ=0）才有意义，在比较层由
+      // burden(τ=0) − burden(当前) 得到，见 attachNoTaxComparison。
+      const dalyBurden = numberOr(node.dalyBurden, 0);
       const inequity = clamp01(stressIndex * 0.62 + (downstreamPopulation / 9000000) * 0.22 + taxIntensity * 0.16 - input.params.healthFloor * 0.18);
 
       return {
@@ -2299,8 +2316,8 @@
         downstream: node.downstream,
         downstreamReach: node.downstreamReach,
         downstreamPopulationAffected: downstreamPopulation,
-        dalyAvoided,
-        healthBenefitCny: dalyAvoided * VALUE_PER_DALY,
+        dalyBurden,
+        health: node.health || null,
         healthTax: node.healthTax,
         stressIndex,
         taxIntensity,
@@ -2313,8 +2330,10 @@
 
     const compatibleCount = basinResults.filter((item) => item.incentiveCompatible).length;
     const aggregate = {
-      dalyAvoided: sumBy(basinResults, 'dalyAvoided'),
-      healthBenefitCny: sumBy(basinResults, 'healthBenefitCny'),
+      dalyBurden: sumBy(basinResults, 'dalyBurden'),
+      serviceBurden: numberOr(solution.totals && solution.totals.serviceBurden, 0),
+      dilutionBurden: numberOr(solution.totals && solution.totals.dilutionBurden, 0),
+      industrialEffluent: numberOr(solution.totals && solution.totals.industrialEffluent, 0),
       downstreamPopulationAffected: Math.max(...basinResults.map((item) => item.downstreamPopulationAffected || 0), 0),
       upstreamDownstreamInequity: weightedMean(basinResults, 'inequity', 'population') * 100,
       incentiveCompatible: solution.incentive ? Boolean(solution.incentive.compatible) : compatibleCount === basinResults.length,
@@ -2367,7 +2386,7 @@
       code: item.code || base.code || getSubbasinCode(item, id),
       pfafId: item.pfafId ?? item.pfaf_id ?? base.pfafId ?? null,
       population: numberOr(item.population, base.population || 0),
-      dalyAvoided: numberOr(item.dalyAvoided || item.daly || item.healthGain, 0),
+      dalyAvoided: numberOr(item.dalyAvoided || item.daly || item.healthBurden, 0),
       healthBenefitCny: numberOr(item.healthBenefitCny || item.healthBenefit || item.benefit, 0),
       downstreamPopulationAffected: numberOr(item.downstreamPopulationAffected || item.affectedDownstreamPopulation, 0),
       stressIndex: clamp01(numberOr(item.stressIndex || item.waterStress || item.stress, 0)),

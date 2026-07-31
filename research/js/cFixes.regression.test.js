@@ -34,6 +34,7 @@ const BASE_PARAMS = {
 };
 
 const failures = [];
+const deferred = [];
 function check(label, fn) {
   try {
     fn();
@@ -57,30 +58,46 @@ function solveWithClimate(climate) {
   return solveNetwork({ network: attrs, ...BASE_PARAMS, climate });
 }
 
-check("C3 每档气候情景都算出有限的 dalyAvoided", () => {
+// 2026-07-30：健康产出改为「负担」口径（剂量—反应链），dalyAvoided 已移到比较层。
+// C3 的意图是「气候情景必须影响健康产出」，该意图在此以 dalyBurden 检验。
+check("C3 每档气候情景都算出有限的 dalyBurden", () => {
   CLIMATE_BY_RISING_STRESS.forEach((climate) => {
     const result = solveWithClimate(climate);
-    const total = result.aggregate && result.aggregate.dalyAvoided;
-    assert.ok(Number.isFinite(total) && total > 0, climate + " 的 dalyAvoided 应为正有限值，实际 " + total);
+    const total = result.aggregate && result.aggregate.dalyBurden;
+    assert.ok(Number.isFinite(total) && total > 0, climate + " 的 dalyBurden 应为正有限值，实际 " + total);
     assert.ok(
-      result.nodes.every((node) => Number.isFinite(node.dalyAvoided)),
-      climate + " 的每个子流域都应带 dalyAvoided"
+      result.nodes.every((node) => Number.isFinite(node.dalyBurden)),
+      climate + " 的每个子流域都应带 dalyBurden"
     );
   });
 });
 
-check("C3 dalyAvoided 随气候压力严格单调上升", () => {
-  const series = CLIMATE_BY_RISING_STRESS.map((climate) => ({
-    climate,
-    daly: solveWithClimate(climate).aggregate.dalyAvoided,
-  }));
-  const summary = series.map((item) => item.climate + "=" + item.daly.toFixed(1)).join(", ");
-  series.slice(1).forEach((item, index) => {
+// 新口径下气候通过配水影响健康：径流减少 → 河道稀释流量下降 → 浓度上升 → 负担上升。
+// 必须走 LP（生产路径）。启发式回退路径在 SSP5-8.5 下会因 riverRetentionValue(1.296)
+// 高于农业部门用水价值(1.15) 而把农业全部挤掉、出流反而暴涨，导致负担不升反降——
+// 那是回退路径既有的缺陷（LP 用的是按下游节点数归一化后的留存权重），
+// 与本项健康口径无关，另见 docs/economics-audit.md「已知问题」。
+let lpClimateSeries = null;
+deferred.push({ label: "C3 dalyBurden 随气候压力严格单调上升（LP 生产路径）", fn: () => {
+  assert.ok(lpClimateSeries, "LP 气候序列应已求解");
+  const summary = lpClimateSeries.map((item) => item.climate + "=" + item.daly.toFixed(1)).join(", ");
+  lpClimateSeries.slice(1).forEach((item, index) => {
     assert.ok(
-      item.daly > series[index].daly,
-      "气候压力上升时 dalyAvoided 必须上升（曾因 main.js 用无气候项的公式覆盖模型结果而恒定）；" + summary
+      item.daly > lpClimateSeries[index].daly,
+      "气候压力上升时 dalyBurden 必须上升；" + summary
     );
   });
+} });
+
+// 政策旋钮不得直接出现在健康函数里——这正是旧实现的循环论证。
+check("C3 健康函数不得直接依赖 tau 或 healthFloor", () => {
+  const modelSource = read(__dirname, "networkModel.js");
+  const block = modelSource.match(/function computeNodeHealthBurdenDetail[\s\S]*?\n  \}/);
+  assert.ok(block, "应存在 computeNodeHealthBurdenDetail");
+  assert.ok(
+    !/getTau\(|getHealthFloor\(|tauSignal|healthFloorSignal/.test(block[0]),
+    "健康负担函数只能以配水结果为自变量，不得读取 tau/healthFloor（旧实现 18×τSignal 属循环论证）"
+  );
 });
 
 check("C3 CLIMATE_AVAILABILITY 显式包含 historical", () => {
@@ -92,10 +109,14 @@ check("C3 CLIMATE_AVAILABILITY 显式包含 historical", () => {
   );
 });
 
-check("C3 main.js 不得丢弃模型的 dalyAvoided", () => {
+check("C3 main.js 必须采用模型算出的 dalyBurden", () => {
   assert.ok(
-    /const dalyAvoided = numberOr\(\s*\n?\s*node\.dalyAvoided/.test(mainSource),
-    "normalizeResearchNetworkSolution 必须优先采用 node.dalyAvoided（含气候压力项）"
+    /const dalyBurden = numberOr\(node\.dalyBurden, 0\);/.test(mainSource),
+    "normalizeResearchNetworkSolution 必须采用 node.dalyBurden，不得用本地公式覆盖"
+  );
+  assert.ok(
+    /dalyAvoided = comparison \? Math\.max\(0, numberOr\(comparison\.delta\.dalyAvoided, 0\)\) : 0/.test(mainSource),
+    "dalyAvoided 必须来自 τ=0 反事实比较，而不是节点局部公式"
   );
 });
 
@@ -314,9 +335,29 @@ check("D4 PPT 与文档都不再指向 localhost", () => {
 
 // ---------------------------------------------------------------------------
 
-if (failures.length) {
-  console.error("\n" + failures.length + " 项回归检查失败：");
-  failures.forEach((item) => console.error("  - " + item));
-  process.exit(1);
+async function main() {
+  const glpk = await ResearchNetworkModel.loadNodeGlpkInstance();
+  lpClimateSeries = [];
+  for (const climate of CLIMATE_BY_RISING_STRESS) {
+    const result = await ResearchNetworkModel.solveNetworkLpAsync({
+      network: attrs,
+      glpk,
+      ...BASE_PARAMS,
+      climate,
+    });
+    lpClimateSeries.push({ climate, daly: result.totals.dalyBurden });
+  }
+  deferred.forEach((item) => check(item.label, item.fn));
+
+  if (failures.length) {
+    console.error("\n" + failures.length + " 项回归检查失败：");
+    failures.forEach((item) => console.error("  - " + item));
+    process.exit(1);
+  }
+  console.log("\nC 组回归检查全部通过。");
 }
-console.log("\nC 组回归检查全部通过。");
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

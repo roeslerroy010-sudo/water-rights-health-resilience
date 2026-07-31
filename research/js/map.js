@@ -2,7 +2,7 @@
   'use strict';
 
   const PALETTES = {
-    healthGain: ['#e9f7ef', '#9bd7a8', '#2f9e44'],
+    healthBurden: ['#fdece9', '#f3a58f', '#c0392b'],
     stressIndex: ['#fff4d6', '#f08c00', '#d9480f'],
     taxIntensity: ['#e6f4f1', '#1f7a8c', '#155e70'],
     inequity: ['#f0ebff', '#8d7be0', '#5f3dc4'],
@@ -10,7 +10,9 @@
   };
 
   const LAYER_META = {
-    healthGain: { label: '健康收益', field: 'dalyAvoided' },
+    // 健康产出改为「负担」口径：由剂量—反应链从配水结果算出，数值越高越差。
+    // 「避免量」需要反事实才有定义，是全域比较层的量，无法逐节点上色。
+    healthBurden: { label: '健康负担', field: 'dalyBurden' },
     stressIndex: { label: '水压力', field: 'stressIndex' },
     taxIntensity: { label: '税强度', field: 'taxIntensity' },
     inequity: { label: '不公平', field: 'inequity' },
@@ -530,7 +532,7 @@
     tabs.addEventListener('click', (event) => {
       const button = event.target && event.target.closest ? event.target.closest('.layer-tab') : null;
       if (!button || !tabs.contains(button)) return;
-      localActiveLayer = button.dataset.layer || 'healthGain';
+      localActiveLayer = button.dataset.layer || 'healthBurden';
       tabs.querySelectorAll('.layer-tab').forEach((item) => {
         item.classList.toggle('active', item === button);
       });
@@ -541,7 +543,7 @@
   }
 
   function getActiveLayer(payloadLayer) {
-    return localActiveLayer || payloadLayer || 'healthGain';
+    return localActiveLayer || payloadLayer || 'healthBurden';
   }
 
   function createMapContext(result, selectionState) {
@@ -1623,8 +1625,8 @@
   }
 
   function colorFor(layerName, item, context) {
-    const palette = PALETTES[layerName] || PALETTES.healthGain;
-    const meta = LAYER_META[layerName] || LAYER_META.healthGain;
+    const palette = PALETTES[layerName] || PALETTES.healthBurden;
+    const meta = LAYER_META[layerName] || LAYER_META.healthBurden;
     if (layerName === 'netTrade') {
       const net = readNetTrade(item, context && context.tradeAggregate);
       const max = Math.max(Number(context && context.netTradeMax) || 0, Math.abs(net), 1);
@@ -1633,7 +1635,7 @@
     }
     const rawValue = Number(item[meta.field] || 0);
     let t;
-    if (layerName === 'healthGain') {
+    if (layerName === 'healthBurden') {
       t = Math.min(1, Math.sqrt(Math.max(0, rawValue)) / 18);
     } else {
       t = Math.max(0, Math.min(1, rawValue));
@@ -1675,7 +1677,7 @@
   function updateLegend(layerName) {
     const element = document.querySelector('.map-legend');
     if (!element) return;
-    const palette = PALETTES[layerName] || PALETTES.healthGain;
+    const palette = PALETTES[layerName] || PALETTES.healthBurden;
     const label = (LAYER_META[layerName] && LAYER_META[layerName].label) || layerName;
     const labels = layerName === 'netTrade'
       ? ['净买入', '自给', '净卖出']
@@ -1701,8 +1703,8 @@
       <div class="basin-popup">
         <h3>${escapeHtml(name)}</h3>
         ${code ? `<div class="popup-code" title="技术 ID：${escapeHtml(code)}">Pfaf 编码：${escapeHtml(code)}</div>` : ''}
-        <div class="popup-row"><span>DALY</span><strong>${formatNumber(item.dalyAvoided, 1)}</strong></div>
-        <div class="popup-row"><span>健康收益</span><strong>${formatMoney(item.healthBenefitCny)}</strong></div>
+        <div class="popup-row"><span>DALY 负担</span><strong>${formatNumber(item.dalyBurden, 1)}</strong></div>
+        <div class="popup-row"><span>负荷比/临界</span><strong>${item.health && item.health.loadRatio !== null ? formatNumber(item.health.loadRatio / 0.0625, 2) + "x" : "—"}</strong></div>
         <div class="popup-row"><span>净交易</span><strong>${escapeHtml(formatSignedWater(netTrade))}（${netTradeRole(netTrade)}）</strong></div>
         <div class="popup-row"><span>下游人口</span><strong>${formatPeople(item.downstreamPopulationAffected)}</strong></div>
         <div class="popup-row"><span>水压力</span><strong>${formatPercent(item.stressIndex)}</strong></div>

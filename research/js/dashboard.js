@@ -37,13 +37,19 @@
       <section class="metric-card health">
         <div class="metric-label">DALY 避免</div>
         <div class="metric-value">${formatNumber(aggregate.dalyAvoided, 1)}</div>
-        <p class="metric-sub">当前范围健康损失减少量</p>
+        <p class="metric-sub">相对 τ=0 反事实的健康负担减少量：${formatNumber(aggregate.counterfactualDalyBurden, 1)} − ${formatNumber(aggregate.dalyBurden, 1)}。经剂量—反应链由配水结果算出，政策旋钮不直接进入健康函数</p>
       </section>
 
       <section class="metric-card environment">
         <div class="metric-label">生态/环境流量</div>
         <div class="metric-value">${formatWater(aggregate.environmentalFlow)}</div>
         <p class="metric-sub">本地产流/支流基流 ${formatWater(aggregate.ecoBaseFlow)} + 额外留存 ${formatWater(aggregate.ecoSurplus)}</p>
+      </section>
+
+      <section class="metric-card health">
+        <div class="metric-label">健康负担</div>
+        <div class="metric-value">${formatNumber(aggregate.dalyBurden, 1)}</div>
+        <p class="metric-sub">当前配水下的 DALY 负担：供水缺口通路 ${formatNumber(aggregate.serviceBurden, 1)} + 河道稀释通路 ${formatNumber(aggregate.dilutionBurden, 1)}。工业废水 ${formatWater(aggregate.industrialEffluent)}</p>
       </section>
 
       <section class="metric-card health">
